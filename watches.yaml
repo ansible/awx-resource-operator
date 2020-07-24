@@ -1,0 +1,9 @@
+---
+- version: v1alpha1
+  group: tower.ansible.com
+  kind: JobTemplate
+  role: jobtemplate
+  # finalizer:
+  #   name: finalizer.tower.ansible.com
+  #   vars:
+  #     tower_resource_state: absent

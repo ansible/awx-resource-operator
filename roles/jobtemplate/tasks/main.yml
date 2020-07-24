@@ -1,0 +1,34 @@
+---
+# tasks file for jobtemplate
+
+- name: Read Secret Configuration
+  k8s_info:
+    kind: Secret
+    namespace: '{{ meta.namespace }}'
+    name: "{{ tower_auth_secret }}"
+  register: tower_config_secret
+
+- name: Show secret details
+  debug:
+    msg: "{{ tower_config_secret }}"
+
+- name: Create Job Template
+  awx.awx.tower_job_template:
+    name: "{{ job_template_name }}"
+    job_type: "{{ job_template_type | default('run') }}"
+    inventory: "{{ job_template_inventory }}"
+    project: "{{ job_template_project }}"
+    playbook: "{{ job_template_playbook }}"
+    credentials: "{{ job_template_credentials | default(omit) }}"
+    vault_credential: "{{ job_template_vault_credentials | default(omit) }}"
+    forks: "{{ job_template_forks | default(omit) }}"
+    limit: "{{ job_template_limit | default(omit) }}"
+    verbosity: "{{ job_template_verbosity | default(omit) }}"
+    extra_vars: "{{ job_template_extra_vars | default(omit) }}"
+    become_enabled: "{{ job_template_become_enabled | default(omit) }}"
+    allow_simultaneous: "{{ job_template_allow_simultaneous | default(omit) }}"
+    state: "{{ tower_resource_state if tower_resource_state is defined else 'present' }}"
+  environment:
+    - TOWER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
+    - TOWER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
+    - TOWER_VERIFY_SSL: "False"
