@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ meta.name }}"
+  namespace: "{{ meta.namespace }}"
+spec:
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      containers:
+      - name: joblaunch
+        image: matburt/operator-job-run:latest
+        env:
+          - name: TOWER_OAUTH_TOKEN
+            value: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
+          - name: TOWER_HOST
+            value: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
+          - name: TOWER_JOB_TEMPLATE_NAME
+            value: "{{ job_template_name }}"
+          - name: TOWER_VERIFY_SSL
+            value: "False"
+      restartPolicy: Never
+  backoffLimit: 1

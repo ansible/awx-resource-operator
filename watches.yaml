@@ -7,3 +7,8 @@
   #   name: finalizer.tower.ansible.com
   #   vars:
   #     tower_resource_state: absent
+- version: v1alpha1
+  group: tower.ansible.com
+  kind: Job
+  role: job
+  watchDependentResources: True

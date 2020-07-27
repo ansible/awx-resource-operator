@@ -1,0 +1,10 @@
+---
+
+- name: Create Job Template
+  awx.awx.tower_job_launch:
+    job_template: "{{ lookup('env','TOWER_JOB_TEMPLATE_NAME') }}"
+  register: job
+
+- name: Wait for job
+  tower_job_wait:
+    job_id: "{{ job.id }}"

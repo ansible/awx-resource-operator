@@ -1,0 +1,7 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: Job
+metadata:
+  name: bigjoblaunch
+  namespace: awx
+spec:
+  job_template_name: Demo Job Template

@@ -1,0 +1,18 @@
+---
+# tasks file for jobtemplate
+
+# - name: Show all vars
+#   debug:
+#     msg: "{{ vars }}"
+
+- name: Read Secret Configuration
+  k8s_info:
+    kind: Secret
+    namespace: '{{ meta.namespace }}'
+    name: "{{ tower_auth_secret }}"
+  register: tower_config_secret
+
+- name: Start K8s Runner Job
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'job_definition.yml') }}"
