@@ -9,6 +9,6 @@
   #     tower_resource_state: absent
 - version: v1alpha1
   group: tower.ansible.com
-  kind: Job
+  kind: AnsibleJob
   role: job
   watchDependentResources: True

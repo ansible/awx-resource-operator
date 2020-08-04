@@ -6,8 +6,8 @@ This purpose of this operator is to allow managing one or more Tower and AWX clu
 
 Currently two CRDs are implemented with backing roles:
 
-* Job Template [CRD](deploy/crds/tower.ansible.com_joblaunch_crd.yaml) and [Role](roles/jobtemplate/tasks/main.yml) will create a Job Template against the referenced Tower cluster
-* Job [CRD](deploy/crds/tower.ansible.com_joblaunch_crd.yaml) and [Role](roles/job/tasks/main.yml) given a Job Template name will run a job on the referenced Tower cluster
+* Job Template [CRD](deploy/crds/tower.ansible.com_jobtemplates_crd.yaml) and [Role](roles/jobtemplate/tasks/main.yml) will create a Job Template against the referenced Tower cluster
+* AnsibleJob [CRD](deploy/crds/tower.ansible.com_joblaunch_crd.yaml) and [Role](roles/job/tasks/main.yml) given a Job Template name will run a job on the referenced Tower cluster
 
 ## Connectivity Secrets
 

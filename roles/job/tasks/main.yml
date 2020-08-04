@@ -12,6 +12,18 @@
     name: "{{ tower_auth_secret }}"
   register: tower_config_secret
 
+- name: Get Job Info
+  k8s_info:
+    api_version: batch/v1
+    kind: Job
+    name: "{{ meta.name }}"
+    namespace: "{{ meta.namespace }}"
+  register: job_information_output
+
+- name: Debug Job Information
+  debug:
+    var: job_information_output
+
 - name: Start K8s Runner Job
   k8s:
     state: present

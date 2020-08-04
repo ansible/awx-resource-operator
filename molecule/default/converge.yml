@@ -4,4 +4,4 @@
   connection: local
   roles:
     - jobtemplate
-    - job
+    - ansiblejob

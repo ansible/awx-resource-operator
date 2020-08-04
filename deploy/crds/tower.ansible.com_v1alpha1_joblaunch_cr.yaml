@@ -1,5 +1,5 @@
 apiVersion: tower.ansible.com/v1alpha1
-kind: Job
+kind: AnsibleJob
 metadata:
   name: bigjoblaunch
   namespace: awx
