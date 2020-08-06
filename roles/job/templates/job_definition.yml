@@ -19,5 +19,9 @@ spec:
             value: "{{ job_template_name }}"
           - name: TOWER_VERIFY_SSL
             value: "False"
+          - name: ANSIBLEJOB_NAME
+            value: "{{ meta.name }}"
+          - name: ANSIBLEJOB_NAMESPACE
+            value: "{{ meta.namespace }}"
       restartPolicy: Never
   backoffLimit: 1
