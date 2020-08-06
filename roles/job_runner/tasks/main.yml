@@ -1,6 +1,6 @@
 ---
 
-- name: Create Job Template
+- name: Launch a job
   awx.awx.tower_job_launch:
     job_template: "{{ lookup('env','TOWER_JOB_TEMPLATE_NAME') }}"
   register: job
