@@ -7,8 +7,10 @@
 
 - name: Update AnsibleJob definition with Tower job id
   k8s:
+    state: present
     definition:
       kind: AnsibleJob
+      apiVersion: tower.ansible.com/v1alpha1
       metadata:
         name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
         namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"

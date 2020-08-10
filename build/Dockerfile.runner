@@ -6,7 +6,7 @@ COPY requirements.yml ${HOME}/requirements.yml
 RUN ansible-galaxy collection install -r ${HOME}/requirements.yml \
  && chmod -R ug+rwx ${HOME}/.ansible && mkdir ${HOME}/roles
 
-RUN pip3 install ansible-tower-cli
+RUN pip3 install ansible-tower-cli kubernetes openshift
 
 COPY roles/job_runner ${HOME}/roles/job_runner
 CMD ["ansible-runner", "-r", "job_runner", "run", "/runner"]
