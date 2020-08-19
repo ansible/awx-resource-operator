@@ -1,5 +1,9 @@
 # Ansible Tower/AWX Resource Operator
 
+---
+> **_NOTE:_** This operator is experimental and is not considered supported or stable and ready for use
+---
+
 This purpose of this operator is to allow managing one or more Tower and AWX cluster resources. This also attempts to lay out a general model for how to interface with individual resources whether running within an Openshift cluster or being managed off-cluster.
 
 ## Existing CRDs and Roles
