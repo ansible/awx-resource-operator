@@ -227,6 +227,14 @@ spec:
                 type: string
               job_template_name:
                 type: string
+              inventory:
+                type: array
+                items:
+                  type: object
+              extra_vars:
+                type: array
+                items:
+                  type: object
             required:
             - tower_auth_secret
             type: object
