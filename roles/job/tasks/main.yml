@@ -12,6 +12,12 @@
     name: "{{ tower_auth_secret }}"
   register: tower_config_secret
 
+- name: Validate Secret Exists
+  assert:
+    that:
+      - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
+    fail_msg: "Tower Secret must exists"
+
 - name: Get Job Info
   k8s_info:
     api_version: batch/v1
