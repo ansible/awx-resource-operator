@@ -16,7 +16,25 @@
         namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
         labels:
           tower_job_id: "{{ job.id }}"
+      statusAnsibleJob:
+        status: "{{ job.status }}"
 
 - name: Wait for job
   tower_job_wait:
     job_id: "{{ job.id }}"
+  register: job_result
+
+- name: Update AnsibleJob definition with Tower job result
+  k8s:
+    state: present
+    definition:
+      kind: AnsibleJob
+      apiVersion: tower.ansible.com/v1alpha1
+      metadata:
+        name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
+        namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
+      statusAnsibleJob:
+        elapsed: "{{ job_result.elapsed }}"
+        finished: "{{ job_result.finished }}"
+        started: "{{ job_result.started }}"
+        status: "{{ job_result.status }}"
