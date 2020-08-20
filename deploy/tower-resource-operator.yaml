@@ -131,7 +131,7 @@ spec:
       containers:
         - name: tower-resource-operator
           # Replace this with the built image name
-          image: "matburt/tower-resource-operator:0.1.0"
+          image: "_REPLACE_ME_/tower-resource-operator:0.1.0"
           imagePullPolicy: "Always"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner

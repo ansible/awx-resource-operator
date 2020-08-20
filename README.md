@@ -27,18 +27,21 @@ All CRDs within this operator depend on a _Secret_ being defined within the desi
       token: XXXXX
       host: https://towerhost.com
 
-## Building the Operator
-
-The current codebase has a fixed image location and should be modified, the examples below should also be modified to publish the images into a specific location. Start with building the operator image and publishing:
-
-    $ operator-sdk build matburt/tower-resource-operator:0.1.0
-    ...
-    $ docker push matburt/tower-resource-operator:0.1.0
-    ...
-
 ## Building the Job launch job container
 
 The Tower Job launch CRD launches a k8s job in a dependent fashion. The k8s Job actually invokes the Tower Job and tracks it, this container needs to be built and published:
 
-    $ docker build -t matburt/operator-job-run:latest -f build/Dockerfile.runner .
+    $ sed -i 's/_REPLACE_ME_/_your_repo_name_/g' roles/job/templates/job_definition.yml
+    $ docker build -t _your_repo_name_/operator-job-run:latest -f build/Dockerfile.runner .
+
+## Building the Operator
+
+The current codebase has a fixed image location and should be modified, the examples below should also be modified to publish the images into a specific location. Start with building the operator image and publishing:
+
+    $ sed -i 's/_REPLACE_ME_/_your_repo_name_/g' deploy/tower-resource-operator.yaml
+    $ sed -i 's/_REPLACE_ME_/_your_repo_name_/g' deploy/operator.yaml
+    $ operator-sdk build _your_repo_name_/tower-resource-operator:0.1.0
+    ...
+    $ docker push _your_repo_name_/tower-resource-operator:0.1.0
+    ...
 

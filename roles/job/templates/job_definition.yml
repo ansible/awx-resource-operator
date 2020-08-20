@@ -10,7 +10,7 @@ spec:
       serviceAccountName: tower-resource-operator
       containers:
       - name: joblaunch
-        image: matburt/operator-job-run:latest
+        image: _REPLACE_ME_/operator-job-run:latest
         env:
           - name: TOWER_OAUTH_TOKEN
             value: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
