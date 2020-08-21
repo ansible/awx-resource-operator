@@ -16,7 +16,18 @@
         namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
         labels:
           tower_job_id: "{{ job.id }}"
-      statusAnsibleJob:
+
+- name: Update AnsibleJob status with Tower job status
+  k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleJob
+    name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
+    namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
+    status:
+      ansibleJobResult:
+        elapsed:
+        finished:
+        started:
         status: "{{ job.status }}"
 
 - name: Wait for job
@@ -24,16 +35,14 @@
     job_id: "{{ job.id }}"
   register: job_result
 
-- name: Update AnsibleJob definition with Tower job result
-  k8s:
-    state: present
-    definition:
-      kind: AnsibleJob
-      apiVersion: tower.ansible.com/v1alpha1
-      metadata:
-        name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
-        namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
-      statusAnsibleJob:
+- name: Update AnsibleJob status with Tower job result
+  k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleJob
+    name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
+    namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
+    status:
+      ansibleJobResult:
         elapsed: "{{ job_result.elapsed }}"
         finished: "{{ job_result.finished }}"
         started: "{{ job_result.started }}"
