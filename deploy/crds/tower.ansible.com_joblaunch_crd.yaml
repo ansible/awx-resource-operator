@@ -34,6 +34,8 @@ spec:
               inventory:
                 type: string
               extra_vars:
+                description: extra_vars is a JSON string. For example,
+                  '{"version":"1.23.45","other_variable":"foo","pacman":"mrs","ghosts":["inky","pinky","clyde","sue"]}'
                 type: string
             required:
             - tower_auth_secret
