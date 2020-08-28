@@ -231,13 +231,10 @@ spec:
               job_template_name:
                 type: string
               inventory:
-                type: array
-                items:
-                  type: object
+                type: string
               extra_vars:
-                type: array
-                items:
-                  type: object
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
             required:
             - tower_auth_secret
             type: object
