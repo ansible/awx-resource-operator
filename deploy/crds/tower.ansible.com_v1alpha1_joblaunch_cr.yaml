@@ -2,7 +2,10 @@ apiVersion: tower.ansible.com/v1alpha1
 kind: AnsibleJob
 metadata:
   name: bigjoblaunch
-  namespace: awx
 spec:
   tower_auth_secret: toweraccess
   job_template_name: Demo Job Template
+  extra_vars:
+    target_clusters:
+    - aaa_cluster
+    - bbb_cluster
