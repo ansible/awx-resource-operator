@@ -18,19 +18,23 @@
       - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
     fail_msg: "Tower Secret must exists"
     
+- name: Generate a Pseudorandom K8s Job name
+  set_fact:
+    k8s_job_name: "{{ meta.name + '-' + (99999999 | random | to_uuid)[:8] }}"
+
+- name: Start K8s Runner Job
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'job_definition.yml') }}"
+
 - name: Get Job Info
   k8s_info:
     api_version: batch/v1
     kind: Job
-    name: "{{ meta.name }}"
+    name: "{{ k8s_job_name }}"
     namespace: "{{ meta.namespace }}"
   register: job_information_output
 
 - name: Debug Job Information
   debug:
     var: job_information_output
-
-- name: Start K8s Runner Job
-  k8s:
-    state: present
-    definition: "{{ lookup('template', 'job_definition.yml') }}"

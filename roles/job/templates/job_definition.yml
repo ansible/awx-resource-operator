@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "{{ meta.name }}"
+  name: "{{ k8s_job_name }}"
   namespace: "{{ meta.namespace }}"
 spec:
   ttlSecondsAfterFinished: 3600
