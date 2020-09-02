@@ -27,7 +27,7 @@
         labels:
           tower_job_id: "{{ job.id }}"
 
-- name: Update AnsibleJob status with Tower job status
+- name: Update AnsibleJob status with Tower job status and url
   k8s_status:
     api_version: tower.ansible.com/v1alpha1
     kind: AnsibleJob
@@ -39,6 +39,7 @@
         finished:
         started:
         status: "{{ job.status }}"
+        url: "{{lookup('env', 'TOWER_HOST') + '/#/jobs/playbook/' + (job.id|string)}}"
 
 - name: Wait for job
   tower_job_wait:
