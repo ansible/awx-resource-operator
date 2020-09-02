@@ -196,6 +196,8 @@ spec:
                   type: string
                 job_template_inventory:
                   type: string
+          required:
+            - tower_auth_secret
 
 ---
 apiVersion: apiextensions.k8s.io/v1
