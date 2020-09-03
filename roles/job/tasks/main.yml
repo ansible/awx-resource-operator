@@ -5,11 +5,33 @@
 #   debug:
 #     msg: "{{ vars }}"
 
+- name: Read K8s job info
+  k8s_info:
+    kind: Job
+    api_version: batch/v1
+    name: "{{ meta.name }}"
+    namespace: "{{ meta.namespace }}"
+  register: k8s_job
+
+- block:
+  - name: Update AnsibleJob status with message
+    k8s_status:
+      api_version: tower.ansible.com/v1alpha1
+      kind: AnsibleJob
+      name: "{{ meta.name }}"
+      namespace: "{{ meta.namespace }}"
+      status:
+        message: "This job instance has already reached its end state. Create a new AnsibleJob if you wish to run the template again."
+  - name: End play early
+    meta: end_play
+  when: k8s_job["resources"] is defined and (k8s_job["resources"]|length>0)
+
 - name: Read Secret Configuration
   k8s_info:
     kind: Secret
-    namespace: '{{ meta.namespace }}'
+    api_version: v1
     name: "{{ tower_auth_secret }}"
+    namespace: "{{ meta.namespace }}"
   register: tower_config_secret
 
 - name: Validate Secret Exists
@@ -22,15 +44,3 @@
   k8s:
     state: present
     definition: "{{ lookup('template', 'job_definition.yml') }}"
-
-- name: Get Job Info
-  k8s_info:
-    api_version: batch/v1
-    kind: Job
-    name: "{{ meta.name }}"
-    namespace: "{{ meta.namespace }}"
-  register: job_information_output
-
-- name: Debug Job Information
-  debug:
-    var: job_information_output
