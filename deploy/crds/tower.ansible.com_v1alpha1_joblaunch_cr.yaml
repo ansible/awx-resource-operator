@@ -1,7 +1,7 @@
 apiVersion: tower.ansible.com/v1alpha1
 kind: AnsibleJob
 metadata:
-  name: bigjoblaunch
+  name: demo-job
   namespace: awx
 spec:
   tower_auth_secret: toweraccess
