@@ -9,7 +9,7 @@ spec:
     spec:
       serviceAccountName: tower-resource-operator
       containers:
-      - name: joblaunch
+      - name: "{{ meta.name }}"
         image: "{{ lookup('env', 'ANSIBLE_JOB_RUNNER_IMAGE') }}"
         env:
           - name: TOWER_OAUTH_TOKEN
