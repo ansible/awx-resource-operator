@@ -1,18 +1,5 @@
 ---
 
-- name: Update status with K8s job info
-  k8s_status:
-    api_version: tower.ansible.com/v1alpha1
-    kind: AnsibleJob
-    name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
-    namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
-    status:
-      ansibleK8sJob:
-        created: true
-        env:
-          templateName: "{{ lookup('env','TOWER_JOB_TEMPLATE_NAME') }}"
-          verifySSL: "{{ lookup('env','TOWER_VERIFY_SSL') }}"
-
 - name: Read AnsibleJob Specs
   k8s_info:
     kind: AnsibleJob
@@ -48,9 +35,8 @@
     namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
     status:
       ansibleJobResult:
-        elapsed:
-        finished:
-        started:
+        changed: "{{ job.changed }}"
+        failed: "{{ job.failed }}"
         status: "{{ job.status }}"
         url: "{{lookup('env', 'TOWER_HOST') + '/#/jobs/playbook/' + (job.id|string)}}"
 

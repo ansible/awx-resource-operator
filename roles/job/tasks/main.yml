@@ -1,9 +1,4 @@
 ---
-# tasks file for jobtemplate
-
-# - name: Show all vars
-#   debug:
-#     msg: "{{ vars }}"
 
 - name: Read K8s job info
   k8s_info:
@@ -21,7 +16,7 @@
       name: "{{ meta.name }}"
       namespace: "{{ meta.namespace }}"
       status:
-        message: "This job instance has already reached its end state. Create a new AnsibleJob if you wish to run the template again."
+        message: "This job instance is already running or has reached its end state."
   - name: End play early
     meta: end_play
   when: k8s_job["resources"] is defined and (k8s_job["resources"]|length>0)
@@ -44,3 +39,19 @@
   k8s:
     state: present
     definition: "{{ lookup('template', 'job_definition.yml') }}"
+
+- name: Update AnsibleJob status with K8s job info
+  k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleJob
+    name: "{{ meta.name }}"
+    namespace: "{{ meta.namespace }}"
+    status:
+      k8sJob:
+        created: true
+        message: "Monitor the K8s job status and log for more details"
+        namespacedName: "{{meta.namespace+'/'+meta.name}}"
+        env:
+          secretNamespacedName: "{{meta.namespace+'/'+tower_auth_secret}}"
+          templateName: "{{ job_template_name }}"
+          verifySSL: false
