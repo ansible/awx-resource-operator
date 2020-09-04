@@ -1,7 +1,8 @@
 ---
-collections:
-  - name: awx.awx
-    version: ">=13.0.0"
-  - community.kubernetes
-  - name: operator_sdk.util
-    version: ">=0.1.0"
+  collections:
+    - name: awx.awx
+      version: "==14.1.0"
+    - name: community.kubernetes
+      version: "==1.0.0"
+    - name: operator_sdk.util
+      version: "==0.1.0"
