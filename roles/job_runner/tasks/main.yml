@@ -8,12 +8,23 @@
     namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
   register: ansible_job
 
-- name: Launch a job
-  awx.awx.tower_job_launch:
-    job_template: "{{ lookup('env','TOWER_JOB_TEMPLATE_NAME') }}"
-    extra_vars: "{{ ansible_job['resources'][0]['spec']['extra_vars'] | default(omit) }}"
-    inventory: "{{ ansible_job['resources'][0]['spec']['inventory'] | default(omit) }}"
-  register: job
+- name: Launch a job if error update AnsibleJob status then end play
+  block:
+    - awx.awx.tower_job_launch:
+        job_template: "{{ lookup('env','TOWER_JOB_TEMPLATE_NAME') }}"
+        extra_vars: "{{ ansible_job['resources'][0]['spec']['extra_vars'] | default(omit) }}"
+        inventory: "{{ ansible_job['resources'][0]['spec']['inventory'] | default(omit) }}"
+      register: job
+  rescue:
+    - k8s_status:
+        api_version: tower.ansible.com/v1alpha1
+        kind: AnsibleJob
+        name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
+        namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
+        status:
+          ansibleJobResult:
+            status: "error"
+    - meta: end_play
 
 - name: Update AnsibleJob definition with Tower job id
   k8s:
