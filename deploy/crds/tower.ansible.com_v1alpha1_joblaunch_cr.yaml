@@ -2,7 +2,19 @@ apiVersion: tower.ansible.com/v1alpha1
 kind: AnsibleJob
 metadata:
   name: bigjoblaunch
-  namespace: awx
+  namespace: default
 spec:
   tower_auth_secret: toweraccess
   job_template_name: Demo Job Template
+  extra_vars:
+    cost: 6.88
+    ghosts: ["inky","pinky","clyde","sue"]
+    is_enable: false
+    other_variable: foo
+    pacman: mrs
+    size: 8
+    targets_list:
+    - aaa
+    - bbb
+    - ccc
+    version: 1.23.45
