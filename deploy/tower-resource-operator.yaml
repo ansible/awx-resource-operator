@@ -1,14 +1,24 @@
 ---
+  apiVersion: v1
+kind: Namespace
+metadata:
+  name: tower-operator
+---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: ClusterRole
 metadata:
   creationTimestamp: null
   name: tower-resource-operator
+  namespace: tower-operator
 rules:
 - apiGroups:
   - ""
+  - rbac.authorization.k8s.io
   resources:
   - pods
+  - serviceaccounts
+  - roles
+  - rolebindings
   - services
   - services/finalizers
   - endpoints
@@ -32,6 +42,7 @@ rules:
   - daemonsets
   - replicasets
   - statefulsets
+  - jobs
   verbs:
   - create
   - delete
@@ -59,6 +70,7 @@ rules:
   - ""
   resources:
   - pods
+  - jobs
   verbs:
   - get
 - apiGroups:
@@ -66,6 +78,7 @@ rules:
   resources:
   - replicasets
   - deployments
+  - jobs
   verbs:
   - get
 - apiGroups:
@@ -98,11 +111,13 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: tower-resource-operator
+  namespace: tower-operator
 subjects:
 - kind: ServiceAccount
   name: tower-resource-operator
+  namespace: tower-operator
 roleRef:
-  kind: Role
+  kind: ClusterRole
   name: tower-resource-operator
   apiGroup: rbac.authorization.k8s.io
 
@@ -110,13 +125,14 @@ roleRef:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-    name: tower-resource-operator
+  name: tower-resource-operator
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: tower-resource-operator
+  namespace: tower-operator
 spec:
   replicas: 1
   selector:
@@ -138,9 +154,6 @@ spec:
             name: runner
           env:
             - name: WATCH_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
             - name: POD_NAME
               valueFrom:
                 fieldRef:
