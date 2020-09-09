@@ -3,7 +3,6 @@ kind: ClusterRole
 metadata:
   creationTimestamp: null
   name: tower-resource-operator
-  namespace: tower-operator
 rules:
 - apiGroups:
   - ""
