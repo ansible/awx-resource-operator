@@ -9,7 +9,6 @@ kind: ClusterRole
 metadata:
   creationTimestamp: null
   name: tower-resource-operator
-  namespace: tower-operator
 rules:
 - apiGroups:
   - ""
@@ -107,11 +106,10 @@ rules:
   - watch
 
 ---
-kind: RoleBinding
+kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: tower-resource-operator
-  namespace: tower-operator
 subjects:
 - kind: ServiceAccount
   name: tower-resource-operator
