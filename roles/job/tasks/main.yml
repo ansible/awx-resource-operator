@@ -1,15 +1,32 @@
 ---
-# tasks file for jobtemplate
 
-# - name: Show all vars
-#   debug:
-#     msg: "{{ vars }}"
+- name: Read K8s job info
+  k8s_info:
+    kind: Job
+    api_version: batch/v1
+    name: "{{ meta.name }}"
+    namespace: "{{ meta.namespace }}"
+  register: k8s_job
+
+- block:
+  - name: Update AnsibleJob status with message
+    k8s_status:
+      api_version: tower.ansible.com/v1alpha1
+      kind: AnsibleJob
+      name: "{{ meta.name }}"
+      namespace: "{{ meta.namespace }}"
+      status:
+        message: "This job instance is already running or has reached its end state."
+  - name: End play early
+    meta: end_play
+  when: k8s_job["resources"] is defined and (k8s_job["resources"]|length>0)
 
 - name: Read Secret Configuration
   k8s_info:
     kind: Secret
-    namespace: '{{ meta.namespace }}'
+    api_version: v1
     name: "{{ tower_auth_secret }}"
+    namespace: "{{ meta.namespace }}"
   register: tower_config_secret
 
 - name: Validate Secret Exists
@@ -23,14 +40,18 @@
     state: present
     definition: "{{ lookup('template', 'job_definition.yml') }}"
 
-- name: Get Job Info
-  k8s_info:
-    api_version: batch/v1
-    kind: Job
+- name: Update AnsibleJob status with K8s job info
+  k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleJob
     name: "{{ meta.name }}"
     namespace: "{{ meta.namespace }}"
-  register: job_information_output
-
-- name: Debug Job Information
-  debug:
-    var: job_information_output
+    status:
+      k8sJob:
+        created: true
+        message: "Monitor the K8s job status and log for more details"
+        namespacedName: "{{meta.namespace+'/'+meta.name}}"
+        env:
+          secretNamespacedName: "{{meta.namespace+'/'+tower_auth_secret}}"
+          templateName: "{{ job_template_name }}"
+          verifySSL: false

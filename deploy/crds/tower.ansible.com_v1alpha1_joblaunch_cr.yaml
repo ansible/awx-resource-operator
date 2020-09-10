@@ -1,7 +1,7 @@
 apiVersion: tower.ansible.com/v1alpha1
 kind: AnsibleJob
 metadata:
-  name: bigjoblaunch
+  generateName: demo-job- # generate a unique suffix per 'kubectl create'
   namespace: default
 spec:
   tower_auth_secret: toweraccess
