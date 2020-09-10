@@ -1,13 +1,17 @@
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: ClusterRole
 metadata:
   creationTimestamp: null
   name: tower-resource-operator
 rules:
 - apiGroups:
   - ""
+  - rbac.authorization.k8s.io
   resources:
   - pods
+  - serviceaccounts
+  - roles
+  - rolebindings
   - services
   - services/finalizers
   - endpoints
