@@ -1,11 +1,14 @@
-FROM ansible/ansible-runner:latest
+FROM registry.redhat.io/ansible-tower-37/ansible-runner-rhel7:1.4.6-1.1594641921
 ENV ANSIBLE_ROLES_PATH ${HOME}/roles
 
-COPY requirements.yml ${HOME}/requirements.yml
+COPY vendor /tmp/vendor
 
-RUN ansible-galaxy collection install -r ${HOME}/requirements.yml \
+RUN ansible-galaxy collection install /tmp/vendor/galaxy.ansible.com/awx/awx/awx-awx-14.1.0.tar.gz -p ${HOME}/.ansible/collections \
+ && ansible-galaxy collection install /tmp/vendor/galaxy.ansible.com/community/kubernetes/community-kubernetes-1.0.0.tar.gz -p ${HOME}/.ansible/collections \
+ && ansible-galaxy collection install /tmp/vendor/galaxy.ansible.com/operator_sdk/util/operator_sdk-util-0.1.0.tar.gz -p ${HOME}/.ansible/collections \
  && chmod -R ug+rwx ${HOME}/.ansible && mkdir ${HOME}/roles
 
+# For brew builds, instead of using `pip3` use `yum` to install these packages via RPMs
 RUN pip3 install ansible-tower-cli kubernetes openshift
 
 COPY roles/job_runner ${HOME}/roles/job_runner
