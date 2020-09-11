@@ -45,7 +45,7 @@ runner:
 
 
 bundle: operator-sdk
-	operator-sdk bundle create ${IMG_BUNDLE} \
+	${OPERATOR_SDK} bundle create ${IMG_BUNDLE} \
       --channels release-0.1 \
       --default-channel release-0.1
 
