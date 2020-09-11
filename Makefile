@@ -13,7 +13,7 @@ OS    = $(shell uname -s | tr '[:upper:]' '[:lower:]')
 ARCH  = $(shell uname -m | sed 's/x86_64/amd64/')
 OSOPER   = $(shell uname -s | tr '[:upper:]' '[:lower:]' | sed 's/darwin/apple-darwin/' | sed 's/linux/linux-gnu/')
 ARCHOPER = $(shell uname -m )
-_OPERATOR_SDK_VERSION ?= v0.18.0
+_OPERATOR_SDK_VERSION ?= v0.18.2
 
 ############################################################
 # dependency section
@@ -37,17 +37,17 @@ endif
 # images section
 ############################################################
 
-operator:
+build-operator:
 	docker build . -t ${IMG_OPERATOR} -f build/Dockerfile
 
-runner:
+build-runner:
 	docker build . -t ${IMG_RUNNER} -f build/Dockerfile.runner
 
+build-bundle: operator-sdk
+	docker build -f bundle.Dockerfile -t $(IMG_BUNDLE) .
 
-bundle: operator-sdk
-	${OPERATOR_SDK} bundle create ${IMG_BUNDLE} \
-      --channels release-0.1 \
-      --default-channel release-0.1
+validate-bundle: operator-sdk
+	${OPERATOR_SDK} bundle validate $(IMG_BUNDLE)
 
 ############################################################
 # publish section
