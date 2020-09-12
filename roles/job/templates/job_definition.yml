@@ -1,8 +1,110 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: null
+  name: tower-resource-operator
+  namespace: "{{ meta.namespace }}"
+rules:
+- apiGroups:
+  - ""
+  - rbac.authorization.k8s.io
+  resources:
+  - pods
+  - serviceaccounts
+  - roles
+  - rolebindings
+  - services
+  - services/finalizers
+  - endpoints
+  - persistentvolumeclaims
+  - events
+  - configmaps
+  - secrets
+  - jobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - daemonsets
+  - replicasets
+  - statefulsets
+  - jobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - servicemonitors
+  verbs:
+  - get
+  - create
+- apiGroups:
+  - apps
+  resourceNames:
+  - tower-resource-operator
+  resources:
+  - deployments/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - jobs
+  verbs:
+  - get
+- apiGroups:
+  - apps
+  resources:
+  - replicasets
+  - deployments
+  - jobs
+  verbs:
+  - get
+- apiGroups:
+  - tower.ansible.com
+  resources:
+  - '*'
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - '*'
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-    name: tower-resource-operator
-    namespace: "{{ meta.namespace }}"
+  name: tower-resource-operator
+  namespace: "{{ meta.namespace }}"
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -14,8 +116,9 @@ subjects:
   name: tower-resource-operator
   namespace: "{{ meta.namespace }}"
 roleRef:
-  kind: ClusterRole
+  kind: Role
   name: tower-resource-operator
+  namespace: "{{ meta.namespace }}"
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: batch/v1
