@@ -37,6 +37,13 @@ metadata:
         }
       ]
     capabilities: Basic Install
+    categories: "Integration & Delivery,OpenShift Optional"
+    description: The Ansible job operator manages AnsibleJob resources for launching tower job teamplates in Ansible Towers
+    containerImage: quay.io/open-cluster-management/aap-resource-operator:latest
+    certified: 'false'
+    createdAt: 2020-09-12T18:00:00Z
+    repository: https://github.com/ansible/awx-resource-operator/
+    support: Red Hat
   name: awx-resource-operator.v0.1.0
   namespace: placeholder
 spec:
@@ -50,7 +57,7 @@ spec:
   displayName: aap-resource-operator
   icon:
   - base64data: ""
-    mediatype: ""
+    mediatype: "image/jpeg"
   install:
     spec:
       clusterPermissions:
@@ -206,12 +213,9 @@ spec:
   - name: Awx Resource Operator
     url: https://github.com/ansible/awx-resource-operator/
   maintainers:
-  - email: ming@redhat.ocm
-    name: Mike Ng
-  - email: xiangli@redhat.com
-    name: Xiangjing Li
+  - email: ocm-dev@open-cluster-management.io
+    name: Open Cluster Management Project team
   maturity: alpha
   provider:
     name: Red Hat
-    url: https://www.redhat.com/
   version: 0.1.0
