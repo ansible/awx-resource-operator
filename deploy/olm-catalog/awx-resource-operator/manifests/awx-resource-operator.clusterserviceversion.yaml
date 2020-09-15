@@ -34,6 +34,21 @@ metadata:
             "job_template_name": "Demo Job Template",
             "tower_auth_secret": "toweraccess"
           }
+        },
+        {
+          "apiVersion": "tower.ansible.com/v1alpha1",
+          "kind": "JobTemplate",
+          "metadata": {
+            "name": "examplejobtemplate",
+            "namespace": "awx"
+          },
+          "spec": {
+            "job_template_inventory": "Demo Inventory",
+            "job_template_name": "ExampleJobTemplate",
+            "job_template_playbook": "hello_world.yml",
+            "job_template_project": "Demo Project",
+            "tower_auth_secret": "toweraccess"
+          }
         }
       ]
     capabilities: Basic Install
@@ -41,7 +56,7 @@ metadata:
     description: The Ansible job operator manages AnsibleJob resources for launching tower job teamplates in Ansible Towers
     containerImage: quay.io/open-cluster-management/aap-resource-operator:latest
     certified: 'false'
-    createdAt: 2020-09-12T18:00:00Z
+    createdAt: 2020-09-15T18:00:00Z
     repository: https://github.com/ansible/awx-resource-operator/
     support: Red Hat
   name: awx-resource-operator.v0.1.0
@@ -52,6 +67,9 @@ spec:
     owned:
     - kind: AnsibleJob
       name: ansiblejobs.tower.ansible.com
+      version: v1alpha1
+    - kind: JobTemplate
+      name: jobtemplates.tower.ansible.com
       version: v1alpha1
   description: Ansible Tower job operator
   displayName: aap-resource-operator
