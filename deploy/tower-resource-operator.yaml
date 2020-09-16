@@ -163,7 +163,7 @@ spec:
               value: explicit
             - name: ANSIBLE_DEBUG_LOGS
               value: "True"
-            - name: ANSIBLE_JOB_RUNNER_IMAGE
+            - name: RELEATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE
               # Replace this with the job runner built image name
               value: "quay.io/open-cluster-management/aap-resource-runner:latest"
       volumes:
