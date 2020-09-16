@@ -54,7 +54,7 @@ metadata:
     capabilities: Basic Install
     categories: "Integration & Delivery,OpenShift Optional"
     description: The Ansible job operator manages AnsibleJob resources for launching tower job teamplates in Ansible Towers
-    containerImage: quay.io/open-cluster-management/aap-resource-operator:latest
+    containerImage: quay.io/open-cluster-management/platform-resource-operator:latest
     certified: 'false'
     createdAt: 2020-09-15T18:00:00Z
     repository: https://github.com/ansible/awx-resource-operator/
@@ -72,7 +72,7 @@ spec:
       name: jobtemplates.tower.ansible.com
       version: v1alpha1
   description: Ansible Tower job operator
-  displayName: aap-resource-operator
+  displayName: platform-resource-operator
   icon:
   - base64data: ""
     mediatype: "image/jpeg"
@@ -202,8 +202,8 @@ spec:
                 - name: ANSIBLE_DEBUG_LOGS
                   value: "True"
                 - name: RELEATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE
-                  value: quay.io/open-cluster-management/aap-resource-runner:latest
-                image: quay.io/open-cluster-management/aap-resource-operator:latest
+                  value: quay.io/open-cluster-management/platform-resource-runner:latest
+                image: quay.io/open-cluster-management/platform-resource-operator:latest
                 imagePullPolicy: Always
                 name: tower-resource-operator
                 resources: {}
