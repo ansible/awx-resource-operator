@@ -1,11 +1,11 @@
 # opeator image
-IMG_OPERATOR ?= quay.io/open-cluster-management/aap-resource-operator:latest
+IMG_OPERATOR ?= quay.io/open-cluster-management/platform-resource-operator:latest
 # runner image
-IMG_RUNNER ?= quay.io/open-cluster-management/aap-resource-runner:latest
+IMG_RUNNER ?= quay.io/open-cluster-management/platform-resource-runner:latest
 # bundle image version
 BUNDEL_VERSION ?= 0.1.0
 # bundle image
-IMG_BUNDLE ?= quay.io/open-cluster-management/aap-resource-operator-bundle:$(BUNDEL_VERSION)
+IMG_BUNDLE ?= quay.io/open-cluster-management/platform-resource-operator-bundle:$(BUNDEL_VERSION)
 
 PATH  := $(PATH):$(PWD)/bin
 SHELL := env PATH=$(PATH) /bin/sh

@@ -146,7 +146,7 @@ spec:
       containers:
         - name: tower-resource-operator
           # Replace this with the built image name
-          image: "quay.io/open-cluster-management/aap-resource-operator:latest"
+          image: "quay.io/open-cluster-management/platform-resource-operator:latest"
           imagePullPolicy: "Always"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
@@ -165,7 +165,7 @@ spec:
               value: "True"
             - name: RELEATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE
               # Replace this with the job runner built image name
-              value: "quay.io/open-cluster-management/aap-resource-runner:latest"
+              value: "quay.io/open-cluster-management/platform-resource-runner:latest"
       volumes:
         - name: runner
           emptyDir: {}
