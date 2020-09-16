@@ -201,7 +201,7 @@ spec:
                   value: explicit
                 - name: ANSIBLE_DEBUG_LOGS
                   value: "True"
-                - name: ANSIBLE_JOB_RUNNER_IMAGE
+                - name: RELEATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE
                   value: quay.io/open-cluster-management/aap-resource-runner:latest
                 image: quay.io/open-cluster-management/aap-resource-operator:latest
                 imagePullPolicy: Always
