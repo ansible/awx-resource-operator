@@ -38,6 +38,7 @@ spec:
                 x-kubernetes-preserve-unknown-fields: true
             required:
             - tower_auth_secret
+            - job_template_name
             type: object
     served: true
     storage: true
