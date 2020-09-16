@@ -52,6 +52,7 @@
         message: "Monitor the K8s job status and log for more details"
         namespacedName: "{{meta.namespace+'/'+meta.name}}"
         env:
+          inventory: "{{ inventory | default(omit) }}"
           secretNamespacedName: "{{meta.namespace+'/'+tower_auth_secret}}"
           templateName: "{{ job_template_name }}"
           verifySSL: false
