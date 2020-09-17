@@ -56,7 +56,7 @@ metadata:
     description: The Ansible job operator manages AnsibleJob resources for launching tower job teamplates in Ansible Towers
     containerImage: quay.io/open-cluster-management/platform-resource-operator:latest
     certified: 'false'
-    createdAt: 2020-09-15T18:00:00Z
+    createdAt: 2020-09-16T18:00:00Z
     repository: https://github.com/ansible/awx-resource-operator/
     support: Red Hat
   name: awx-resource-operator.v0.1.0
@@ -68,14 +68,16 @@ spec:
     - kind: AnsibleJob
       name: ansiblejobs.tower.ansible.com
       version: v1alpha1
+      displayName: Ansible Job
     - kind: JobTemplate
       name: jobtemplates.tower.ansible.com
       version: v1alpha1
-  description: Ansible Tower job operator
-  displayName: platform-resource-operator
+      displayName: Ansible Job Template
+  description: This purpose of this operator is to allow managing one or more Tower and AWX cluster resources. This also attempts to lay out a general model for how to interface with individual resources whether running within an Openshift cluster or being managed off-cluster.
+  displayName: Ansible Tower Resource Operator
   icon:
-  - base64data: ""
-    mediatype: "image/jpeg"
+  - base64data: PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgNjYgNjUiIGZpbGw9IiNmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjx1c2UgeGxpbms6aHJlZj0iI0EiIHg9Ii41IiB5PSIuNSIvPjxzeW1ib2wgaWQ9IkEiIG92ZXJmbG93PSJ2aXNpYmxlIj48ZyBzdHJva2U9Im5vbmUiIGZpbGwtcnVsZT0ibm9uemVybyI+PHBhdGggZD0iTTY0IDMyYzAgMTcuNjc0LTE0LjMyNiAzMi0zMiAzMlMwIDQ5LjY3NCAwIDMyIDE0LjMyOCAwIDMyIDBzMzIgMTQuMzI4IDMyIDMyIiBmaWxsPSIjMWExOTE4Ii8+PHBhdGggZD0iTTMyLjU0IDE5LjU0OGw4LjI4IDIwLjQzOC0xMi41MDgtOS44NTN6bTE0LjcgMjUuMTQ3TDM0LjUxMiAxNC4wNGMtLjM2NC0uODg0LTEuMS0xLjM1Mi0xLjk3My0xLjM1MnMtMS42NjQuNDY4LTIuMDI4IDEuMzUyTDE2LjUyIDQ3LjY2NGg0Ljc4M0wyNi44MzcgMzMuOGwxNi41MTUgMTMuMzQzYy42NjQuNTM3IDEuMTQ0Ljc4IDEuNzY3Ljc4IDEuMjQ4IDAgMi4zMzgtLjkzNiAyLjMzOC0yLjI4NiAwLS4yMi0uMDc4LS41Ny0uMjE4LS45NDR6Ii8+PC9nPjwvc3ltYm9sPjwvc3ZnPg==
+    mediatype: image/svg+xml
   install:
     spec:
       clusterPermissions:
