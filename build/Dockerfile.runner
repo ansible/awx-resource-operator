@@ -2,6 +2,7 @@ FROM registry.redhat.io/ansible-tower-37/ansible-runner-rhel7:1.4.6-1.1594641921
 ENV ANSIBLE_ROLES_PATH ${HOME}/roles
 
 COPY vendor /tmp/vendor
+COPY requirements.txt /tmp/requirements.txt
 
 RUN ansible-galaxy collection install /tmp/vendor/galaxy.ansible.com/awx/awx/awx-awx-14.1.0.tar.gz -p ${HOME}/.ansible/collections \
  && ansible-galaxy collection install /tmp/vendor/galaxy.ansible.com/community/kubernetes/community-kubernetes-1.0.0.tar.gz -p ${HOME}/.ansible/collections \
@@ -9,7 +10,7 @@ RUN ansible-galaxy collection install /tmp/vendor/galaxy.ansible.com/awx/awx/awx
  && chmod -R ug+rwx ${HOME}/.ansible && mkdir ${HOME}/roles
 
 # For brew builds, instead of using `pip3` use `yum` to install these packages via RPMs
-RUN pip3 install ansible-tower-cli kubernetes openshift
+RUN pip3 install -r /tmp/requirements.txt
 
 COPY roles/job_runner ${HOME}/roles/job_runner
 CMD ["ansible-runner", "-r", "job_runner", "run", "/runner"]

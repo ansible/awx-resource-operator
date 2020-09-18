@@ -42,3 +42,17 @@ The Tower Job launch CRD launches a k8s job in a dependent fashion. The k8s Job 
 
     $ docker build -t matburt/operator-job-run:latest -f build/Dockerfile.runner .
 
+## Updating requirements.txt
+
+The Python requirements file is generated from `requirements.in`[requirements.in] by `pip-compile`
+from the [pip-tools](https://github.com/jazzband/pip-tools) Python package. All package updates should be made in `requirements.in` and then run
+
+```
+$ pip-compile requirements.in -o requirements.txt
+```
+
+`requirement-build.txt` can be updated in a similar method.
+
+```
+$ pip-compile requirements-build.in -o requirements-build.txt --allow-unsafe
+```
