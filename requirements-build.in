@@ -1,0 +1,3 @@
+setuptools-scm  # build requirement for python-dateutil
+setuptools      # build requirement for wheel
+wheel           # build requirement for python-string-utils

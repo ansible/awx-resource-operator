@@ -50,3 +50,9 @@ from the [pip-tools](https://github.com/jazzband/pip-tools) Python package. All 
 ```
 $ pip-compile requirements.in -o requirements.txt
 ```
+
+`requirement-build.txt` can be updated in a similar method.
+
+```
+$ pip-compile requirements-build.in -o requirements-build.txt --allow-unsafe
+```
