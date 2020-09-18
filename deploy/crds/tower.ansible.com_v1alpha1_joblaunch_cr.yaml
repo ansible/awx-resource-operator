@@ -6,7 +6,8 @@ metadata:
 spec:
   tower_auth_secret: toweraccess
   job_template_name: Demo Job Template
-  extra_vars:
+  inventory: Demo Inventory # Inventory prompt on launch needs to be enabled
+  extra_vars: # Extra variables prompt on launch needs to be enabled
     cost: 6.88
     ghosts: ["inky","pinky","clyde","sue"]
     is_enable: false
