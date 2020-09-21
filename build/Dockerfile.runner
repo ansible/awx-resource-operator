@@ -1,6 +1,7 @@
 FROM registry.redhat.io/ansible-tower-37/ansible-runner-rhel7:1.4.6-1.1594641921
 ENV ANSIBLE_ROLES_PATH ${HOME}/roles
 
+COPY hack/hosts /runner/inventory
 COPY vendor /tmp/vendor
 COPY requirements.txt /tmp/requirements.txt
 
