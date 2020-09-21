@@ -133,7 +133,7 @@ spec:
       serviceAccountName: tower-resource-operator
       containers:
       - name: "{{ meta.name }}"
-        image: "{{ lookup('env', 'RELEATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE') }}"
+        image: "{{ lookup('env', 'RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE') }}"
         env:
           - name: TOWER_OAUTH_TOKEN
             value: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
