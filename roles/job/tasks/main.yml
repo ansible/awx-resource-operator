@@ -49,7 +49,11 @@
     status:
       k8sJob:
         created: true
-        message: "Monitor the K8s job status and log for more details"
+        message: |-
+          Monitor the job.batch status for more details with the following commands:
+          'kubectl -n {{meta.namespace}} get job.batch/{{meta.name}}'
+          'kubectl -n {{meta.namespace}} describe job.batch/{{meta.name}}'
+          'kubectl -n {{meta.namespace}} logs -f job.batch/{{meta.name}}'
         namespacedName: "{{meta.namespace+'/'+meta.name}}"
         env:
           inventory: "{{ inventory | default(omit) }}"
