@@ -187,8 +187,14 @@ spec:
     status: {}
   validation:
     openAPIV3Schema:
-      description: Schema validation for the Tower Resource CRD
+      description: Schema validation for the Tower Job Template CRD
       properties:
+        apiVersion:
+          type: string
+        kind:
+          type: string
+        metadata:
+          type: object
         spec:
           properties:
             job_template_inventory:
@@ -201,9 +207,9 @@ spec:
               type: string
             tower_auth_secret:
               type: string
+          required:
+          - tower_auth_secret
           type: object
-      required:
-      - tower_auth_secret
       type: object
       x-kubernetes-preserve-unknown-fields: true
   version: v1alpha1
