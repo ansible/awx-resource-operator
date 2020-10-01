@@ -9,4 +9,4 @@ RUN ansible-galaxy collection install -r ${HOME}/requirements.yml \
 RUN pip3 install ansible-tower-cli kubernetes openshift
 
 COPY roles/job_runner ${HOME}/roles/job_runner
-CMD ["ansible-runner", "-r", "job_runner", "run", "/runner"]
+CMD ["ansible-runner", "--role-skip-facts", "-r", "job_runner", "run", "/runner"]
