@@ -13,4 +13,4 @@ RUN ansible-galaxy collection install /tmp/vendor/galaxy.ansible.com/awx/awx/awx
 RUN pip3 install -r /tmp/requirements.txt
 
 COPY roles/job_runner ${HOME}/roles/job_runner
-CMD ["ansible-runner", "--hosts", "localhost", "-r", "job_runner", "run", "/runner"]
+CMD ["ansible-runner", "--role-skip-facts", "--hosts", "localhost", "-r", "job_runner", "run", "/runner"]
