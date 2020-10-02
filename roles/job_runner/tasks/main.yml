@@ -51,10 +51,21 @@
         status: "{{ job.status }}"
         url: "{{lookup('env', 'TOWER_HOST') + '/#/jobs/playbook/' + (job.id|string)}}"
 
-- name: Wait for job
-  tower_job_wait:
-    job_id: "{{ job.id }}"
-  register: job_result
+- name: Wait for the tower job if error update AnsibleJob status then end play
+  block:
+    - tower_job_wait:
+        job_id: "{{ job.id }}"
+      register: job_result
+  rescue:
+    - k8s_status:
+        api_version: tower.ansible.com/v1alpha1
+        kind: AnsibleJob
+        name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
+        namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
+        status:
+          ansibleJobResult:
+            status: "error"
+    - meta: end_play
 
 - name: Update AnsibleJob status with Tower job result
   k8s_status:
