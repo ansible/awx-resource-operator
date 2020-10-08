@@ -4,7 +4,7 @@
 > **_NOTE:_** This operator is experimental and is not considered supported or stable and ready for use
 ---
 
-This purpose of this operator is to allow managing one or more Tower and AWX cluster resources. This also attempts to lay out a general model for how to interface with individual resources whether running within an Openshift cluster or being managed off-cluster.
+The purpose of this Operator is to allow managing Ansible Platform job resources that can interface with any infrastructure whether it be on an Openshift cluster or traditional infrastructure running off-cluster.
 
 ## Existing CRDs and Roles
 
