@@ -5,3 +5,4 @@
   roles:
     - jobtemplate
     - ansiblejob
+    - module

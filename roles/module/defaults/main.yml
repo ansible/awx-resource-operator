@@ -1,0 +1,3 @@
+---
+module_collection: "{{ collection }}"
+module_name: "{{ name }}"

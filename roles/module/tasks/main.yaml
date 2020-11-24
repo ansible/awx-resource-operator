@@ -1,0 +1,28 @@
+---
+- name: Read Secret Configuration
+  k8s_info:
+    kind: Secret
+    namespace: '{{ meta.namespace }}'
+    name: "{{ tower_auth_secret }}"
+  register: tower_config_secret
+
+- name: Validate Secret Exists
+  assert:
+    that:
+      - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
+    fail_msg: "Tower Secret must exists"
+
+- name: Show secret details
+  debug:
+    msg: "{{ tower_config_secret }}"
+
+- name: "Generate module's task file"
+  template:
+    src: "module.j2"
+    dest: "{{ role_path }}/tasks/module.yml"
+
+- include_tasks: "{{ role_path }}/tasks/module.yml"
+  environment:
+    - TOWER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
+    - TOWER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
+    - TOWER_VERIFY_SSL: "False"
