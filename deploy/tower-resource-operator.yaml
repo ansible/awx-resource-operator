@@ -265,3 +265,101 @@ spec:
   - name: v1alpha1
     served: true
     storage: true
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: modules.tower.ansible.com
+spec:
+  group: tower.ansible.com
+  names:
+    kind: Module
+    listKind: ModuleList
+    plural: modules
+    singular: module
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: Schema validation for the Tower Module CRD.
+      properties:
+        apiVersion:
+          type: string
+        kind:
+          type: string
+        metadata:
+          type: object
+        spec:
+          properties:
+            tower_auth_secret:
+              type: string
+            collection:
+              type: string
+              enum:
+                - "awx.awx"
+                - "ansible.tower"
+              default: "awx.awx"
+            name:
+              description: |
+                List of modules available:
+                 https://docs.ansible.com/ansible/latest/collections/awx/awx/index.html#modules
+              type: string
+              enum:
+                - tower_ad_hoc_command_cancel
+                - tower_ad_hoc_command
+                - tower_ad_hoc_command_wait
+                - tower_application
+                - tower_credential_input_source
+                - tower_credential
+                - tower_credential_type
+                - tower_export
+                - tower_group
+                - tower_host
+                - tower_import
+                - tower_instance_group
+                - tower_inventory
+                - tower_inventory_source
+                - tower_inventory_source_update
+                - tower_job_cancel
+                - tower_job_launch
+                - tower_job_list
+                - tower_job_template
+                - tower_job_wait
+                - tower_label
+                - tower_license
+                - tower_meta
+                - tower_notification_template
+                - tower_organization
+                - tower_project
+                - tower_project_update
+                - tower_receive
+                - tower_role
+                - tower_schedule
+                - tower_send
+                - tower_settings
+                - tower_team
+                - tower_token
+                - tower_user
+                - tower_workflow_job_template_node
+                - tower_workflow_job_template
+                - tower_workflow_launch
+                - tower_workflow_template
+            parameters:
+              description: |
+                List of parameters of each module:
+                 https://docs.ansible.com/ansible/latest/collections/awx/awx/index.html#modules
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+          required:
+          - tower_auth_secret
+          - name
+          - parameters
+          type: object
+      type: object
+      x-kubernetes-preserve-unknown-fields: true

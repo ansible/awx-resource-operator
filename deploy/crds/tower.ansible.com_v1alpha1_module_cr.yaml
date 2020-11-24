@@ -1,0 +1,13 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: Module
+metadata:
+  name: examplemodule
+  namespace: awx
+spec:
+  tower_auth_secret: tower_secret_map
+  name: "tower_job_template"
+  parameters:
+    name: ExampleJobTemplate
+    project: Demo Project
+    playbook: hello_world.yml
+    inventory: Demo Inventory

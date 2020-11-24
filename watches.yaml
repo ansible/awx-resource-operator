@@ -3,12 +3,16 @@
   group: tower.ansible.com
   kind: JobTemplate
   role: jobtemplate
-  # finalizer:
-  #   name: finalizer.tower.ansible.com
-  #   vars:
-  #     tower_resource_state: absent
+#  finalizer:
+#    name: finalizer.tower.ansible.com
+#    vars:
+#       tower_resource_state: absent
 - version: v1alpha1
   group: tower.ansible.com
   kind: AnsibleJob
   role: job
   watchDependentResources: True
+- version: v1alpha1
+  group: tower.ansible.com
+  kind: Module
+  role: module
