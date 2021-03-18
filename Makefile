@@ -3,7 +3,7 @@ IMG_OPERATOR ?= quay.io/open-cluster-management/platform-resource-operator:lates
 # runner image
 IMG_RUNNER ?= quay.io/open-cluster-management/platform-resource-runner:latest
 # bundle image version
-BUNDEL_VERSION ?= 0.1.0
+BUNDEL_VERSION ?= 0.1.1
 # bundle image
 IMG_BUNDLE ?= quay.io/open-cluster-management/platform-resource-operator-bundle:$(BUNDEL_VERSION)
 
@@ -43,8 +43,10 @@ build-operator:
 build-runner:
 	docker build . -t ${IMG_RUNNER} -f build/Dockerfile.runner
 
-build-bundle: operator-sdk
-	docker build -f bundle.Dockerfile -t $(IMG_BUNDLE) .
+build-bundle:
+	cd deploy/olm-catalog/awx-resource-operator/ ;\
+	docker build -f $(BUNDEL_VERSION)/bundle-$(BUNDEL_VERSION).Dockerfile -t $(IMG_BUNDLE) . ;\
+	cd $(PWD)
 
 validate-bundle: operator-sdk
 	${OPERATOR_SDK} bundle validate $(IMG_BUNDLE)
