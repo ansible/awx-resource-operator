@@ -1,0 +1,242 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "tower.ansible.com/v1alpha1",
+          "kind": "AnsibleJob",
+          "metadata": {
+            "generateName": "demo-job-",
+            "namespace": "default"
+          },
+          "spec": {
+            "extra_vars": {
+              "cost": 6.88,
+              "ghosts": [
+                "inky",
+                "pinky",
+                "clyde",
+                "sue"
+              ],
+              "is_enable": false,
+              "other_variable": "foo",
+              "pacman": "mrs",
+              "size": 8,
+              "targets_list": [
+                "aaa",
+                "bbb",
+                "ccc"
+              ],
+              "version": "1.23.45"
+            },
+            "job_template_name": "Demo Job Template",
+            "tower_auth_secret": "toweraccess"
+          }
+        },
+        {
+          "apiVersion": "tower.ansible.com/v1alpha1",
+          "kind": "JobTemplate",
+          "metadata": {
+            "name": "examplejobtemplate",
+            "namespace": "awx"
+          },
+          "spec": {
+            "job_template_inventory": "Demo Inventory",
+            "job_template_name": "ExampleJobTemplate",
+            "job_template_playbook": "hello_world.yml",
+            "job_template_project": "Demo Project",
+            "tower_auth_secret": "toweraccess"
+          }
+        }
+      ]
+    capabilities: Basic Install
+    categories: "Integration & Delivery,OpenShift Optional"
+    description: The Ansible Automation Platform Resource Operator manages launching Ansible Jobs and Workflows.
+    containerImage: quay.io/open-cluster-management/platform-resource-operator:latest
+    certified: 'false'
+    createdAt: 2021-03-16T18:00:00Z
+    repository: https://github.com/ansible/awx-resource-operator/
+    support: Red Hat
+  name: awx-resource-operator.v0.1.1
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - kind: AnsibleJob
+      name: ansiblejobs.tower.ansible.com
+      version: v1alpha1
+      displayName: Ansible Job
+    - kind: JobTemplate
+      name: jobtemplates.tower.ansible.com
+      version: v1alpha1
+      displayName: Ansible Job Template
+  description: The purpose of this Operator is to allow managing Ansible Platform job resources that can interface with any infrastructure whether it be on an Openshift cluster or traditional infrastructure running off-cluster.
+  displayName: Ansible Automation Platform Resource Operator
+  icon:
+  - base64data: PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgNjYgNjUiIGZpbGw9IiNmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjx1c2UgeGxpbms6aHJlZj0iI0EiIHg9Ii41IiB5PSIuNSIvPjxzeW1ib2wgaWQ9IkEiIG92ZXJmbG93PSJ2aXNpYmxlIj48ZyBzdHJva2U9Im5vbmUiIGZpbGwtcnVsZT0ibm9uemVybyI+PHBhdGggZD0iTTY0IDMyYzAgMTcuNjc0LTE0LjMyNiAzMi0zMiAzMlMwIDQ5LjY3NCAwIDMyIDE0LjMyOCAwIDMyIDBzMzIgMTQuMzI4IDMyIDMyIiBmaWxsPSIjMWExOTE4Ii8+PHBhdGggZD0iTTMyLjU0IDE5LjU0OGw4LjI4IDIwLjQzOC0xMi41MDgtOS44NTN6bTE0LjcgMjUuMTQ3TDM0LjUxMiAxNC4wNGMtLjM2NC0uODg0LTEuMS0xLjM1Mi0xLjk3My0xLjM1MnMtMS42NjQuNDY4LTIuMDI4IDEuMzUyTDE2LjUyIDQ3LjY2NGg0Ljc4M0wyNi44MzcgMzMuOGwxNi41MTUgMTMuMzQzYy42NjQuNTM3IDEuMTQ0Ljc4IDEuNzY3Ljc4IDEuMjQ4IDAgMi4zMzgtLjkzNiAyLjMzOC0yLjI4NiAwLS4yMi0uMDc4LS41Ny0uMjE4LS45NDR6Ii8+PC9nPjwvc3ltYm9sPjwvc3ZnPg==
+    mediatype: image/svg+xml
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - ""
+          - rbac.authorization.k8s.io
+          resources:
+          - pods
+          - serviceaccounts
+          - roles
+          - rolebindings
+          - services
+          - services/finalizers
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - secrets
+          - jobs
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          - jobs
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - get
+          - create
+        - apiGroups:
+          - apps
+          resourceNames:
+          - tower-resource-operator
+          resources:
+          - deployments/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - jobs
+          verbs:
+          - get
+        - apiGroups:
+          - apps
+          resources:
+          - replicasets
+          - deployments
+          - jobs
+          verbs:
+          - get
+        - apiGroups:
+          - tower.ansible.com
+          resources:
+          - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - batch
+          resources:
+          - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        serviceAccountName: tower-resource-operator
+      deployments:
+      - name: tower-resource-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: tower-resource-operator
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: tower-resource-operator
+            spec:
+              containers:
+              - env:
+                - name: WATCH_NAMESPACE
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: OPERATOR_NAME
+                  value: tower-resource-operator
+                - name: ANSIBLE_GATHERING
+                  value: explicit
+                - name: ANSIBLE_DEBUG_LOGS
+                  value: "True"
+                - name: RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE
+                  value: quay.io/open-cluster-management/platform-resource-runner:latest
+                image: quay.io/open-cluster-management/platform-resource-operator:latest
+                imagePullPolicy: Always
+                name: tower-resource-operator
+                resources: {}
+                volumeMounts:
+                - mountPath: /tmp/ansible-operator/runner
+                  name: runner
+              serviceAccountName: tower-resource-operator
+              volumes:
+              - emptyDir: {}
+                name: runner
+    strategy: deployment
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: false
+    type: AllNamespaces
+  keywords:
+  - Ansilbe Tower
+  - Red Hat
+  links:
+  - name: Awx Resource Operator
+    url: https://github.com/ansible/awx-resource-operator/
+  maintainers:
+  - email: ocm-dev@open-cluster-management.io
+    name: Open Cluster Management Project team
+  maturity: alpha
+  provider:
+    name: Red Hat
+  replaces: awx-resource-operator.v0.1.0
+  version: 0.1.1
