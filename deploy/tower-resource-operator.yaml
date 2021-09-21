@@ -113,7 +113,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: tower-resource-operator
-  namespace: tower-operator
+  namespace: default
 roleRef:
   kind: Role
   name: tower-resource-operator
@@ -124,14 +124,12 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: tower-resource-operator
-  namespace: tower-operator
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: tower-resource-operator
-  namespace: tower-operator
 spec:
   replicas: 1
   selector:
@@ -153,6 +151,9 @@ spec:
             name: runner
           env:
             - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
             - name: POD_NAME
               valueFrom:
                 fieldRef:

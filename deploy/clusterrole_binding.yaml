@@ -5,7 +5,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: tower-resource-operator
-  namespace: tower-operator
+  namespace: default
 roleRef:
   kind: Role
   name: tower-resource-operator
