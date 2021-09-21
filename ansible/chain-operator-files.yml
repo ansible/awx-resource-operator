@@ -1,0 +1,25 @@
+---
+# To run: `ansible-playbook chain-operator-files.yml`
+- name: Chain operator files together for easy deployment
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Template AnsibleJob CRD
+      template:
+        src: joblaunch_crd.yml.j2
+        dest: "{{ playbook_dir }}/../deploy/crds/tower.ansible.com_joblaunch_crd.yaml"
+        mode: '0644'
+    
+    - name: Template AnsibleTemplate CRD
+      template:
+        src: jobtemplates_crd.yml.j2
+        dest: "{{ playbook_dir }}/../deploy/crds/tower.ansible.com_jobtemplates_crd.yaml"
+        mode: '0644'
+
+    - name: Template tower-resource-operator.yaml
+      template:
+        src: tower-resource-operator.yaml.j2
+        dest: ../deploy/tower-resource-operator.yaml
+        mode: '0644'

@@ -2,7 +2,7 @@ apiVersion: tower.ansible.com/v1alpha1
 kind: JobTemplate
 metadata:
   name: examplejobtemplate
-  namespace: awx
+  namespace: default
 spec:
   tower_auth_secret: toweraccess
   job_template_name: ExampleJobTemplate
