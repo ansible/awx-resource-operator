@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: tower-resource-operator
-  namespace: "{{ namespace }}"
 spec:
   replicas: 1
   selector:
@@ -18,7 +17,7 @@ spec:
       containers:
         - name: tower-resource-operator
           # Replace this with the built image name
-          image: "quay.io/open-cluster-management/platform-resource-operator:latest"
+          image: "{{ operator_image }}:{{ operator_version }}"
           imagePullPolicy: "Always"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
@@ -40,7 +39,7 @@ spec:
               value: "True"
             - name: RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE
               # Replace this with the job runner built image name
-              value: "quay.io/open-cluster-management/platform-resource-runner:latest"
+              value: "{{ runner_image }}:{{ runner_version }}"
       volumes:
         - name: runner
           emptyDir: {}
