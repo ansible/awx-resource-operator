@@ -80,7 +80,7 @@ spec:
     mediatype: image/svg+xml
   install:
     spec:
-      clusterPermissions:
+      permissions:
       - rules:
         - apiGroups:
           - ""
