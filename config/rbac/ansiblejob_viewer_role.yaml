@@ -1,0 +1,20 @@
+# permissions for end users to view ansiblejobs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ansiblejob-viewer-role
+rules:
+- apiGroups:
+  - tower.ansible.com
+  resources:
+  - ansiblejobs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - tower.ansible.com
+  resources:
+  - ansiblejobs/status
+  verbs:
+  - get

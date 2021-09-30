@@ -1,0 +1,7 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: JobTemplate
+metadata:
+  name: jobtemplate-sample
+spec:
+  # Add fields here
+  foo: bar

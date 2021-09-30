@@ -1,6 +1,0 @@
-operator_image: quay.io/open-cluster-management/platform-resource-operator
-operator_version: latest
-pull_policy: Always
-runner_image: quay.io/open-cluster-management/platform-resource-runner
-runner_version: latest
-ansible_debug_logs: "false"

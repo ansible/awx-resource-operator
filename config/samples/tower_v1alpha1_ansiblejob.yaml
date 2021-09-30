@@ -1,0 +1,7 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleJob
+metadata:
+  name: ansiblejob-sample
+spec:
+  # Add fields here
+  foo: bar

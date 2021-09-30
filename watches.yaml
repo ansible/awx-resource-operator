@@ -1,14 +1,16 @@
 ---
+# Use the 'create api' subcommand to add watches to this file.
 - version: v1alpha1
   group: tower.ansible.com
-  kind: JobTemplate
-  role: jobtemplate
+  kind: AnsibleJob
+  role: ansiblejob
   # finalizer:
   #   name: finalizer.tower.ansible.com
   #   vars:
   #     tower_resource_state: absent
+
 - version: v1alpha1
   group: tower.ansible.com
-  kind: AnsibleJob
-  role: job
-  watchDependentResources: True
+  kind: JobTemplate
+  role: jobtemplate
+#+kubebuilder:scaffold:watch
