@@ -3,7 +3,7 @@ kind: Role
 metadata:
   creationTimestamp: null
   name: tower-resource-operator
-  namespace: "{{ meta.namespace }}"
+  namespace: "{{ ansible_operator_meta.namespace }}"
 rules:
 - apiGroups:
   - ""
@@ -104,35 +104,35 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: tower-resource-operator
-  namespace: "{{ meta.namespace }}"
+  namespace: "{{ ansible_operator_meta.namespace }}"
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: tower-resource-operator
-  namespace: "{{ meta.namespace }}"
+  namespace: "{{ ansible_operator_meta.namespace }}"
 subjects:
 - kind: ServiceAccount
   name: tower-resource-operator
-  namespace: "{{ meta.namespace }}"
+  namespace: "{{ ansible_operator_meta.namespace }}"
 roleRef:
   kind: Role
   name: tower-resource-operator
-  namespace: "{{ meta.namespace }}"
+  namespace: "{{ ansible_operator_meta.namespace }}"
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "{{ meta.name }}"
-  namespace: "{{ meta.namespace }}"
+  name: "{{ ansible_operator_meta.name }}"
+  namespace: "{{ ansible_operator_meta.namespace }}"
 spec:
   ttlSecondsAfterFinished: 3600
   template:
     spec:
       serviceAccountName: tower-resource-operator
       containers:
-      - name: "{{ meta.name }}"
+      - name: "{{ ansible_operator_meta.name }}"
         image: "{{ lookup('env', 'RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE') }}"
         env:
           - name: TOWER_OAUTH_TOKEN
@@ -144,8 +144,8 @@ spec:
           - name: TOWER_VERIFY_SSL
             value: "False"
           - name: ANSIBLEJOB_NAME
-            value: "{{ meta.name }}"
+            value: "{{ ansible_operator_meta.name }}"
           - name: ANSIBLEJOB_NAMESPACE
-            value: "{{ meta.namespace }}"
+            value: "{{ ansible_operator_meta.namespace }}"
       restartPolicy: Never
   backoffLimit: 1

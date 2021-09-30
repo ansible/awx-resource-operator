@@ -4,7 +4,7 @@
 - name: Read Secret Configuration
   k8s_info:
     kind: Secret
-    namespace: '{{ meta.namespace }}'
+    namespace: '{{ ansible_operator_meta.namespace }}'
     name: "{{ tower_auth_secret }}"
   register: tower_config_secret
 
