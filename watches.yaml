@@ -3,7 +3,8 @@
 - version: v1alpha1
   group: tower.ansible.com
   kind: AnsibleJob
-  role: ansiblejob
+  role: job
+  watchDependentResources: True
   # finalizer:
   #   name: finalizer.tower.ansible.com
   #   vars:

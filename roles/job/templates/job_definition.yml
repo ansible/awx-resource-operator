@@ -1,3 +1,4 @@
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -5,100 +6,100 @@ metadata:
   name: tower-resource-operator
   namespace: "{{ ansible_operator_meta.namespace }}"
 rules:
-- apiGroups:
-  - ""
-  - rbac.authorization.k8s.io
-  resources:
-  - pods
-  - serviceaccounts
-  - roles
-  - rolebindings
-  - services
-  - services/finalizers
-  - endpoints
-  - persistentvolumeclaims
-  - events
-  - configmaps
-  - secrets
-  - jobs
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - apps
-  resources:
-  - deployments
-  - daemonsets
-  - replicasets
-  - statefulsets
-  - jobs
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - monitoring.coreos.com
-  resources:
-  - servicemonitors
-  verbs:
-  - get
-  - create
-- apiGroups:
-  - apps
-  resourceNames:
-  - tower-resource-operator
-  resources:
-  - deployments/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  - jobs
-  verbs:
-  - get
-- apiGroups:
-  - apps
-  resources:
-  - replicasets
-  - deployments
-  - jobs
-  verbs:
-  - get
-- apiGroups:
-  - tower.ansible.com
-  resources:
-  - '*'
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - batch
-  resources:
-  - '*'
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
+  - apiGroups:
+      - ""
+      - rbac.authorization.k8s.io
+    resources:
+      - pods
+      - serviceaccounts
+      - roles
+      - rolebindings
+      - services
+      - services/finalizers
+      - endpoints
+      - persistentvolumeclaims
+      - events
+      - configmaps
+      - secrets
+      - jobs
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - daemonsets
+      - replicasets
+      - statefulsets
+      - jobs
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - monitoring.coreos.com
+    resources:
+      - servicemonitors
+    verbs:
+      - get
+      - create
+  - apiGroups:
+      - apps
+    resourceNames:
+      - tower-resource-operator
+    resources:
+      - deployments/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - jobs
+    verbs:
+      - get
+  - apiGroups:
+      - apps
+    resources:
+      - replicasets
+      - deployments
+      - jobs
+    verbs:
+      - get
+  - apiGroups:
+      - tower.ansible.com
+    resources:
+      - '*'
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - batch
+    resources:
+      - '*'
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -112,9 +113,9 @@ metadata:
   name: tower-resource-operator
   namespace: "{{ ansible_operator_meta.namespace }}"
 subjects:
-- kind: ServiceAccount
-  name: tower-resource-operator
-  namespace: "{{ ansible_operator_meta.namespace }}"
+  - kind: ServiceAccount
+    name: tower-resource-operator
+    namespace: "{{ ansible_operator_meta.namespace }}"
 roleRef:
   kind: Role
   name: tower-resource-operator
@@ -132,20 +133,20 @@ spec:
     spec:
       serviceAccountName: tower-resource-operator
       containers:
-      - name: "{{ ansible_operator_meta.name }}"
-        image: "{{ lookup('env', 'RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE') }}"
-        env:
-          - name: TOWER_OAUTH_TOKEN
-            value: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
-          - name: TOWER_HOST
-            value: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
-          - name: TOWER_JOB_TEMPLATE_NAME
-            value: "{{ job_template_name }}"
-          - name: TOWER_VERIFY_SSL
-            value: "False"
-          - name: ANSIBLEJOB_NAME
-            value: "{{ ansible_operator_meta.name }}"
-          - name: ANSIBLEJOB_NAMESPACE
-            value: "{{ ansible_operator_meta.namespace }}"
+        - name: "{{ ansible_operator_meta.name }}"
+          image: "{{ lookup('env', 'RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE') }}"
+          env:
+            - name: TOWER_OAUTH_TOKEN
+              value: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
+            - name: TOWER_HOST
+              value: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
+            - name: TOWER_JOB_TEMPLATE_NAME
+              value: "{{ job_template_name }}"
+            - name: TOWER_VERIFY_SSL
+              value: "False"
+            - name: ANSIBLEJOB_NAME
+              value: "{{ ansible_operator_meta.name }}"
+            - name: ANSIBLEJOB_NAMESPACE
+              value: "{{ ansible_operator_meta.namespace }}"
       restartPolicy: Never
   backoffLimit: 1

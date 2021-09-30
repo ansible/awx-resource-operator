@@ -9,16 +9,16 @@
   register: k8s_job
 
 - block:
-  - name: Update AnsibleJob status with message
-    k8s_status:
-      api_version: tower.ansible.com/v1alpha1
-      kind: AnsibleJob
-      name: "{{ ansible_operator_meta.name }}"
-      namespace: "{{ ansible_operator_meta.namespace }}"
-      status:
-        message: "This job instance is already running or has reached its end state."
-  - name: End play early
-    meta: end_play
+    - name: Update AnsibleJob status with message
+      k8s_status:
+        api_version: tower.ansible.com/v1alpha1
+        kind: AnsibleJob
+        name: "{{ ansible_operator_meta.name }}"
+        namespace: "{{ ansible_operator_meta.namespace }}"
+        status:
+          message: "This job instance is already running or has reached its end state."
+    - name: End play early
+      meta: end_play
   when: k8s_job["resources"] is defined and (k8s_job["resources"]|length>0)
 
 - name: Read Secret Configuration
@@ -51,12 +51,12 @@
         created: true
         message: |-
           Monitor the job.batch status for more details with the following commands:
-          'kubectl -n {{ansible_operator_meta.namespace}} get job.batch/{{ansible_operator_meta.name}}'
-          'kubectl -n {{ansible_operator_meta.namespace}} describe job.batch/{{ansible_operator_meta.name}}'
-          'kubectl -n {{ansible_operator_meta.namespace}} logs -f job.batch/{{ansible_operator_meta.name}}'
-        namespacedName: "{{ansible_operator_meta.namespace+'/'+ansible_operator_meta.name}}"
+          'kubectl -n {{ ansible_operator_meta.namespace }} get job.batch/{{ ansible_operator_meta.name }}'
+          'kubectl -n {{ ansible_operator_meta.namespace }} describe job.batch/{{ ansible_operator_meta.name }}'
+          'kubectl -n {{ ansible_operator_meta.namespace }} logs -f job.batch/{{ ansible_operator_meta.name }}'
+        namespacedName: "{{ ansible_operator_meta.namespace+'/'+ansible_operator_meta.name }}"
         env:
           inventory: "{{ inventory | default(omit) }}"
-          secretNamespacedName: "{{ansible_operator_meta.namespace+'/'+tower_auth_secret}}"
+          secretNamespacedName: "{{ ansible_operator_meta.namespace+'/'+tower_auth_secret }}"
           templateName: "{{ job_template_name }}"
           verifySSL: false

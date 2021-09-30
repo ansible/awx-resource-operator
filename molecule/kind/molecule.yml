@@ -5,7 +5,7 @@ driver:
   name: delegated
 lint: |
   set -e
-  yamllint -d "{extends: relaxed, rules: {line-length: {max: 120}}}" .
+  yamllint -d "{extends: relaxed, rules: {line-length: {max: 170}}}" .
 platforms:
   - name: cluster
     groups:
