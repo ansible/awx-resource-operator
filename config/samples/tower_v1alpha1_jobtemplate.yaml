@@ -3,5 +3,8 @@ kind: JobTemplate
 metadata:
   name: jobtemplate-sample
 spec:
-  # Add fields here
-  foo: bar
+  tower_auth_secret: toweraccess
+  job_template_name: ExampleJobTemplate
+  job_template_project: Demo Project
+  job_template_playbook: hello_world.yml
+  job_template_inventory: Demo Inventory
