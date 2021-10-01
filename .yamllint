@@ -4,8 +4,9 @@ extends: default
 ignore: |
   .cache/
   kustomization.yaml
-  awx-operator.clusterserviceversion.yaml
+  awx-resource-operator.clusterserviceversion.yaml
   bundle
+  config/testing/kustomization.yaml
 
 rules:
   truthy: disable
