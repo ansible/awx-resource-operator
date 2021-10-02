@@ -1,5 +1,4 @@
 ---
-# tasks file for jobtemplate
 
 - name: Read Secret Configuration
   k8s_info:
@@ -12,11 +11,12 @@
   assert:
     that:
       - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
-    fail_msg: "Tower Secret must exists"
+    fail_msg: "Tower Secret must exist"
 
 - name: Show secret details
   debug:
     msg: "{{ tower_config_secret }}"
+  no_log: true
 
 - name: Create Job Template
   awx.awx.tower_job_template:

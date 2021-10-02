@@ -9,9 +9,20 @@ rules:
   ##
   - apiGroups:
       - ""
+      - rbac.authorization.k8s.io
     resources:
       - secrets
       - pods
+      - serviceaccounts
+      - roles
+      - rolebindings
+      - services
+      - services/finalizers
+      - endpoints
+      - persistentvolumeclaims
+      - events
+      - configmaps
+      - jobs
       - pods/exec
       - pods/log
     verbs:
@@ -29,6 +40,7 @@ rules:
       - daemonsets
       - replicasets
       - statefulsets
+      - jobs
     verbs:
       - create
       - delete
@@ -37,6 +49,13 @@ rules:
       - patch
       - update
       - watch
+  - apiGroups:
+    - monitoring.coreos.com
+    resources:
+    - servicemonitors
+    verbs:
+    - get
+    - create
   ##
   ## Rules for tower.ansible.com/v1alpha1, Kind: AnsibleJob
   ##
@@ -72,3 +91,55 @@ rules:
       - update
       - watch
 #+kubebuilder:scaffold:rules
+
+##
+## Rules needed for starting k8s runner job
+##
+
+  - apiGroups:
+    - apps
+    resourceNames:
+    - tower-resource-operator
+    resources:
+    - deployments/finalizers
+    verbs:
+    - update
+  - apiGroups:
+    - ""
+    resources:
+    - pods
+    - jobs
+    verbs:
+    - get
+  - apiGroups:
+    - apps
+    resources:
+    - replicasets
+    - deployments
+    - jobs
+    verbs:
+    - get
+  - apiGroups:
+    - tower.ansible.com
+    resources:
+    - '*'
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - apiGroups:
+    - batch
+    resources:
+    - '*'
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch

@@ -33,7 +33,7 @@
   assert:
     that:
       - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
-    fail_msg: "Tower Secret must exists"
+    fail_msg: "Tower Secret must exist"
 
 - name: Start K8s Runner Job
   k8s:
