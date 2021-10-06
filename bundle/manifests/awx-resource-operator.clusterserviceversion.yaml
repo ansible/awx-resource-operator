@@ -1,0 +1,335 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "tower.ansible.com/v1alpha1",
+          "kind": "AnsibleJob",
+          "metadata": {
+            "name": "demo-job"
+          },
+          "spec": {
+            "extra_vars": {
+              "cost": 6.88,
+              "ghosts": [
+                "inky",
+                "pinky",
+                "clyde",
+                "sue"
+              ],
+              "is_enable": false,
+              "other_variable": "foo",
+              "pacman": "mrs",
+              "size": 8,
+              "targets_list": [
+                "aaa",
+                "bbb",
+                "ccc"
+              ],
+              "version": "1.23.45"
+            },
+            "inventory": "Demo Inventory",
+            "job_template_name": "Demo Job Template",
+            "tower_auth_secret": "toweraccess"
+          }
+        },
+        {
+          "apiVersion": "tower.ansible.com/v1alpha1",
+          "kind": "JobTemplate",
+          "metadata": {
+            "name": "jobtemplate-sample"
+          },
+          "spec": {
+            "job_template_inventory": "Demo Inventory",
+            "job_template_name": "ExampleJobTemplate",
+            "job_template_playbook": "hello_world.yml",
+            "job_template_project": "Demo Project",
+            "tower_auth_secret": "toweraccess"
+          }
+        }
+      ]
+    capabilities: Basic Install
+    operators.operatorframework.io/builder: operator-sdk-v1.11.0+git
+    operators.operatorframework.io/project_layout: ansible.sdk.operatorframework.io/v1
+  name: awx-resource-operator.v0.2.0
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - kind: AnsibleJob
+      name: ansiblejobs.tower.ansible.com
+      version: v1alpha1
+    - kind: JobTemplate
+      name: jobtemplates.tower.ansible.com
+      version: v1alpha1
+  description: The AWX Resource Operator manages launching Ansible Jobs and Workflows.
+  displayName: AWX Resource Operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - authentication.k8s.io
+          resources:
+          - tokenreviews
+          verbs:
+          - create
+        - apiGroups:
+          - authorization.k8s.io
+          resources:
+          - subjectaccessreviews
+          verbs:
+          - create
+        serviceAccountName: awx-resource-operator-controller-manager
+      deployments:
+      - name: awx-resource-operator-controller-manager
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              control-plane: controller-manager
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                control-plane: controller-manager
+            spec:
+              containers:
+              - args:
+                - --secure-listen-address=0.0.0.0:8443
+                - --upstream=http://127.0.0.1:8080/
+                - --logtostderr=true
+                - --v=10
+                image: gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0
+                name: kube-rbac-proxy
+                ports:
+                - containerPort: 8443
+                  name: https
+                  protocol: TCP
+                resources: {}
+              - args:
+                - --health-probe-bind-address=:6789
+                - --metrics-bind-address=127.0.0.1:8080
+                - --leader-elect
+                - --leader-election-id=awx-resource-operator
+                env:
+                - name: ANSIBLE_GATHERING
+                  value: explicit
+                - name: WATCH_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['olm.targetNamespaces']
+                - name: RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE
+                  value: quay.io/open-cluster-management/platform-resource-runner:latest
+                image: quay.io/ansible/awx-resource-operator:0.2.0
+                livenessProbe:
+                  httpGet:
+                    path: /healthz
+                    port: 6789
+                  initialDelaySeconds: 15
+                  periodSeconds: 20
+                name: manager
+                readinessProbe:
+                  httpGet:
+                    path: /readyz
+                    port: 6789
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                resources: {}
+                securityContext:
+                  allowPrivilegeEscalation: false
+              securityContext:
+                runAsNonRoot: true
+              serviceAccountName: awx-resource-operator-controller-manager
+              terminationGracePeriodSeconds: 10
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - coordination.k8s.io
+          resources:
+          - leases
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - patch
+        - apiGroups:
+          - ""
+          - rbac.authorization.k8s.io
+          resources:
+          - secrets
+          - pods
+          - serviceaccounts
+          - roles
+          - rolebindings
+          - services
+          - services/finalizers
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - jobs
+          - pods/exec
+          - pods/log
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          - jobs
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - get
+          - create
+        - apiGroups:
+          - tower.ansible.com
+          resources:
+          - ansiblejobs
+          - ansiblejobs/status
+          - ansiblejobs/finalizers
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - tower.ansible.com
+          resources:
+          - jobtemplates
+          - jobtemplates/status
+          - jobtemplates/finalizers
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resourceNames:
+          - tower-resource-operator
+          resources:
+          - deployments/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - jobs
+          verbs:
+          - get
+        - apiGroups:
+          - apps
+          resources:
+          - replicasets
+          - deployments
+          - jobs
+          verbs:
+          - get
+        - apiGroups:
+          - tower.ansible.com
+          resources:
+          - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - batch
+          resources:
+          - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        serviceAccountName: awx-resource-operator-controller-manager
+    strategy: deployment
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - tower
+  - resource
+  - awx
+  - ansible
+  - automation
+  - ci
+  - cd
+  - deployment
+  links:
+  - name: Awx Resource Operator
+    url: https://awx-resource-operator.domain
+  maturity: alpha
+  provider:
+    name: Red Hat
+    url: https://github.com/ansible/awx-resource-operator
+  version: 0.2.0
