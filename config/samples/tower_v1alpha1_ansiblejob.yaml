@@ -1,7 +1,8 @@
 apiVersion: tower.ansible.com/v1alpha1
 kind: AnsibleJob
 metadata:
-  generateName: demo-job- # generate a unique suffix per 'kubectl create'
+  name: demo-job
+  # generateName: demo-job- # generate a unique suffix per 'kubectl create'
 spec:
   tower_auth_secret: toweraccess
   job_template_name: Demo Job Template
