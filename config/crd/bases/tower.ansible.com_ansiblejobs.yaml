@@ -34,6 +34,12 @@ spec:
                 type: string
               tower_auth_secret:
                 type: string
+              runner_image:
+                type: string
+                description: Runner image used when running jobs
+              runner_version:
+                type: string
+                description: Runner image version used when running jobs
             required:
             - tower_auth_secret
             - job_template_name

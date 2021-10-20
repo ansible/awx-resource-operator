@@ -35,6 +35,17 @@
       - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
     fail_msg: "Tower Secret must exist"
 
+- name: Set user provided runner image
+  set_fact:
+    _custom_runner_image: "{{ runner_image }}:{{ runner_version }}"
+  when:
+    - runner_image is defined
+    - runner_version is defined
+
+- name: Set Runner image URL
+  set_fact:
+    _runner_image: "{{ _custom_runner_image | default(lookup('env', 'RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE')) }}"
+
 - name: Start K8s Runner Job
   k8s:
     state: present
