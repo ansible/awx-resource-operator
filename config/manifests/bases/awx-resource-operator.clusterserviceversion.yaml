@@ -1,0 +1,56 @@
+apiVersion: operators.coreos.com/v1beta1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: '[]'
+    capabilities: Basic Install
+    categories: Integration & Delivery,OpenShift Optional
+    certified: "false"
+    containerImage: quay.io/open-cluster-management/platform-resource-operator:latest
+    description: The Ansible Automation Platform Resource Operator manages launching
+      Ansible Jobs and Workflows.
+    repository: https://github.com/ansible/awx-resource-operator
+    support: Red Hat
+  name: awx-resource-operator.v0.0.0
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions: {}
+  description: The Ansible Automation Platform Resource Operator manages launching
+    Ansible Jobs and Workflows.
+  displayName: AWX Resource Operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      deployments: null
+    strategy: ""
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: true
+    type: MultiNamespace
+  - supported: false
+    type: AllNamespaces
+  keywords:
+  - automation
+  - ansible
+  - tower
+  - awx
+  - resource
+  - ci
+  - cd
+  links:
+  - name: Awx Operator
+    url: https://github.com/ansible/awx-resource-operator
+  maintainers:
+  - email: ocm-dev@open-cluster-management.io
+    name: Open Cluster Management Project team
+  maturity: alpha
+  provider:
+    name: Red Hat
+    url: github.com/ansible/awx-resource-operator
+  version: 0.0.0

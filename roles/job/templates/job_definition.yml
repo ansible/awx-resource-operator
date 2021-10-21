@@ -11,7 +11,8 @@ spec:
       serviceAccountName: awx-resource-operator-controller-manager
       containers:
         - name: "{{ ansible_operator_meta.name }}"
-          image: "{{ lookup('env', 'RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE') }}"
+          image: "{{ _runner_image }}"
+          imagePullPolicy: Always
           env:
             - name: TOWER_OAUTH_TOKEN
               value: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"

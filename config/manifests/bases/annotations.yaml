@@ -1,0 +1,2 @@
+annotations:
+  operators.openshift.io/infrastructure-features: '["disconnected"]'
