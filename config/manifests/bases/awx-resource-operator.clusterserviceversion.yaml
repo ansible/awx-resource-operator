@@ -15,7 +15,18 @@ metadata:
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
-  customresourcedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: Launch a new job via awx
+      displayName: AWX job
+      kind: AnsibleJob
+      name: ansiblejobs.tower.ansible.com
+      version: v1alpha1
+    - description: Define a new job template in awx
+      displayName: AWX job template
+      kind: JobTemplate
+      name: jobtemplates.tower.ansible.com
+      version: v1alpha1
   description: The Ansible Automation Platform Resource Operator manages launching
     Ansible Jobs and Workflows.
   displayName: AWX Resource Operator
