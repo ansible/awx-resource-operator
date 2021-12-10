@@ -8,7 +8,7 @@ spec:
   ttlSecondsAfterFinished: 3600
   template:
     spec:
-      serviceAccountName: awx-resource-operator-controller-manager
+      serviceAccountName: resource-operator-controller-manager
       containers:
         - name: "{{ ansible_operator_meta.name }}"
           image: "{{ _runner_image }}"
