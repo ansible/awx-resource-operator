@@ -46,10 +46,15 @@
   set_fact:
     _runner_image: "{{ _custom_runner_image | default(lookup('env', 'RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE')) }}"
 
+- name: Create ServiceAccount to run pod with if it does not exist
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'service_account.yml.j2') }}"
+
 - name: Start K8s Runner Job
   k8s:
     state: present
-    definition: "{{ lookup('template', 'job_definition.yml') }}"
+    definition: "{{ lookup('template', 'job_definition.yml.j2') }}"
 
 - name: Update AnsibleJob status with K8s job info
   k8s_status:

@@ -93,13 +93,13 @@ rules:
 #+kubebuilder:scaffold:rules
 
 ##
-## Rules needed for starting k8s runner job
+## Rules needed for managing k8s runner job
 ##
 
   - apiGroups:
     - apps
     resourceNames:
-    - tower-resource-operator
+    - resource-operator-controller-manager
     resources:
     - deployments/finalizers
     verbs:
