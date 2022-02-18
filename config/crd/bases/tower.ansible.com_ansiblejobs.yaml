@@ -32,14 +32,17 @@ spec:
                 type: string
               job_template_name:
                 type: string
-              tower_auth_secret:
-                type: string
               runner_image:
                 type: string
                 description: Runner image used when running jobs
               runner_version:
                 type: string
                 description: Runner image version used when running jobs
+              tower_auth_secret:
+                type: string
+              job_ttl:
+                description: Time to live for k8s job object after the playbook run has finished
+                type: integer
             required:
             - tower_auth_secret
             - job_template_name

@@ -5,7 +5,7 @@ metadata:
   name: "{{ ansible_operator_meta.name }}"
   namespace: "{{ ansible_operator_meta.namespace }}"
 spec:
-  ttlSecondsAfterFinished: 3600
+  ttlSecondsAfterFinished: {{ job_ttl | string }}
   template:
     spec:
       serviceAccountName: resource-operator-controller-manager-job
@@ -27,4 +27,4 @@ spec:
             - name: ANSIBLEJOB_NAMESPACE
               value: "{{ ansible_operator_meta.namespace }}"
       restartPolicy: Never
-  backoffLimit: 1
+  backoffLimit: {{ backoff_limit }}
