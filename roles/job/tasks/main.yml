@@ -1,13 +1,5 @@
 ---
 
-- name: Read AnsibleJob info
-  k8s_info:
-    api_version: tower.ansible.com/v1alpha1
-    kind: AnsibleJob
-    name: "{{ ansible_operator_meta.name }}"
-    namespace: "{{ ansible_operator_meta.namespace }}"
-  register: ansiblejob_info
-
 - name: Read K8s job info
   k8s_info:
     kind: Job
@@ -27,6 +19,14 @@
   when:
     - k8s_job['resources'][0]['status']['succeeded'] is defined
     - k8s_job['resources'][0]['status']['succeeded'] == 1
+
+- name: Read AnsibleJob info
+  k8s_info:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleJob
+    name: "{{ ansible_operator_meta.name }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+  register: ansiblejob_info
 
 - name: End play early is AnsibleJob has already finished
   meta: end_play

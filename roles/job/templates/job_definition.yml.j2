@@ -5,7 +5,7 @@ metadata:
   name: "{{ ansible_operator_meta.name }}"
   namespace: "{{ ansible_operator_meta.namespace }}"
 spec:
-  ttlSecondsAfterFinished: {{ job_ttl | string }}
+  ttlSecondsAfterFinished: {{ job_ttl }}
   template:
     spec:
       serviceAccountName: resource-operator-controller-manager-job
