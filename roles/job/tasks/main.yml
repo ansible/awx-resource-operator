@@ -8,7 +8,53 @@
     namespace: "{{ ansible_operator_meta.namespace }}"
   register: k8s_job
 
+- name: Update AnsibleJob isFinished status if job succeeded
+  k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleJob
+    name: "{{ ansible_operator_meta.name }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+    status:
+      isFinished: true
+  when:
+    - k8s_job['resources'][0]['status']['succeeded'] is defined
+    - k8s_job['resources'][0]['status']['succeeded'] == 1
+
+- name: Read AnsibleJob info
+  k8s_info:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleJob
+    name: "{{ ansible_operator_meta.name }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+  register: ansiblejob_info
+
+- name: End play early is AnsibleJob has already finished
+  meta: end_play
+  when:
+    - ansiblejob_info['resources'][0]['status']['isFinished'] is defined
+    - ansiblejob_info['resources'][0]['status']['isFinished']
+
 - block:
+    - name: Check number of attempts to execute the job have been made
+      set_fact:
+        _attempts: "{{ k8s_job['resources'][0]['status']['failed'] | default(0) }}"
+
+    - name: Set the maximum failed attempts allowed based on the backoffLimit
+      set_fact:
+        _failures_allowed: "{{ backoff_limit }} + 1"
+
+    - name: Update AnsibleJob status if backoff limit is exceeded
+      k8s_status:
+        api_version: tower.ansible.com/v1alpha1
+        kind: AnsibleJob
+        name: "{{ ansible_operator_meta.name }}"
+        namespace: "{{ ansible_operator_meta.namespace }}"
+        status:
+          isFinished: true
+          message: "This job instance reached its backoff limit. Inspect playbook output for more info."
+      when:
+        - _attempts >= _failures_allowed
+
     - name: Update AnsibleJob status with message
       k8s_status:
         api_version: tower.ansible.com/v1alpha1
@@ -19,7 +65,9 @@
           message: "This job instance is already running or has reached its end state."
     - name: End play early
       meta: end_play
-  when: k8s_job["resources"] is defined and (k8s_job["resources"]|length>0)
+  when:
+    - k8s_job['resources'] is defined
+    - (k8s_job["resources"]|length>0)
 
 - name: Read Secret Configuration
   k8s_info:
