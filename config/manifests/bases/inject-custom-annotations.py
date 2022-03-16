@@ -1,6 +1,5 @@
 '''
-After generating the bundle, inject custom configuration such as
-annotations, OLM parameters, etc.
+After generating the bundle, inject custom configuration for annotations.
 '''
 
 import yaml
