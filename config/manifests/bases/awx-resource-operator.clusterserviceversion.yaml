@@ -21,11 +21,72 @@ spec:
       displayName: AWX job
       kind: AnsibleJob
       name: ansiblejobs.tower.ansible.com
+      specDescriptors:
+      - displayName: Job Template Name
+        path: job_template_name
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: AWX Authentication Secret
+        path: tower_auth_secret
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: AWX Inventory
+        path: inventory
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Extra Variables
+        path: extra_vars
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Job TTL
+        path: job_ttl
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      - displayName: Ansible Runner Image
+        path: runner_image
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      - displayName: Ansible Runner Version
+        path: runner_version
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:advanced
       version: v1alpha1
     - description: Define a new job template in awx
       displayName: AWX job template
       kind: JobTemplate
       name: jobtemplates.tower.ansible.com
+      specDescriptors:
+      - displayName: Job Template Name
+        path: job_template_name
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: AWX Authentication Secret
+        path: tower_auth_secret
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Job Template Inventory
+        path: job_template_inventory
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Job Template Playbook
+        path: job_template_playbook
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Job Template Project
+        path: job_template_project
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Job Template Ask Vars
+        path: job_template_ask_vars
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Job Template Ask Inventory
+        path: job_template_ask_inventory
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
       version: v1alpha1
   description: The Ansible Automation Platform Resource Operator manages launching
     Ansible Jobs and Workflows.
@@ -49,13 +110,14 @@ spec:
   keywords:
   - automation
   - ansible
+  - controller
   - tower
   - awx
   - resource
   - ci
   - cd
   links:
-  - name: Awx Operator
+  - name: AWX Operator
     url: https://github.com/ansible/awx-resource-operator
   maintainers:
   - email: ocm-dev@open-cluster-management.io
