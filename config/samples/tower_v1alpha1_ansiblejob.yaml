@@ -4,7 +4,7 @@ metadata:
   name: demo-job
   # generateName: demo-job- # generate a unique suffix per 'kubectl create'
 spec:
-  tower_auth_secret: toweraccess
+  tower_auth_secret: awxaccess
   job_template_name: Demo Job Template
   inventory: Demo Inventory # Inventory prompt on launch needs to be enabled
   extra_vars: # Extra variables prompt on launch needs to be enabled

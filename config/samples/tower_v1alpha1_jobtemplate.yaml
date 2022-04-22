@@ -3,7 +3,7 @@ kind: JobTemplate
 metadata:
   name: jobtemplate-sample
 spec:
-  tower_auth_secret: toweraccess
+  tower_auth_secret: awxaccess
   job_template_name: ExampleJobTemplate
   job_template_project: Demo Project
   job_template_playbook: hello_world.yml
