@@ -58,5 +58,5 @@ spec:
           periodSeconds: 10
       serviceAccountName: controller-manager
       imagePullSecrets:
-        - name: ansible-deployment-pull-secret
+        - name: redhat-operators-pull-secret
       terminationGracePeriodSeconds: 10
