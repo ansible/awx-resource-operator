@@ -31,8 +31,8 @@ spec:
         # More info: https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
         # Please uncomment the following code if your project does NOT have to work on old Kubernetes
         # versions < 1.19 or on vendors versions which do NOT support this field by default (i.e. Openshift < 4.11 ).
-        seccompProfile:
-          type: RuntimeDefault
+        # seccompProfile:
+        #   type: RuntimeDefault
       containers:
       - args:
         - --leader-elect
@@ -50,7 +50,7 @@ spec:
               fieldPath: metadata.namespace
         - name: RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE
           # Replace this with the job runner built image name
-          value: quay.io/open-cluster-management/platform-resource-runner:latest
+          value: quay.io/aap/awx-resource-runner:latest
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

@@ -1,5 +1,10 @@
 ---
 
+- name: Assert JT or WFJT defined
+  assert:
+    that:
+      - (job_template_name | default('') | length) or (workflow_template_name | default('') | length)
+
 - name: Read K8s job info
   k8s_info:
     kind: Job
@@ -104,6 +109,10 @@
     state: present
     definition: "{{ lookup('template', 'job_definition.yml.j2') }}"
 
+- name: Set Job or WFJT name
+  set_fact:
+    _job_name: '{{ job_template_name | default(workflow_template_name)}}'
+
 - name: Update AnsibleJob status with K8s job info
   k8s_status:
     api_version: tower.ansible.com/v1alpha1
@@ -122,5 +131,5 @@
         env:
           inventory: "{{ inventory | default(omit) }}"
           secretNamespacedName: "{{ ansible_operator_meta.namespace+'/'+tower_auth_secret }}"
-          templateName: "{{ job_template_name }}"
+          templateName: "{{ _job_name }}"
           verifySSL: false

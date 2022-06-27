@@ -1,12 +1,12 @@
-FROM ansible/ansible-runner:latest
+FROM quay.io/ansible/ansible-runner:latest
 ENV ANSIBLE_ROLES_PATH ${HOME}/roles
 
 COPY requirements.yml ${HOME}/requirements.yml
 
-RUN ansible-galaxy collection install -r ${HOME}/requirements.yml \
- && chmod -R ug+rwx ${HOME}/.ansible && mkdir ${HOME}/roles
+RUN ansible-galaxy collection install -r ${HOME}/requirements.yml --force \
+ && chmod -R ug+rwx ${HOME}/.ansible && mkdir -p ${HOME}/roles
 
 RUN pip3 install ansible-tower-cli kubernetes openshift
 
 COPY roles/job_runner ${HOME}/roles/job_runner
-CMD ["ansible-runner", "--role-skip-facts", "-r", "job_runner", "run", "/runner"]
+CMD ["ansible-runner", "run", "/runner", "--hosts", "localhost", "--role", "job_runner", "--role-skip-facts"]
