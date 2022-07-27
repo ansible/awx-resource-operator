@@ -49,8 +49,6 @@
     instance_groups: "{{ job_template_instance_groups | default(omit) }}"
     job_slice_count: "{{ job_template_job_slice_count | default('1') }}"
     job_tags: "{{ job_template_job_tags | default(omit) }}"
-    job_type: "{{ job_template_job_type | default(omit) }}"
-    job_tags: "{{ job_template_job_tags | default(omit) }}"
     organization: "{{ job_template_organization | default(omit) }}"
     scm_branch: "{{ job_template_scm_branch | default(omit) }}"
     skip_tags: "{{ job_template_skip_tags | default(omit) }}"

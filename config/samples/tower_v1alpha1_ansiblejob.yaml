@@ -9,7 +9,7 @@ spec:
   inventory: Demo Inventory # Inventory prompt on launch needs to be enabled
   extra_vars: # Extra variables prompt on launch needs to be enabled
     cost: 6.88
-    ghosts: ["inky","pinky","clyde","sue"]
+    ghosts: ["inky", "pinky", "clyde", "sue"]
     is_enable: false
     other_variable: foo
     pacman: mrs
