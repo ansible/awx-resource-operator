@@ -10,7 +10,13 @@ spec:
     spec:
       containers:
       - name: kube-rbac-proxy
-        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0
+        securityContext:
+          allowPrivilegeEscalation: false
+        # TODO(user): uncomment for common cases that do not require escalating privileges
+        # capabilities:
+        #   drop:
+        #     - "ALL"
+        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.11.0
         args:
         - "--secure-listen-address=0.0.0.0:8443"
         - "--upstream=http://127.0.0.1:8080/"
@@ -20,6 +26,13 @@ spec:
         - containerPort: 8443
           protocol: TCP
           name: https
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+          requests:
+            cpu: 5m
+            memory: 64Mi
       - name: awx-resource-manager
         args:
         - "--health-probe-bind-address=:6789"

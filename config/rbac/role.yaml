@@ -50,12 +50,12 @@ rules:
       - update
       - watch
   - apiGroups:
-    - monitoring.coreos.com
+      - monitoring.coreos.com
     resources:
-    - servicemonitors
+      - servicemonitors
     verbs:
-    - get
-    - create
+      - get
+      - create
   ##
   ## Rules for tower.ansible.com/v1alpha1, Kind: AnsibleJob
   ##
@@ -97,49 +97,49 @@ rules:
 ##
 
   - apiGroups:
-    - apps
+      - apps
     resourceNames:
-    - resource-operator-controller-manager
+      - resource-operator-controller-manager
     resources:
-    - deployments/finalizers
+      - deployments/finalizers
     verbs:
-    - update
+      - update
   - apiGroups:
-    - ""
+      - ""
     resources:
-    - pods
-    - jobs
+      - pods
+      - jobs
     verbs:
-    - get
+      - get
   - apiGroups:
-    - apps
+      - apps
     resources:
-    - replicasets
-    - deployments
-    - jobs
+      - replicasets
+      - deployments
+      - jobs
     verbs:
-    - get
+      - get
   - apiGroups:
-    - tower.ansible.com
+      - tower.ansible.com
     resources:
-    - '*'
+      - '*'
     verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
   - apiGroups:
-    - batch
+      - batch
     resources:
-    - '*'
+      - '*'
     verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
