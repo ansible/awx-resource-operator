@@ -34,7 +34,8 @@ jobs:
             ansible-core
       - name: Install Collections
         run: |
-         ansible-galaxy collection install community.general kubernetes.core:2.3.2 operator_sdk.util
+         ansible-galaxy collection install -r requirements.yml
+         ansible-galaxy collection install community.docker
       - name: Run Molecule
         env:
           MOLECULE_VERBOSITY: 3
