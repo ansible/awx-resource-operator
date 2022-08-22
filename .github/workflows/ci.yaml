@@ -1,0 +1,46 @@
+---
+
+name: CI
+
+on:
+  pull_request:
+    branches: [devel]
+
+  push:
+    branches: [devel]
+
+jobs:
+  pull_request:
+    runs-on: ubuntu-18.04
+    name: pull_request
+    env:
+      DOCKER_API_VERSION: "1.38"
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+
+      - name: Install Dependencies
+        run: |
+          pip install \
+            "molecule<3.5" \
+            molecule-docker \
+            yamllint \
+            ansible-lint \
+            openshift \
+            jmespath \
+            ansible-core
+      - name: Install Collections
+        run: |
+         ansible-galaxy collection install -r requirements.yml
+         ansible-galaxy collection install community.docker
+      - name: Run Molecule
+        env:
+          MOLECULE_VERBOSITY: 3
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+        run: |
+          make kustomize
+          KUSTOMIZE_PATH=$(readlink -f bin/kustomize) molecule test -s kind
