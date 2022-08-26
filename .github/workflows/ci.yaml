@@ -24,17 +24,11 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install \
-            "molecule<3.5" \
-            molecule-docker \
-            yamllint \
-            ansible-lint \
-            openshift \
-            jmespath \
-            ansible-core
+          pip install -r molecule/requirements.txt
+
       - name: Install Collections
         run: |
-         ansible-galaxy collection install -r requirements.yml
+         ansible-galaxy collection install -r molecule/requirements.yml
          ansible-galaxy collection install community.docker
       - name: Run Molecule
         env:
