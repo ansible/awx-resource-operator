@@ -38,7 +38,7 @@ BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
 # Image URL to use all building/pushing image targets
 IMG ?= $(IMAGE_TAG_BASE):$(VERSION)
 
-RUNNER_IMAGE_TAG_BASE ?= quay.io/open-cluster-management/platform-resource-runner
+RUNNER_IMAGE_TAG_BASE ?= quay.io/aap/awx-resource-runner
 RUNNER_VERSION ?= latest
 RUNNER_IMG ?= $(RUNNER_IMAGE_TAG_BASE):$(RUNNER_VERSION)
 

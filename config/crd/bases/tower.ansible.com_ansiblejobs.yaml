@@ -38,6 +38,8 @@ spec:
                 type: string
               job_template_name:
                 type: string
+              workflow_template_name:
+                type: string
               runner_image:
                 type: string
                 description: Runner image used when running jobs
@@ -53,7 +55,6 @@ spec:
                 type: integer
             required:
             - tower_auth_secret
-            - job_template_name
             description: Spec defines the desired state of AnsibleJob
             type: object
             x-kubernetes-preserve-unknown-fields: true
