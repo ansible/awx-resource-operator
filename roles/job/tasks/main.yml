@@ -111,7 +111,7 @@
 
 - name: Set Job or WFJT name
   set_fact:
-    _job_name: "{{ job_template_name |  default(workflow_job_template_name)}}"
+    _job_name: "{{ job_template_name |  default(workflow_template_name)}}"
 
 - name: Update AnsibleJob status with K8s job info
   k8s_status:
