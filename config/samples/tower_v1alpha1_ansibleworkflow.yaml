@@ -1,0 +1,6 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleWorkflow
+metadata:
+  name: ansibleworkflow-sample
+spec:
+  # TODO(user): Add fields here

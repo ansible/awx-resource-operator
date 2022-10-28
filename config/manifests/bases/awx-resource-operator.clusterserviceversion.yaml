@@ -64,6 +64,43 @@ spec:
         - urn:alm:descriptor:com.tectonic.ui:text
         - urn:alm:descriptor:com.tectonic.ui:advanced
       version: v1alpha1
+    - description: Launch a new workflow via awx
+      displayName: AWX workflow
+      kind: AnsibleWorkflow
+      name: ansibleworkflows.tower.ansible.com
+      specDescriptors:
+      - displayName: Workflow Template Name
+        path: workflow_template_name
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: AWX Authentication Secret
+        path: tower_auth_secret
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: AWX Inventory
+        path: inventory
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Extra Variables
+        path: extra_vars
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Workflow TTL
+        path: workflow_ttl
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      - displayName: Ansible Runner Image
+        path: runner_image
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      - displayName: Ansible Runner Version
+        path: runner_version
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      version: v1alpha1
     - description: Define a new job template in awx
       displayName: AWX job template
       kind: JobTemplate

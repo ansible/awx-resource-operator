@@ -1,4 +1,4 @@
-- name: Launch a workflow, if error update AnsibleJob status then end play
+- name: Launch a workflow, if error update AnsibleWorkflow status then end play
   block:
     - name: Launch workflow
       awx.awx.workflow_launch:
@@ -12,41 +12,41 @@
     - name: Update status if job resulted in an error
       k8s_status:
         api_version: tower.ansible.com/v1alpha1
-        kind: AnsibleJob
-        name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
-        namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
+        kind: AnsibleWorkflow
+        name: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAME') }}"
+        namespace: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAMESPACE') }}"
         status:
-          ansibleJobResult:
+          AnsibleWorkflowResult:
             status: "error"
     - name: End playbook run
       meta: end_play
 
-- name: Update AnsibleJob definition with Tower workflow id
+- name: Update AnsibleWorkflow definition with Tower workflow id
   k8s:
     state: present
     definition:
-      kind: AnsibleJob
+      kind: AnsibleWorkflow
       apiVersion: tower.ansible.com/v1alpha1
       metadata:
-        name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
-        namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
+        name: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAME') }}"
+        namespace: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAMESPACE') }}"
         labels:
           tower_job_id: "{{ job.id }}"
 
-- name: Update AnsibleJob status with Tower workflow status and url
+- name: Update AnsibleWorkflow status with Tower workflow status and url
   k8s_status:
     api_version: tower.ansible.com/v1alpha1
-    kind: AnsibleJob
-    name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
-    namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
+    kind: AnsibleWorkflow
+    name: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAME') }}"
+    namespace: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAMESPACE') }}"
     status:
-      ansibleJobResult:
+      ansibleWorkflowResult:
         changed: "{{ job.changed }}"
         failed: "{{ job.failed }}"
         status: "{{ job.status }}"
         url: "{{ lookup('env', 'TOWER_HOST') + '/#/jobs/workflow/' + (job.id|string) }}"
 
-- name: Wait for the tower workflow, if error update AnsibleJob status then end play
+- name: Wait for the tower workflow, if error update AnsibleWorkflow status then end play
   block:
     - name: Register Job result when complete
       awx.awx.tower_job_wait:
@@ -57,11 +57,11 @@
     - name: Update status if job results in an error
       k8s_status:
         api_version: tower.ansible.com/v1alpha1
-        kind: AnsibleJob
-        name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
-        namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
+        kind: AnsibleWorkflow
+        name: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAME') }}"
+        namespace: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAMESPACE') }}"
         status:
-          ansibleJobResult:
+          ansibleWorkflowesult:
             status: "error"
     - name: End playbook run
       meta: end_play
