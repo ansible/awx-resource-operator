@@ -1,4 +1,17 @@
 ---
+- name: Read AnsibleProject Specs
+  k8s_info:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleProject
+    name: "{{ lookup('env', 'ANSIBLEPROJECT_NAME') }}"
+    namespace: "{{ lookup('env', 'ANSIBLEPROJECT_NAMESPACE') }}"
+  register: project
+
+- name: Launch Project
+  include_tasks: launch_project.yml
+  when:
+    - lookup('env','PROJECT_NAME') is defined
+    - lookup('env','PROJECT_NAME') != ''
 
 - name: Read AnsibleJob Specs
   k8s_info:
@@ -7,6 +20,11 @@
     name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
     namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
   register: ansible_job
+  when:
+    - lookup('env','TOWER_JOB_TEMPLATE_NAME') is defined
+    - lookup('env','TOWER_JOB_TEMPLATE_NAME') != ''
+    - lookup('env','TOWER_WORKFLOW_TEMPLATE_NAME') is defined
+    - lookup('env','TOWER_WORKFLOW_TEMPLATE_NAME') != ''    
 
 - name: Launch a job
   include_tasks: launch_job.yml
@@ -32,3 +50,8 @@
         finished: "{{ job_result.finished }}"
         started: "{{ job_result.started }}"
         status: "{{ job_result.status }}"
+  when:
+    - lookup('env','TOWER_JOB_TEMPLATE_NAME') is defined
+    - lookup('env','TOWER_JOB_TEMPLATE_NAME') != ''
+    - lookup('env','TOWER_WORKFLOW_TEMPLATE_NAME') is defined
+    - lookup('env','TOWER_WORKFLOW_TEMPLATE_NAME') != ''    
