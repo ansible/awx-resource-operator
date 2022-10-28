@@ -4,4 +4,5 @@
 resources:
 - bases/tower.ansible.com_ansiblejobs.yaml
 - bases/tower.ansible.com_jobtemplates.yaml
+- bases/tower.ansible.com_ansibleprojects.yaml
 #+kubebuilder:scaffold:crdkustomizeresource

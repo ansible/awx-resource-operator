@@ -1,0 +1,11 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleProject
+metadata:
+  name: project
+spec:
+  project_repo: https://github.com/ansible/ansible-tower-samples
+  project_branch: master
+  project_name: Demo
+  project_organization: Default
+  project_description: demoProject
+  tower_auth_secret: awx-access
