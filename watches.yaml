@@ -14,4 +14,8 @@
   group: tower.ansible.com
   kind: JobTemplate
   role: jobtemplate
+- version: v1alpha1
+  group: tower.ansible.com
+  kind: AnsibleWorkflow
+  role: workflow
 #+kubebuilder:scaffold:watch

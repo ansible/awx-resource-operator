@@ -90,6 +90,23 @@ rules:
       - patch
       - update
       - watch
+  ##
+  ## Rules for tower.ansible.com/v1alpha1, Kind: AnsibleWorkflow
+  ##
+  - apiGroups:
+      - tower.ansible.com
+    resources:
+      - ansibleworkflows
+      - ansibleworkflows/status
+      - ansibleworkflows/finalizers
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
 #+kubebuilder:scaffold:rules
 
 ##
