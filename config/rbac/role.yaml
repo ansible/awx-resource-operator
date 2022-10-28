@@ -90,6 +90,23 @@ rules:
       - patch
       - update
       - watch
+  ##
+  ## Rules for tower.ansible.com/v1alpha1, Kind: AnsibleProject
+  ##
+  - apiGroups:
+      - tower.ansible.com
+    resources:
+      - ansibleprojects
+      - ansibleprojects/status
+      - ansibleprojects/finalizers
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
 #+kubebuilder:scaffold:rules
 
 ##

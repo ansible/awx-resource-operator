@@ -1,0 +1,134 @@
+---
+- name: Assert project defined
+  assert:
+    that:
+      - (project_name | default('') | length)
+
+- name: Read K8s job info
+  k8s_info:
+    kind: Job
+    api_version: batch/v1
+    name: "{{ ansible_operator_meta.name }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+  register: k8s_job
+
+- name: Update AnsibleProject isFinished status if job succeeded
+  k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleProject
+    name: "{{ ansible_operator_meta.name }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+    status:
+      isFinished: true
+  when:
+    - k8s_job['resources'][0]['status']['succeeded'] is defined
+    - k8s_job['resources'][0]['status']['succeeded'] == 1
+
+- name: Read AnsibleProject info
+  k8s_info:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleProject
+    name: "{{ ansible_operator_meta.name }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+  register: ansiblejob_info
+
+- name: End play early is AnsibleProject has already finished
+  meta: end_play
+  when:
+    - ansiblejob_info['resources'][0]['status']['isFinished'] is defined
+    - ansiblejob_info['resources'][0]['status']['isFinished']
+
+- block:
+    - name: Check number of attempts to execute the job have been made
+      set_fact:
+        _attempts: "{{ k8s_job['resources'][0]['status']['failed'] | default(0) }}"
+
+    - name: Set the maximum failed attempts allowed based on the backoffLimit
+      set_fact:
+        _failures_allowed: "{{ backoff_limit }} + 1"
+
+    - name: Update AnsibleProject status if backoff limit is exceeded
+      k8s_status:
+        api_version: tower.ansible.com/v1alpha1
+        kind: AnsibleProject
+        name: "{{ ansible_operator_meta.name }}"
+        namespace: "{{ ansible_operator_meta.namespace }}"
+        status:
+          isFinished: true
+          message: "This job instance reached its backoff limit. Inspect playbook output for more info."
+      when:
+        - _attempts >= _failures_allowed
+
+    - name: Update AnsibleProject status with message
+      k8s_status:
+        api_version: tower.ansible.com/v1alpha1
+        kind: AnsibleProject
+        name: "{{ ansible_operator_meta.name }}"
+        namespace: "{{ ansible_operator_meta.namespace }}"
+        status:
+          message: "This job instance is already running or has reached its end state."
+    - name: End play early
+      meta: end_play
+  when:
+    - k8s_job['resources'] is defined
+    - (k8s_job["resources"]|length>0)
+
+- name: Read Secret Configuration
+  k8s_info:
+    kind: Secret
+    api_version: v1
+    name: "{{ tower_auth_secret }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+  register: tower_config_secret
+
+- name: Validate Secret Exists
+  assert:
+    that:
+      - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
+    fail_msg: "Tower Secret must exist"
+
+- name: Set user provided runner image
+  set_fact:
+    _custom_runner_image: "{{ runner_image }}:{{ runner_version }}"
+  when:
+    - runner_image is defined
+    - runner_version is defined
+
+- name: Set Runner image URL
+  set_fact:
+    _runner_image: "{{ _custom_runner_image | default(lookup('env', 'RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE')) }}"
+
+- name: Create ServiceAccount to run pod with if it does not exist
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'service_account.yml.j2') }}"
+
+- name: Start K8s Runner Job
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'job_definition.yml.j2') }}"
+
+- name: Set project name
+  set_fact:
+    _project_name: "{{ project_name}}"
+
+- name: Update AnsibleProject status with K8s job info
+  k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleProject
+    name: "{{ ansible_operator_meta.name }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+    status:
+      k8sJob:
+        created: true
+        message: |-
+          Monitor the job.batch status for more details with the following commands:
+          'kubectl -n {{ ansible_operator_meta.namespace }} get job.batch/{{ ansible_operator_meta.name }}'
+          'kubectl -n {{ ansible_operator_meta.namespace }} describe job.batch/{{ ansible_operator_meta.name }}'
+          'kubectl -n {{ ansible_operator_meta.namespace }} logs -f job.batch/{{ ansible_operator_meta.name }}'
+        namespacedName: "{{ ansible_operator_meta.namespace+'/'+ansible_operator_meta.name }}"
+        env:
+          inventory: "{{ inventory | default(omit) }}"
+          secretNamespacedName: "{{ ansible_operator_meta.namespace+'/'+tower_auth_secret }}"
+          projectName: "{{ _project_name }}"
+          verifySSL: false

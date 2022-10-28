@@ -20,4 +20,11 @@ resources:
   group: tower
   kind: JobTemplate
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: ansible.com
+  group: tower
+  kind: AnsibleProject
+  version: v1alpha1
 version: "3"
