@@ -75,6 +75,8 @@ rules:
       - watch
   ##
   ## Rules for tower.ansible.com/v1alpha1, Kind: JobTemplate
+  ## Rules for tower.ansible.com/v1alpha1, Kind: AnsibleProject
+  ## Rules for tower.ansible.com/v1alpha1, Kind: AnsibleWorkflow
   ##
   - apiGroups:
       - tower.ansible.com
@@ -82,20 +84,9 @@ rules:
       - jobtemplates
       - jobtemplates/status
       - jobtemplates/finalizers
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  ##
-  ## Rules for tower.ansible.com/v1alpha1, Kind: AnsibleProject
-  ##
-  - apiGroups:
-      - tower.ansible.com
-    resources:
+      - ansibleworkflows
+      - ansibleworkflows/status
+      - ansibleworkflows/finalizers
       - ansibleprojects
       - ansibleprojects/status
       - ansibleprojects/finalizers
@@ -107,7 +98,6 @@ rules:
       - patch
       - update
       - watch
-#+kubebuilder:scaffold:rules
 
 ##
 ## Rules needed for managing k8s runner job
