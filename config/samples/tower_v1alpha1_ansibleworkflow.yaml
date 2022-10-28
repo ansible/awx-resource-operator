@@ -1,6 +1,8 @@
 apiVersion: tower.ansible.com/v1alpha1
 kind: AnsibleWorkflow
 metadata:
-  name: ansibleworkflow-sample
+  name: workflow
 spec:
-  # TODO(user): Add fields here
+  inventory: Demo Inventory
+  workflow_template_name: Demo Job Template
+  tower_auth_secret: controller-access-secret
