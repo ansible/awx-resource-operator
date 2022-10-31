@@ -15,9 +15,15 @@ spec:
           imagePullPolicy: Always
           env:
             - name: TOWER_OAUTH_TOKEN
-              value: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ tower_config_secret['resources'][0]['metadata']['name'] }}"
+                  key: token
             - name: TOWER_HOST
-              value: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ tower_config_secret['resources'][0]['metadata']['name'] }}"
+                  key: host
 {% if job_template_name is defined and job_template_name != "" %}
             - name: TOWER_JOB_TEMPLATE_NAME
               value: "{{ job_template_name }}"
