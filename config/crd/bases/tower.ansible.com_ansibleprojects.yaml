@@ -30,9 +30,23 @@ spec:
           metadata:
             type: object
           spec:
-            description: Spec defines the desired state of AnsibleProject
-            type: object
-            x-kubernetes-preserve-unknown-fields: true
+            properties:
+              project_repo:
+                type: string
+                description: The URL of the project repository
+              project_branch:
+                type: string
+                description: The branch of the project repository
+              project_name:
+                type: string
+                description: The name of the project
+              project_organization:
+                type: string
+                description: The organization of the project
+              tower_auth_secret:
+                description: |
+                  A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
+                type: string
           status:
             description: Status defines the observed state of AnsibleProject
             type: object

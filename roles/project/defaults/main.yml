@@ -1,4 +1,4 @@
 ---
 # defaults file for AnsibleProject
-job_ttl: 3600
+job_ttl: 60
 backoff_limit: 1
