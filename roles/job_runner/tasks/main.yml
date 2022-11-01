@@ -6,12 +6,32 @@
     name: "{{ lookup('env', 'ANSIBLEPROJECT_NAME') }}"
     namespace: "{{ lookup('env', 'ANSIBLEPROJECT_NAMESPACE') }}"
   register: project
+  when:
+    - lookup('env', 'ANSIBLEPROJECT_NAME') is defined
+    - lookup('env', 'ANSIBLEPROJECT_NAMESPACE') is defined
 
 - name: Launch Project
   include_tasks: create_project.yml
   when:
     - lookup('env','PROJECT_NAME') is defined
     - lookup('env','PROJECT_NAME') != ''
+
+- name: Read AnsibleCredentials Specs
+  k8s_info:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleCredentials
+    name: "{{ lookup('env', 'ANSIBLECREDENTIAL_NAME') }}"
+    namespace: "{{ lookup('env', 'ANSIBLECREDENTIAL_NAMESPACE') }}"
+  register: credential
+  when:
+    - lookup('env', 'ANSIBLECREDENTIAL_NAME') is defined
+    - lookup('env', 'ANSIBLECREDENTIAL_NAMESPACE') is defined
+
+- name: Launch Credentials Creation
+  include_tasks: create_credentials.yml
+  when:
+    - lookup('env','CREDENTIAL_NAME') is defined
+    - lookup('env','CREDENTIAL_NAME') != ''
 
 - name: Read AnsibleJob Specs
   k8s_info:
