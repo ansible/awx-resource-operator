@@ -17,12 +17,12 @@ spec:
             - name: TOWER_OAUTH_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: "{{ tower_config_secret['resources'][0]['metadata']['name'] }}"
+                  name: "{{ tower_auth_secret }}"
                   key: token
             - name: TOWER_HOST
               valueFrom:
                 secretKeyRef:
-                  name: "{{ tower_config_secret['resources'][0]['metadata']['name'] }}"
+                  name: "{{ tower_auth_secret }}"
                   key: host
 {% if job_template_name is defined and job_template_name != "" %}
             - name: TOWER_JOB_TEMPLATE_NAME
