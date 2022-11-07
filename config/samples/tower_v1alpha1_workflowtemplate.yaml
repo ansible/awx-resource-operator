@@ -1,0 +1,9 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: workflowtemplate-sample
+spec:
+  tower_auth_secret: controller-access-secret 
+  workflow_template_name: ExampleWorkflowTemplate
+  workflow_template_description: Example Workflow Template
+  workflow_template_organization: Default

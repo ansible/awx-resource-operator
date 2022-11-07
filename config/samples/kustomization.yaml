@@ -5,4 +5,5 @@ resources:
 - tower_v1alpha1_ansibleproject.yaml
 - tower_v1alpha1_ansibleworkflow.yaml
 - tower_v1alpha1_ansiblecredentials.yaml
+- tower_v1alpha1_workflowtemplate.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples

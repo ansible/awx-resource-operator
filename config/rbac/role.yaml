@@ -81,6 +81,9 @@ rules:
   - apiGroups:
       - tower.ansible.com
     resources:
+      - workflowtemplates
+      - workflowtemplates/status
+      - workflowtemplates/finalizers
       - jobtemplates
       - jobtemplates/status
       - jobtemplates/finalizers
