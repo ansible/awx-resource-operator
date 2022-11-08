@@ -5,4 +5,4 @@ collections:
   - name: operator_sdk.util
     version: "0.2.0"
   - name: awx.awx
-    version: ">=13.0.0"
+    version: ">=21.7.0"

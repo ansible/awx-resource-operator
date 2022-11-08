@@ -23,7 +23,9 @@
     name: "{{ workflow_template_name }}"
     description: "{{ workflow_template_description }}"
     organization: "{{ workflow_template_organization }}"
-    credentials: "{{ job_template_credentials | default(omit) }}"
+    inventory: "{{ workflow_template_inventory | default(omit) }}"
+    extra_vars: "{{ workflow_template_extra_vars | default(omit) }}"
+    workflow_nodes: "{{ workflow_nodes }}"
   environment:
     - TOWER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
     - TOWER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
