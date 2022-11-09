@@ -1,4 +1,4 @@
 ---
-# defaults file for AnsibleCredentials
-job_ttl: 60
+# defaults file for AnsibleProject
+job_ttl: 3600
 backoff_limit: 1
