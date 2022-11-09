@@ -30,6 +30,21 @@ spec:
           metadata:
             type: object
           spec:
+            properties:
+              workflow_template_name:
+                type: string
+              workflow_template_description:
+                type: string
+              workflow_template_organization:
+                type: string
+              workflow_template_extra_vars:
+                type: string
+              workflow_nodes:
+                type: string
+              tower_auth_secret:
+                type: string
+                description: |
+                  A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
             description: Spec defines the desired state of WorkflowTemplate
             type: object
             x-kubernetes-preserve-unknown-fields: true

@@ -23,7 +23,6 @@
     name: "{{ workflow_template_name }}"
     description: "{{ workflow_template_description }}"
     organization: "{{ workflow_template_organization }}"
-    inventory: "{{ workflow_template_inventory | default(omit) }}"
     extra_vars: "{{ workflow_template_extra_vars | default(omit) }}"
     workflow_nodes: "{{ workflow_nodes }}"
   environment:
