@@ -58,10 +58,10 @@
     namespace: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAMESPACE') }}"
     status:
       ansibleWorkflowResult:
-        elapsed: "{{ job_result.elapsed }}"
-        finished: "{{ job_result.finished }}"
-        started: "{{ job_result.started }}"
-        status: "{{ job_result.status }}"
+        elapsed: "{{ workflow_result.elapsed }}"
+        finished: "{{ workflow_result.finished }}"
+        started: "{{ workflow_result.started }}"
+        status: "{{ workflow_result.status }}"
   when:
     - lookup('env','TOWER_WORKFLOW_TEMPLATE_NAME') is defined
     - lookup('env','TOWER_WORKFLOW_TEMPLATE_NAME') != ''
