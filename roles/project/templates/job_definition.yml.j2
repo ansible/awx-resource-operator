@@ -15,30 +15,24 @@ spec:
           imagePullPolicy: Always
           env:
             - name: TOWER_OAUTH_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ tower_auth_secret }}"
-                  key: token
+              value: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
             - name: TOWER_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ tower_auth_secret }}"
-                  key: host
-            - name: CREDENTIAL_NAME
-              value: "{{ credential_name }}"
-            - name: CREDENTIAL_ORGANIZATION
-              value: "{{ credential_organization }}"
-            - name: CREDENTIAL_DESCRIPTION
-              value: "{{ credential_description }}"
-            - name: CREDENTIAL_TYPE
-              value: "{{ credential_type }}"
-            - name: CREDENTIAL_INPUTS
-              value: "{{ credential_inputs }}"
+              value: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
+            - name: PROJECT_NAME
+              value: "{{ project_name }}"
+            - name: PROJECT_ORGANIZATION
+              value: "{{ project_organization }}"
+            - name: PROJECT_DESCRIPTION
+              value: "{{ project_description }}"
+            - name: PROJECT_REPO
+              value: "{{ project_repo }}"
+            - name: PROJECT_BRANCH
+              value: "{{ project_branch }}"
             - name: TOWER_VERIFY_SSL
               value: "False"
-            - name: ANSIBLECREDENTIAL_NAME
+            - name: ANSIBLEPROJECT_NAME
               value: "{{ ansible_operator_meta.name }}"
-            - name: ANSIBLECREDENTIAL_NAMESPACE
+            - name: ANSIBLEPROJECT_NAMESPACE
               value: "{{ ansible_operator_meta.namespace }}"
       restartPolicy: Never
   backoffLimit: {{ backoff_limit }}

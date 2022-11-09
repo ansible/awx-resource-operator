@@ -13,4 +13,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: quay.io/rcook/tools
-  newTag: wftemplate
+  newTag: creds
