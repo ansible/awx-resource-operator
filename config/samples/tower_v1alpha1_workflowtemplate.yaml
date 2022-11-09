@@ -3,8 +3,8 @@ kind: WorkflowTemplate
 metadata:
   name: workflowtemplate-sample
 spec:
-  tower_auth_secret: controller-access-secret 
-  workflow_template_name: mgk 
+  tower_auth_secret: awxaccess
+  workflow_template_name: ExampleTowerWorkflow
   workflow_template_description: Example Workflow Template
   workflow_template_organization: Default
   workflow_template_inventory: Demo Inventory
