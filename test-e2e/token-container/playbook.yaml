@@ -1,0 +1,36 @@
+---
+- hosts: localhost
+  become: false
+  gather_facts: false
+  tasks:
+  - name: Create a new token using username/password
+    awx.awx.token:
+      description: "testing token" 
+      scope: "write"
+      state: present
+      controller_username: "{{ lookup('env', 'ADMIN') }}"
+      controller_password: "{{ lookup('env', 'CREDENTIAL') }}"
+      controller_host: "http://{{ lookup('env', 'AWX_DEMO_SERVICE_SERVICE_HOST') }}"
+    register: token
+
+  - name: base64 encode token
+    shell: echo "{{ token.ansible_facts.tower_token.token }}" | base64
+    register: token
+
+  - name: base64 encoded host
+    shell: echo "http://{{ lookup('env', 'AWX_DEMO_SERVICE_SERVICE_HOST') }}" | base64
+    register: host
+
+  - name: Create a Service object from an inline definition
+    kubernetes.core.k8s:
+      state: present
+      definition:
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: awxaccess
+          namespace: awx
+        data:
+          token: "{{ token.stdout }}"
+          host: "{{ host.stdout }}"
+
