@@ -53,6 +53,12 @@ spec:
               job_ttl:
                 description: Time to live for k8s job object after the playbook run has finished
                 type: integer
+              job_tags:
+                type: string
+                description: A comma-separated list of tags to specify which sets of ansible tasks in a job should be run
+              skip_tags:
+                type: string
+                description: A comma-separated list of tags to specify which sets of ansible tasks in a job should not be run
             required:
             - tower_auth_secret
             description: Spec defines the desired state of AnsibleJob
