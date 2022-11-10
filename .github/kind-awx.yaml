@@ -1,0 +1,105 @@
+---
+
+name: AWX test
+
+on:
+  pull_request:
+    branches: [devel, iaac-poc]
+
+  push:
+    branches: [devel,iacc-poc]
+
+env:
+  GO_VERSION: "1.17"
+  OPERATOR_IMAGE: "quay.io/ansible/awx-resource-operator"
+  RUNNER_IMAGE: "quay.io/ansible/awx-resource-runner"
+  TOKEN_IMAGE: "quay.io/ansible/token-playbook"
+
+jobs:
+  image-build:
+    runs-on: ubuntu-20-04
+    name: image-build
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build operator container
+        run: make docker-build IMG=${OPERATOR_IMAGE}
+
+      - name: Build runner container
+        run: podman build -f Dockerfile.runner -t ${RUNNER_IMAGE}
+
+      - name: Build token generator
+        run: cd tools/token-container && podman build . --tag ${TOKEN_IMAGE}
+
+      - name: archive operator image
+        run: podman save ${OPERATOR_IMAGE} > operator.tar
+
+      - name: archive runner image
+        run: podman save ${RUNNER_IMAGE} > runner.tar
+
+      - name: upload operator image
+        uses: actions/upload-artifact@v2
+        with:
+          name: operator.tar
+          path: operator.tar
+
+      - name: upload runner image
+        uses: actions/upload-artifact@v2
+        with:
+          name: runner.tar
+          path: runner.tar
+
+  kind-test:
+    runs-on: ubuntu-20-04
+    name: kind-test
+    needs: image-build
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install the Kubectl binary
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          sudo install ./kubectl /usr/local/bin/
+          kubectl version --short --client
+          
+      - name: Install the Kind binary
+        run: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.12.0/kind-linux-amd64
+          chmod +x ./kind
+          sudo mv ./kind /usr/local/bin/kind
+          kind version
+    
+      - name: Create a Kind Cluster
+        run: kind create cluster
+
+      - name: Pull the Container Image from Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: operator.tar
+          path: /tmp
+
+      - name: Pull the Container Image from Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: runner.tar
+          path: /tmp
+
+      - name: Load the Container Image into the Kind Cluster
+        run: |
+          kind load image-archive /tmp/operator.tar
+          kind load image-archive /tmp/runner.tar
+          NAMESPACE=awx IMG=${OPERATOR_IMAGE} make deploy
+
+      - name: Clone and install awx operator
+        run: |
+          git clone https://github.com/ansible/awx-operator.git
+          cp test-e2e/kustomize1.yaml awx-operator/kustomization.yaml
+          cd awx-operator
+          kustomize build . | kubectl apply -f -
+          cp ../test-e2e-/kustomize2.yaml ./kustomization.yaml
+          kustomize build . | kubectl apply -f -
+
+      - name: generate token
+        run: kubectl apply -f test-e2e/token.yaml
+
+
