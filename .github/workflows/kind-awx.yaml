@@ -7,7 +7,7 @@ on:
     branches: [devel, iaac-poc]
 
   push:
-    branches: [devel,iacc-poc]
+    branches: [devel, iacc-poc]
 
 env:
   GO_VERSION: "1.17"
@@ -70,14 +70,14 @@ jobs:
           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
           sudo install ./kubectl /usr/local/bin/
           kubectl version --short --client
-          
+
       - name: Install the Kind binary
         run: |
           curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.12.0/kind-linux-amd64
           chmod +x ./kind
           sudo mv ./kind /usr/local/bin/kind
           kind version
-    
+
       - name: Create a Kind Cluster
         run: kind create cluster
 
