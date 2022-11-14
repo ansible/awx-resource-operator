@@ -5,14 +5,14 @@
   tasks:
   - name: Create a new token using username/password
     awx.awx.token:
-      description: "testing token" 
+      description: "testing token"
       scope: "write"
       state: present
       controller_username: "{{ lookup('env', 'ADMIN') }}"
       controller_password: "{{ lookup('env', 'CREDENTIAL') }}"
       controller_host: "http://{{ lookup('env', 'AWX_DEMO_SERVICE_SERVICE_HOST') }}"
     register: token
-  
+
   - name: base64 encode token
     shell: echo -n "{{ token.ansible_facts.tower_token.token }}" | base64
     register: token

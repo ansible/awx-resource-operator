@@ -4,4 +4,4 @@ kind: AWX
 metadata:
   name: awx-demo
 spec:
-  service_type: clusterip 
+  service_type: clusterip
