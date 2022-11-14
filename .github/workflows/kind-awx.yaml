@@ -106,14 +106,20 @@ jobs:
           kind load image-archive /tmp/token.tar
           NAMESPACE=awx IMG=${OPERATOR_IMAGE} make deploy
 
+      - name: record the latest release of awx-operator
+        run: |
+          echo "LATEST_RELEASE=$(curl -s https://api.github.com/repos/ansible/awx-operator/releases/latest | grep tag_name | cut -d '"' -f 4)" >> $GITHUB_ENV
+
       - name: Clone and install awx operator
         run: |
           git clone https://github.com/ansible/awx-operator.git
           cp test-e2e/base-operator-install.yaml awx-operator/kustomization.yaml
           cd awx-operator
+          sed -i 's/TAG/${{ env.LATEST_RELEASE }}/g' kustomization.yaml
           kustomize build . | kubectl apply -f -
           cp ../test-e2e/awx-demo.yml ./awx-demo.yml
           cp ../test-e2e/awx-deploy.yaml ./kustomization.yaml
+          sed -i 's/TAG/${{ env.LATEST_RELEASE }}/g' kustomization.yaml
           kustomize build . | kubectl apply -f -
           kubectl wait deployment -n awx awx-operator-controller-manager --for condition=Available=True --timeout=500s
 
