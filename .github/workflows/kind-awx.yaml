@@ -141,15 +141,3 @@ jobs:
           kubectl apply -f config/samples/tower_v1alpha1_jobtemplate.yaml -n awx
           kubectl wait jobtemplate -n awx jobtemplate-sample --for condition=Successful=True --timeout=500s
           NAMESPACE=awx IMG=${OPERATOR_IMAGE} make deploy
-
-      - name: Clone and install awx operator
-        run: |
-          git clone https://github.com/ansible/awx-operator.git
-          cp test-e2e/kustomize1.yaml awx-operator/kustomization.yaml
-          cd awx-operator
-          kustomize build . | kubectl apply -f -
-          cp ../test-e2e-/kustomize2.yaml ./kustomization.yaml
-          kustomize build . | kubectl apply -f -
-
-      - name: generate token
-        run: kubectl apply -f test-e2e/token.yaml
