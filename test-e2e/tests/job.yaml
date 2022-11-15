@@ -7,3 +7,4 @@ metadata:
 spec:
   tower_auth_secret: awxaccess
   job_template_name: Demo Job Template
+  runner_pull_policy: IfNotPresent

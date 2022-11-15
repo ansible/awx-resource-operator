@@ -30,6 +30,29 @@ spec:
           metadata:
             type: object
           spec:
+            properties:
+              extra_vars:
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
+              inventory:
+                type: string
+              workflow_template_name:
+                type: string
+              runner_image:
+                type: string
+                description: Runner image used when running jobs
+              runner_version:
+                type: string
+                description: Runner image version used when running jobs
+              runner_pull_policy:
+                type: string
+                description: Runner image pull policy used when running jobs
+              tower_auth_secret:
+                type: string
+                description: |
+                  A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
+            required:
+            - tower_auth_secret
             description: Spec defines the desired state of AnsibleWorkflow
             type: object
             x-kubernetes-preserve-unknown-fields: true
