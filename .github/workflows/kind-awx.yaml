@@ -140,4 +140,8 @@ jobs:
         run: |
           kubectl apply -f config/samples/tower_v1alpha1_jobtemplate.yaml -n awx
           kubectl wait jobtemplate -n awx jobtemplate-sample --for condition=Successful=True --timeout=500s
-          NAMESPACE=awx IMG=${OPERATOR_IMAGE} make deploy
+
+      - name: launch a project
+        run: |
+          kubectl apply -f config/samples/tower_v1alpha1_ansibleproject.yaml -n awx
+          kubectl wait ansibleproject -n awx project --for condition=Successful=True --timeout=500s
