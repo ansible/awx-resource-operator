@@ -1,3 +1,4 @@
+---
 - name: Launch a job, if error update AnsibleJob status then end play
   block:
     - name: Launch job
