@@ -10,7 +10,3 @@ configMapGenerator:
   name: awx-resource-manager-config
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-images:
-- name: controller
-  newName: quay.io/rcook/tools
-  newTag: awx-operator
