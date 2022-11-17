@@ -101,7 +101,7 @@
 
 - name: Set Runner Pull Policy
   set_fact:
-    _runner_pull_policy: "{{ runner_pull_policy | default('Always') }}"
+    _runner_pull_policy: "{{ runner_pull_policy | default('IfNotPresent') }}"
 
 - name: Create ServiceAccount to run pod with if it does not exist
   k8s:
