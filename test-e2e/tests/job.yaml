@@ -1,0 +1,11 @@
+---
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleJob
+metadata:
+  name: demo-job
+  namespace: awx
+spec:
+  tower_auth_secret: awxaccess
+  job_template_name: Demo Job Template
+  runner_pull_policy: IfNotPresent
+  runner_image: quay.io/ansible/awx-resource-runner:ci

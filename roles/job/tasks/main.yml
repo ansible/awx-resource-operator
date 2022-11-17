@@ -99,6 +99,10 @@
   set_fact:
     _runner_image: "{{ _custom_runner_image | default(lookup('env', 'RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE')) }}"
 
+- name: Set Runner Pull Policy
+  set_fact:
+    _runner_pull_policy: "{{ runner_pull_policy | default('IfNotPresent') }}"
+
 - name: Create ServiceAccount to run pod with if it does not exist
   k8s:
     state: present

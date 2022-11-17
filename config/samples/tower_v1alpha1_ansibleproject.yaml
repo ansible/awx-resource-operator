@@ -5,7 +5,8 @@ metadata:
 spec:
   project_repo: https://github.com/ansible/ansible-tower-samples
   project_branch: master
-  project_name: Demo
+  project_name: ProjectDemo
   project_organization: Default
   project_description: demoProject
-  tower_auth_secret: awx-access
+  tower_auth_secret: awxaccess
+  runner_pull_policy: IfNotPresent
