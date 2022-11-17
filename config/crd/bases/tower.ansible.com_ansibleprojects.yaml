@@ -47,6 +47,9 @@ spec:
                 description: |
                   A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
                 type: string
+              scm_type:
+                type: string
+                description: The SCM type of the project
               runner_image:
                 type: string
                 description: Runner image used when running jobs
@@ -58,9 +61,8 @@ spec:
                 description: Runner image pull policy used when running jobs             
             required:
             - tower_auth_secret
-            - project_branch
-            - project_repo
             - project_name
+            - scm_type
             - project_organization
             description: Spec defines the definition of the AnsibleProject
             type: object

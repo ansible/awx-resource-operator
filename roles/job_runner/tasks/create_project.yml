@@ -6,7 +6,7 @@
         description: "{{ lookup('env','PROJECT_DESCRIPTION') }}"
         organization: "{{ lookup('env','PROJECT_ORGANIZATION') }}"
         scm_update_on_launch: True
-        scm_type: git
+        scm_type: "{{ lookup('env','PROJECT_SCM_TYPE') }}"
         scm_url: "{{ lookup('env','PROJECT_REPO') }}"
         state: present
         scm_branch: "{{ lookup('env','PROJECT_BRANCH') }}"

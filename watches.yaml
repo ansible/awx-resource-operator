@@ -24,6 +24,6 @@
   role: workflow
 - version: v1alpha1
   group: tower.ansible.com
-  kind: AnsibleCredentials
-  role: credentials
+  kind: AnsibleCredential
+  role: credential
 #+kubebuilder:scaffold:watch

@@ -10,3 +10,5 @@ spec:
   project_description: demoProject
   tower_auth_secret: awxaccess
   runner_pull_policy: IfNotPresent
+  scm_type: git
+
