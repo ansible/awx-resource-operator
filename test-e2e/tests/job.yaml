@@ -8,4 +8,5 @@ spec:
   tower_auth_secret: awxaccess
   job_template_name: Demo Job Template
   runner_pull_policy: IfNotPresent
-  runner_image: quay.io/ansible/awx-resource-runner:ci
+  runner_image: quay.io/ansible/awx-resource-runner
+  runner_version: ci

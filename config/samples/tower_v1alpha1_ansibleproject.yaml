@@ -6,6 +6,7 @@ spec:
   project_repo: https://github.com/ansible/ansible-tower-samples
   project_branch: master
   project_name: ProjectDemo
+  scm_type: git
   project_organization: Default
   project_description: demoProject
   tower_auth_secret: awxaccess
