@@ -123,13 +123,16 @@ It is possible to configure other things like inventory, extra vars, and time to
 spec:
   tower_auth_secret: awx-access
   job_template_name: Demo Job Template
-  inventory: Demo Inventory                # Inventory prompt on launch needs to be enabled
+  inventory: Demo Inventory                    # Inventory prompt on launch needs to be enabled
   runner_image: quay.io/ansible/awx-resource-runner
   runner_version: latest
   job_ttl: 100
 
-  extra_vars:                              # Extra variables prompt on launch needs to be enabled
+  extra_vars:                                  # Extra variables prompt on launch needs to be enabled
      test_var: test
+
+  job_tags: "provision,install,configuration"  # Specify tags to run
+  skip_tags: "configuration,restart"           # Skip tasks with a given tag
 ```
 
 Note that prompt on launch needs to be enabled for inventories and extra vars if you are specifying those. In order to enable "PROMPT ON LAUNCH", within the AWX UI:

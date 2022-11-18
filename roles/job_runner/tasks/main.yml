@@ -8,7 +8,7 @@
   register: project
 
 - name: Launch Project
-  include_tasks: launch_project.yml
+  include_tasks: create_project.yml
   when:
     - lookup('env','PROJECT_NAME') is defined
     - lookup('env','PROJECT_NAME') != ''
@@ -23,8 +23,6 @@
   when:
     - lookup('env','TOWER_JOB_TEMPLATE_NAME') is defined
     - lookup('env','TOWER_JOB_TEMPLATE_NAME') != ''
-
-
 
 - name: Read AnsibleWorkflow Specs
   k8s_info:

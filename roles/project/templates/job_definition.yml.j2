@@ -12,12 +12,18 @@ spec:
       containers:
         - name: "{{ ansible_operator_meta.name }}"
           image: "{{ _runner_image }}"
-          imagePullPolicy: Always
+          imagePullPolicy: "{{ _runner_pull_policy }}"
           env:
             - name: TOWER_OAUTH_TOKEN
-              value: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ tower_auth_secret }}"
+                  key: token
             - name: TOWER_HOST
-              value: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ tower_auth_secret }}"
+                  key: host
             - name: PROJECT_NAME
               value: "{{ project_name }}"
             - name: PROJECT_ORGANIZATION

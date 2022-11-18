@@ -1,3 +1,4 @@
+---
 - name: Launch a job, if error update AnsibleJob status then end play
   block:
     - name: Launch job
@@ -5,6 +6,8 @@
         job_template: "{{ lookup('env','TOWER_JOB_TEMPLATE_NAME') }}"
         extra_vars: "{{ ansible_job['resources'][0]['spec']['extra_vars'] | default(omit) }}"
         inventory: "{{ ansible_job['resources'][0]['spec']['inventory'] | default(omit) }}"
+        tags: "{{ ansible_job['resources'][0]['spec']['job_tags'] | default(omit) }}"
+        skip_tags: "{{ ansible_job['resources'][0]['spec']['skip_tags'] | default(omit) }}"
       register: job
   rescue:
     - name: Update status if job resulted in an error
