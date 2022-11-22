@@ -30,6 +30,20 @@
     - lookup('env','CREDENTIAL_NAME') is defined
     - lookup('env','CREDENTIAL_NAME') != ''
 
+- name: Read AnsibleSchedule Specs
+  k8s_info:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleSchedule
+    name: "{{ lookup('env', 'ANSIBLESCHEDULE_NAME') }}"
+    namespace: "{{ lookup('env', 'ANSIBLESCHEDULE_NAMESPACE') }}"
+  register: schedule
+
+- name: Launch Schedule
+  include_tasks: create_schedule.yml
+  when:
+    - lookup('env','SCHEDULE_NAME') is defined
+    - lookup('env','SCHEDULE_NAME') != ''
+
 - name: Read AnsibleJob Specs
   k8s_info:
     kind: AnsibleJob

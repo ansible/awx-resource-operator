@@ -1,0 +1,31 @@
+- name: Define a schedule, if error update AnsibleSchedule status then end play
+  block:
+    - name: Launch schedule
+      awx.awx.tower_schedule:
+        name: "{{ lookup('env','SCHEDULE_NAME') }}"
+        rrule: "{{ lookup('env','SCHEDULE_RRULE') }}"
+        state: present
+        unified_job_template: "{{ lookup('env','SCHEDULE_UNIFIED_JOB_TEMPLATE') }}"
+      register: schedule
+  rescue:
+    - name: Update status if creation resulted in an error
+      k8s_status:
+        api_version: tower.ansible.com/v1alpha1
+        kind: AnsibleSchedule
+        name: "{{ lookup('env', 'ANSIBLESCHEDULE_NAME') }}"
+        namespace: "{{ lookup('env', 'ANSIBLESCHEDULE_NAMESPACE') }}"
+        status:
+          AnsibleScheduleResult:
+            status: "error"
+    - name: End playbook run
+      meta: end_play
+
+- name: Update AnsibleSchedule status
+  k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleSchedule
+    name: "{{ lookup('env', 'ANSIBLESCHEDULE_NAME') }}"
+    namespace: "{{ lookup('env', 'ANSIBLESCHEDULE_NAMESPACE') }}"
+    status:
+      AnsibleScheduleResult:
+        changed: "{{ schedule.changed }}"

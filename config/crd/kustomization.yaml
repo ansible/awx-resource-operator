@@ -7,4 +7,5 @@ resources:
 - bases/tower.ansible.com_ansibleprojects.yaml
 - bases/tower.ansible.com_ansibleworkflows.yaml
 - bases/tower.ansible.com_ansiblecredentials.yaml
+- bases/tower.ansible.com_ansibleschedules.yaml
 #+kubebuilder:scaffold:crdkustomizeresource
