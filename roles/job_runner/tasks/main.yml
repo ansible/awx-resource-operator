@@ -44,6 +44,23 @@
     - lookup('env','SCHEDULE_NAME') is defined
     - lookup('env','SCHEDULE_NAME') != ''
 
+- name: Read AnsibleInstanceGroup Specs
+  k8s_info:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleInstanceGroup
+    name: "{{ lookup('env', 'ANSIBLEINSTANCEGROUP_NAME') }}"
+    namespace: "{{ lookup('env', 'ANSIBLEINSTANCEGROUP_NAMESPACE') }}"
+  register: instancegroup
+  when:
+    - lookup('env', 'ANSIBLEINSTANCEGROUP_NAME') is defined
+    - lookup('env', 'ANSIBLEINSTANCEGROUP_NAMESPACE') is defined
+
+- name: Launch Project
+  include_tasks: create_instance_group.yml
+  when:
+    - lookup('env','INSTANCEGROUP_NAME') is defined
+    - lookup('env','INSTANCEGROUP_NAME') != ''
+
 - name: Read AnsibleJob Specs
   k8s_info:
     kind: AnsibleJob

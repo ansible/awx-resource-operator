@@ -1,0 +1,4 @@
+---
+# defaults file for AnsibleInstanceGroup
+job_ttl: 3600
+backoff_limit: 1
