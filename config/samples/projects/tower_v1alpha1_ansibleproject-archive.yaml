@@ -1,0 +1,12 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleProject
+metadata:
+  name: archive
+spec:
+  project_repo: https://github.com/ansible/ansible-tower-samples/archive/refs/heads/master.zip
+  project_name: archive
+  scm_type: archive
+  project_organization: Default
+  project_description: demoProject
+  tower_auth_secret: awxaccess
+  runner_pull_policy: IfNotPresent

@@ -1,16 +1,33 @@
 - name: Define a project, if error update AnsibleProject status then end play
   block:
-    - name: Launch project
+    - name: Launch project with credentials
       awx.awx.project:
         name: "{{ lookup('env','PROJECT_NAME') }}"
         description: "{{ lookup('env','PROJECT_DESCRIPTION') }}"
         organization: "{{ lookup('env','PROJECT_ORGANIZATION') }}"
         scm_update_on_launch: True
         scm_type: "{{ lookup('env','SCM_TYPE') }}"
-        scm_url: "{{ lookup('env','PROJECT_REPO') }}"
+        scm_url: "{{ lookup('env','PROJECT_REPO') | default(omit) }}"
         state: present
-        scm_branch: "{{ lookup('env','PROJECT_BRANCH') }}"
+        scm_branch: "{{ lookup('env','PROJECT_BRANCH'| default(omit)) }}"
       register: project
+      when:
+      - lookup('env','SCM_CREDENTIAL') is not defined
+
+    - name: Launch project without credentials
+      awx.awx.project:
+        name: "{{ lookup('env','PROJECT_NAME') }}"
+        description: "{{ lookup('env','PROJECT_DESCRIPTION') }}"
+        organization: "{{ lookup('env','PROJECT_ORGANIZATION') }}"
+        scm_update_on_launch: True
+        scm_type: "{{ lookup('env','SCM_TYPE') }}"
+        scm_url: "{{ lookup('env','PROJECT_REPO') | default(omit) }}"
+        state: present
+        scm_branch: "{{ lookup('env','PROJECT_BRANCH'| default(omit)) }}"
+      register: project
+      when:
+      - lookup('env','SCM_CREDENTIAL') is defined
+
   rescue:
     - name: Update status if creation resulted in an error
       k8s_status:

@@ -32,10 +32,18 @@ spec:
               value: "{{ project_description }}"
             - name: SCM_TYPE
               value: "{{ scm_type }}"
+{% if scm_credential is defined and scm_credential != "" %}
+            - name: SCM_CREDENTIAL
+              value: "{{ scm_credential }}"
+{% endif %}
+{% if project_repo is defined and project_repo != "" %}
             - name: PROJECT_REPO
               value: "{{ project_repo }}"
+{% endif %}
+{% if project_branch is defined and project_branch != "" %}
             - name: PROJECT_BRANCH
               value: "{{ project_branch }}"
+{% endif %}
             - name: TOWER_VERIFY_SSL
               value: "False"
             - name: ANSIBLEPROJECT_NAME
