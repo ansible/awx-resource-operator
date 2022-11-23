@@ -148,8 +148,9 @@ jobs:
 
       - name: define a credential
         run: |
-          kubectl apply -f config/samples/tower_v1alpha1_ansiblecredential.yaml -n awx
-          kubectl wait ansiblecredential -n awx ansible-credentials-sample --for condition=Successful=True --timeout=40s
+          kubectl apply -f config/samples/credentials -n awx
+          kubectl wait ansiblecredential -n awx ansible-credentials-sample --for condition=Successful=True --timeout=80s
+          kubectl wait ansiblecredential -n awx gh-cred --for condition=Successful=True --timeout=80s
 
       - name: dump logs
         if: always()
