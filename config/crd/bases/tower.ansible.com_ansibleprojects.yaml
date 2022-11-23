@@ -58,7 +58,7 @@ spec:
                 description: Runner image version used when running jobs
               runner_pull_policy:
                 type: string
-                description: Runner image pull policy used when running jobs             
+                description: Runner image pull policy used when running jobs
             required:
             - tower_auth_secret
             - scm_type

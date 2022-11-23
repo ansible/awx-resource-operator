@@ -12,4 +12,3 @@ spec:
   instance_list: []
   runner_pull_policy: IfNotPresent
   tower_auth_secret: awxaccess
-

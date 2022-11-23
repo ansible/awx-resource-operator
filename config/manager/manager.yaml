@@ -38,7 +38,7 @@ spec:
         - --leader-elect
         - --leader-election-id=awx-resource-operator
         image: controller:latest
-        imagePullPolicy: IfNotPresent 
+        imagePullPolicy: IfNotPresent
         name: awx-resource-manager
         env:
         - name: ANSIBLE_GATHERING
