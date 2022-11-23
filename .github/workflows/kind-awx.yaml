@@ -141,17 +141,20 @@ jobs:
           kubectl apply -f config/samples/tower_v1alpha1_jobtemplate.yaml -n awx
           kubectl wait jobtemplate -n awx jobtemplate-sample --for condition=Successful=True --timeout=40s
 
-      - name: launch a project
-        run: |
-          kubectl apply -f config/samples/tower_v1alpha1_ansibleproject.yaml -n awx
-          kubectl wait ansibleproject -n awx project --for condition=Successful=True --timeout=40s
-
       - name: define a credential
         run: |
           kubectl apply -f config/samples/credentials -n awx
           kubectl wait ansiblecredential -n awx ansible-credentials-sample --for condition=Successful=True --timeout=80s
           kubectl wait ansiblecredential -n awx gh-cred --for condition=Successful=True --timeout=80s
+          kubectl wait ansiblecredential -n awx sc-cred --for condition=Successful=True --timeout=80s
+
+      - name: launch a project
+        run: |
+          kubectl apply -f config/samples/projects/ -n awx
+          kubectl wait ansibleproject -n awx git --for condition=Successful=True --timeout=80s
+          kubectl wait ansibleproject -n awx archive --for condition=Successful=True --timeout=80s
+          
 
       - name: dump logs
         if: always()
-        run: kubectl get events -n awx && kubectl get pods -n awx && kubectl logs -n awx -l control-plane=controller-manager --tail 80 --all-containers
+        run: kubectl get events -n awx && kubectl get jobs -n awx && kubectl get pods -n awx && kubectl logs -n awx -l control-plane=controller-manager --tail 80 --all-containers

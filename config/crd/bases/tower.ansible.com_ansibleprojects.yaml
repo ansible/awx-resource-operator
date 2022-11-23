@@ -43,6 +43,9 @@ spec:
               project_organization:
                 type: string
                 description: The organization of the project
+              scm_credential:
+                type: string
+                description: The SCM credential for the project
               scm_type:
                 type: string
                 description: The SCM type of the project
