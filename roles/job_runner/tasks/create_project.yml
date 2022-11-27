@@ -1,6 +1,6 @@
 - name: Define a project, if error update AnsibleProject status then end play
   block:
-    - name: Launch project with credentials
+    - name: Launch project without credentials
       awx.awx.project:
         name: "{{ lookup('env','PROJECT_NAME') }}"
         description: "{{ lookup('env','PROJECT_DESCRIPTION') }}"
@@ -9,12 +9,13 @@
         scm_type: "{{ lookup('env','SCM_TYPE') }}"
         scm_url: "{{ lookup('env','PROJECT_REPO') | default(omit) }}"
         state: present
+        scm_credential:
         scm_branch: "{{ lookup('env','PROJECT_BRANCH'| default(omit)) }}"
       register: project
       when:
-      - lookup('env','SCM_CREDENTIAL') is not defined
+      - lookup('env','SCM_CREDENTIAL') is not defined or lookup('env','SCM_CREDENTIAL') == ''
 
-    - name: Launch project without credentials
+    - name: Launch project with credentials
       awx.awx.project:
         name: "{{ lookup('env','PROJECT_NAME') }}"
         description: "{{ lookup('env','PROJECT_DESCRIPTION') }}"
@@ -28,6 +29,9 @@
       register: project
       when:
       - lookup('env','SCM_CREDENTIAL') is defined
+      - lookup('env','SCM_CREDENTIAL') != ''
+
+
 
   rescue:
     - name: Update status if creation resulted in an error
