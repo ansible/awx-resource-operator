@@ -31,8 +31,6 @@
       - lookup('env','SCM_CREDENTIAL') is defined
       - lookup('env','SCM_CREDENTIAL') != ''
 
-
-
   rescue:
     - name: Update status if creation resulted in an error
       k8s_status:

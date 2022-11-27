@@ -16,29 +16,17 @@ env:
   TOKEN_IMAGE: "quay.io/ansible/token-playbook:latest"
 
 jobs:
-  image-build:
+  operator-image-build:
     runs-on: ubuntu-20.04
-    name: image-build
+    name: operator-image-build
     steps:
       - uses: actions/checkout@v3
 
       - name: Build operator container
         run: podman build -t ${{ env.OPERATOR_IMAGE }} .
 
-      - name: Build runner container
-        run: podman build -f Dockerfile.runner -t ${{ env.RUNNER_IMAGE }}
-
-      - name: Build token generator
-        run: cd test-e2e/token-container && podman build . --tag ${{ env.TOKEN_IMAGE }}
-
       - name: archive operator image
         run: podman save ${OPERATOR_IMAGE} > operator.tar
-
-      - name: archive runner image
-        run: podman save ${RUNNER_IMAGE} > runner.tar
-
-      - name: archive token image
-        run: podman save ${TOKEN_IMAGE} > token.tar
 
       - name: upload operator image
         uses: actions/upload-artifact@v3
@@ -46,11 +34,35 @@ jobs:
           name: operator.tar
           path: operator.tar
 
+  runner-image-build:
+    runs-on: ubuntu-20.04
+    name: runner-image-build
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build runner container
+        run: podman build -f Dockerfile.runner -t ${{ env.RUNNER_IMAGE }}
+
+      - name: archive runner image
+        run: podman save ${RUNNER_IMAGE} > runner.tar
+
       - name: upload runner image
         uses: actions/upload-artifact@v3
         with:
           name: runner.tar
           path: runner.tar
+
+  token-image-build:
+    runs-on: ubuntu-20.04
+    name: token-image-build
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build token generator
+        run: cd test-e2e/token-container && podman build . --tag ${{ env.TOKEN_IMAGE }}
+
+      - name: archive token image
+        run: podman save ${TOKEN_IMAGE} > token.tar
 
       - name: upload token image
         uses: actions/upload-artifact@v3
@@ -61,7 +73,7 @@ jobs:
   kind-test:
     runs-on: ubuntu-20.04
     name: kind-test
-    needs: image-build
+    needs: [operator-image-build, runner-image-build, token-image-build]
     steps:
       - uses: actions/checkout@v3
 
@@ -144,16 +156,27 @@ jobs:
       - name: define a credential
         run: |
           kubectl apply -f config/samples/credentials -n awx
-          kubectl wait ansiblecredential -n awx ansible-credentials-sample --for condition=Successful=True --timeout=80s
-          kubectl wait ansiblecredential -n awx gh-cred --for condition=Successful=True --timeout=80s
-          kubectl wait ansiblecredential -n awx sc-cred --for condition=Successful=True --timeout=80s
+          kubectl wait job -n awx gh-cred --for condition=Complete --timeout=60s
+          kubectl wait job -n awx sc-cred --for condition=Complete --timeout=60s
+          kubectl wait job -n awx ansible-credential-sample --for condition=Complete --timeout=60s
+          kubectl wait ansiblecredential -n awx ansible-credentials-sample --for condition=Successful=True --timeout=1200s
+          kubectl wait ansiblecredential -n awx gh-cred --for condition=Successful=True --timeout=120s
+          kubectl wait ansiblecredential -n awx sc-cred --for condition=Successful=True --timeout=120s
 
       - name: launch a project
         run: |
           kubectl apply -f config/samples/projects/ -n awx
-          kubectl wait ansibleproject -n awx git --for condition=Successful=True --timeout=80s
-          kubectl wait ansibleproject -n awx archive --for condition=Successful=True --timeout=80s
-          
+          kubectl wait job -n awx sc-git --for condition=Complete --timeout=60s
+          kubectl wait job -n awx archive --for condition=Complete --timeout=60s
+          kubectl wait job -n awx git --for condition=Complete --timeout=60s
+          kubectl wait ansibleproject -n awx git --for condition=Successful=True --timeout=120s
+          kubectl wait ansibleproject -n awx archive --for condition=Successful=True --timeout=120s
+          kubectl wait ansibleproject -n awx sc-git --for condition=Successful=True --timeout=120s
+
+      - name: define a schedule
+        run: |
+          kubectl apply -f config/samples/tower_v1alpha1_ansibleschedule.yaml -n awx
+          kubectl wait ansibleschedule -n awx schedule --for condition=Successful=True --timeout=120s
 
       - name: dump logs
         if: always()

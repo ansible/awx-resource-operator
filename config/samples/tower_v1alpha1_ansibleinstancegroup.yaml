@@ -1,0 +1,14 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleInstanceGroup
+metadata:
+  name: instancegroup
+spec:
+  instance_group_name: instancegroup
+  credential_name: "kubernetes cluster"
+  is_container_group: true
+  policy_spec_override: ""
+  policy_instance_percentage: 100
+  policy_instance_minimum: 1
+  instance_list: []
+  runner_pull_policy: IfNotPresent
+  tower_auth_secret: awxaccess

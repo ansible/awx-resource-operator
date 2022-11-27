@@ -40,7 +40,7 @@ spec:
         - "--max-concurrent-reconciles"
         - "3"
         image: controller:latest
-        imagePullPolicy: IfNotPresent 
+        imagePullPolicy: IfNotPresent
         name: awx-resource-manager
         env:
         - name: ANSIBLE_GATHERING
