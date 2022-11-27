@@ -146,37 +146,31 @@ jobs:
       - name: launch a job
         run: |
           kubectl apply -f test-e2e/tests/job.yaml
-          kubectl wait ansiblejob -n awx demo-job --for condition=Successful=True --timeout=40s
+          kubectl wait ansiblejob -n awx demo-job --for condition=Successful=True --timeout=60s
 
       - name: launch a template
         run: |
           kubectl apply -f config/samples/tower_v1alpha1_jobtemplate.yaml -n awx
-          kubectl wait jobtemplate -n awx jobtemplate-sample --for condition=Successful=True --timeout=40s
+          kubectl wait jobtemplate -n awx jobtemplate-sample --for condition=Successful=True --timeout=60s
 
       - name: define a credential
         run: |
           kubectl apply -f config/samples/credentials -n awx
-          kubectl wait job -n awx gh-cred --for condition=Complete --timeout=60s
-          kubectl wait job -n awx sc-cred --for condition=Complete --timeout=60s
-          kubectl wait job -n awx ansible-credential-sample --for condition=Complete --timeout=60s
-          kubectl wait ansiblecredential -n awx ansible-credentials-sample --for condition=Successful=True --timeout=1200s
-          kubectl wait ansiblecredential -n awx gh-cred --for condition=Successful=True --timeout=120s
-          kubectl wait ansiblecredential -n awx sc-cred --for condition=Successful=True --timeout=120s
+          kubectl wait ansiblecredential -n awx ansible-credentials-sample --for condition=Successful=True --timeout=240s
+          kubectl wait ansiblecredential -n awx gh-cred --for condition=Successful=True --timeout=240s
+          kubectl wait ansiblecredential -n awx sc-cred --for condition=Successful=True --timeout=240s
 
       - name: launch a project
         run: |
           kubectl apply -f config/samples/projects/ -n awx
-          kubectl wait job -n awx sc-git --for condition=Complete --timeout=60s
-          kubectl wait job -n awx archive --for condition=Complete --timeout=60s
-          kubectl wait job -n awx git --for condition=Complete --timeout=60s
-          kubectl wait ansibleproject -n awx git --for condition=Successful=True --timeout=120s
-          kubectl wait ansibleproject -n awx archive --for condition=Successful=True --timeout=120s
-          kubectl wait ansibleproject -n awx sc-git --for condition=Successful=True --timeout=120s
+          kubectl wait ansibleproject -n awx git --for condition=Successful=True --timeout=240s
+          kubectl wait ansibleproject -n awx archive --for condition=Successful=True --timeout=240s
+          kubectl wait ansibleproject -n awx sc-git --for condition=Successful=True --timeout=240s
 
       - name: define a schedule
         run: |
           kubectl apply -f config/samples/tower_v1alpha1_ansibleschedule.yaml -n awx
-          kubectl wait ansibleschedule -n awx schedule --for condition=Successful=True --timeout=120s
+          kubectl wait ansibleschedule -n awx schedule --for condition=Successful=True --timeout=240s
 
       - name: dump logs
         if: always()
