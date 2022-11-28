@@ -159,6 +159,7 @@ jobs:
           kubectl wait ansiblecredential -n awx ansible-credentials-sample --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx gh-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx sc-cred --for condition=Successful=True --timeout=240s
+          kubectl wait ansiblecredential -n awx ssh-cred --for condition=Successful=True --timeout=240s
 
       - name: launch a project
         run: |
