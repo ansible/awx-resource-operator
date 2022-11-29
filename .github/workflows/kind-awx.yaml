@@ -155,6 +155,8 @@ jobs:
 
       - name: define a credential
         run: |
+          ssh-keygen -t rsa -b 4096 -f /tmp/id_rsa -N ""
+          kubectl create secret generic my-ssh-secret --from-file=/tmp/id_rsa -n awx
           kubectl apply -f config/samples/credentials -n awx
           kubectl wait ansiblecredential -n awx ansible-credentials-sample --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx gh-cred --for condition=Successful=True --timeout=240s
