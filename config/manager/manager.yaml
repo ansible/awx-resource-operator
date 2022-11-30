@@ -37,6 +37,8 @@ spec:
       - args:
         - --leader-elect
         - --leader-election-id=awx-resource-operator
+        - "--max-concurrent-reconciles"
+        - "3"
         image: controller:latest
         imagePullPolicy: IfNotPresent
         name: awx-resource-manager
@@ -73,10 +75,10 @@ spec:
         # More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
         resources:
           limits:
-            cpu: 500m
+            cpu: 1000m
             memory: 768Mi
           requests:
-            cpu: 10m
+            cpu: 100m
             memory: 256Mi
       serviceAccountName: controller-manager
       imagePullSecrets:

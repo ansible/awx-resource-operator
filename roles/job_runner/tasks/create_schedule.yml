@@ -15,7 +15,8 @@
         name: "{{ lookup('env', 'ANSIBLESCHEDULE_NAME') }}"
         namespace: "{{ lookup('env', 'ANSIBLESCHEDULE_NAMESPACE') }}"
         status:
-          AnsibleScheduleResult:
+          isFinished: true
+          AnsibleCredentialsResult:
             status: "error"
     - name: End playbook run
       meta: end_play
@@ -27,5 +28,6 @@
     name: "{{ lookup('env', 'ANSIBLESCHEDULE_NAME') }}"
     namespace: "{{ lookup('env', 'ANSIBLESCHEDULE_NAMESPACE') }}"
     status:
+      isFinished: true
       AnsibleScheduleResult:
         changed: "{{ schedule.changed }}"

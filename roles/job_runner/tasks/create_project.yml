@@ -39,7 +39,8 @@
         name: "{{ lookup('env', 'ANSIBLEPROJECT_NAME') }}"
         namespace: "{{ lookup('env', 'ANSIBLEPROJECT_NAMESPACE') }}"
         status:
-          AnsibleProjectResult:
+          isFinished: true
+          AnsibleCredentialsResult:
             status: "error"
     - name: End playbook run
       meta: end_play
@@ -51,5 +52,6 @@
     name: "{{ lookup('env', 'ANSIBLEPROJECT_NAME') }}"
     namespace: "{{ lookup('env', 'ANSIBLEPROJECT_NAMESPACE') }}"
     status:
+      isFinished: true
       AnsibleProjectResult:
         changed: "{{ project.changed }}"

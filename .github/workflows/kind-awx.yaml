@@ -158,12 +158,16 @@ jobs:
           ssh-keygen -t rsa -b 4096 -f /tmp/id_rsa -N ""
           kubectl create secret generic my-ssh-secret --from-file=/tmp/id_rsa -n awx
           kubectl apply -n awx -f test-e2e/tests/bearer.yaml
+          kubectl create secret generic github-secret -n awx --from-literal=username=FSAFDFSDF --from-literal=password=FSDFSDFSDFDFFESFD
+          kubectl create secret generic aws-secret -n awx --from-literal=username=FSAFDFSDF --from-literal=password=FSDFSDFSDFDFFESFD
+          kubectl create secret generic github-token-secret -n awx --from-literal=token=FASDFDDSFSDFSDFSDF
           kubectl apply -f config/samples/credentials -n awx
-          kubectl wait ansiblecredential -n awx ansible-credentials-sample --for condition=Successful=True --timeout=240s
+          kubectl wait ansiblecredential -n awx aws-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx gh-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx sc-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx ssh-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx bearer-cred --for condition=Successful=True --timeout=240s
+          kubectl wait ansiblecredential -n awx broken-cred --for condition=Successful=True --timeout=240s
 
       - name: launch a project
         run: |

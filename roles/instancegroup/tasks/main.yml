@@ -1,43 +1,17 @@
 ---
-# tasks file for AnsibleInstanceGroup
-- name: Assert instance_group defined
-  assert:
-    that:
-      - (instance_group_name | default('') | length)
-
-- name: Read K8s job info
-  k8s_info:
-    kind: Job
-    api_version: batch/v1
-    name: "{{ ansible_operator_meta.name }}"
-    namespace: "{{ ansible_operator_meta.namespace }}"
-  register: k8s_job
-
-- name: Update AnsibleInstanceGroup isFinished status if job succeeded
-  k8s_status:
-    api_version: tower.ansible.com/v1alpha1
-    kind: AnsibleInstanceGroup
-    name: "{{ ansible_operator_meta.name }}"
-    namespace: "{{ ansible_operator_meta.namespace }}"
-    status:
-      isFinished: true
-  when:
-    - k8s_job['resources'][0]['status']['succeeded'] is defined
-    - k8s_job['resources'][0]['status']['succeeded'] == 1
-
 - name: Read AnsibleInstanceGroup info
   k8s_info:
     api_version: tower.ansible.com/v1alpha1
     kind: AnsibleInstanceGroup
     name: "{{ ansible_operator_meta.name }}"
     namespace: "{{ ansible_operator_meta.namespace }}"
-  register: ansiblejob_info
+  register: ansibleig_info
 
 - name: End play early is AnsibleInstanceGroup has already finished
   meta: end_play
   when:
-    - ansiblejob_info['resources'][0]['status']['isFinished'] is defined
-    - ansiblejob_info['resources'][0]['status']['isFinished']
+    - ansibleig_info['resources'][0]['status']['isFinished'] is defined
+    - ansibleig_info['resources'][0]['status']['isFinished']
 
 - block:
     - name: Check number of attempts to execute the job have been made
@@ -103,7 +77,7 @@
   set_fact:
     _runner_pull_policy: "{{ runner_pull_policy | default('IfNotPresent') }}"
 
-- name: Create ServiceAccount to run pod with if it does not exist
+- name: Create ServiceAccount to run subsequent jobs
   k8s:
     state: present
     definition: "{{ lookup('template', 'service_account.yml.j2') }}"

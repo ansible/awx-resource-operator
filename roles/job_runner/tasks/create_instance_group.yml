@@ -21,7 +21,8 @@
         name: "{{ lookup('env', 'ANSIBLEINSTANCEGROUP_NAME') }}"
         namespace: "{{ lookup('env', 'ANSIBLEINSTANCEGROUP_NAMESPACE') }}"
         status:
-          AnsibleProjectResult:
+          isFinished: true
+          AnsibleCredentialsResult:
             status: "error"
     - name: End playbook run
       meta: end_play
@@ -33,5 +34,6 @@
     name: "{{ lookup('env', 'ANSIBLEINSTANCEGROUP_NAME') }}"
     namespace: "{{ lookup('env', 'ANSIBLEINSTANCEGROUP_NAMESPACE') }}"
     status:
+      isFinished: true
       AnsibleProjectResult:
         changed: "{{ instance_group.changed }}"
