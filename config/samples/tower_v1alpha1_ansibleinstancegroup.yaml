@@ -1,10 +1,10 @@
 apiVersion: tower.ansible.com/v1alpha1
 kind: AnsibleInstanceGroup
 metadata:
-  name: instancegroup
+  name: kuber-instance-group
 spec:
-  instance_group_name: instancegroup
-  credential_name: "kubernetes cluster"
+  instance_group_name: kuber-instance-group
+  credential_name: bearer-cred
   is_container_group: true
   policy_spec_override: ""
   policy_instance_percentage: 100

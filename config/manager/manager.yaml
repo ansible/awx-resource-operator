@@ -37,8 +37,6 @@ spec:
       - args:
         - --leader-elect
         - --leader-election-id=awx-resource-operator
-        - "--max-concurrent-reconciles"
-        - "6"
         image: controller:latest
         imagePullPolicy: IfNotPresent
         name: awx-resource-manager

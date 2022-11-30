@@ -157,11 +157,13 @@ jobs:
         run: |
           ssh-keygen -t rsa -b 4096 -f /tmp/id_rsa -N ""
           kubectl create secret generic my-ssh-secret --from-file=/tmp/id_rsa -n awx
+          kubectl apply -n awx -f test-e2e/tests/bearer.yaml
           kubectl apply -f config/samples/credentials -n awx
           kubectl wait ansiblecredential -n awx ansible-credentials-sample --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx gh-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx sc-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx ssh-cred --for condition=Successful=True --timeout=240s
+          kubectl wait ansiblecredential -n awx bearer-cred --for condition=Successful=True --timeout=240s
 
       - name: launch a project
         run: |
@@ -174,6 +176,11 @@ jobs:
         run: |
           kubectl apply -f config/samples/tower_v1alpha1_ansibleschedule.yaml -n awx
           kubectl wait ansibleschedule -n awx schedule --for condition=Successful=True --timeout=240s
+
+      - name: define an instance group
+        run: |
+          kubectl apply -f config/samples/tower_v1alpha1_ansibleinstancegroup.yaml -n awx
+          kubectl wait ansibleinstancegroup -n awx kuber-instance-group --for condition=Successful=True --timeout=240s
 
       - name: dump logs
         if: always()
