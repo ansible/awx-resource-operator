@@ -70,28 +70,18 @@ jobs:
           name: token.tar
           path: token.tar
 
-  kind-test:
+  minikube-test:
     runs-on: ubuntu-20.04
-    name: kind-test
+    name: minikube-test
     needs: [operator-image-build, runner-image-build, token-image-build]
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install the Kubectl binary
-        run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          sudo install ./kubectl /usr/local/bin/
-          kubectl version --short --client
-
-      - name: Install the Kind binary
-        run: |
-          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.12.0/kind-linux-amd64
-          chmod +x ./kind
-          sudo mv ./kind /usr/local/bin/kind
-          kind version
-
-      - name: Create a Kind Cluster
-        run: kind create cluster
+      - name: Start minikube
+        uses: medyagh/setup-minikube@master
+        with:
+          memory: max
+          cpus: max
 
       - name: Pull the Container Image from Artifacts
         uses: actions/download-artifact@v3
@@ -113,10 +103,18 @@ jobs:
 
       - name: Load the Container Image into the Kind Cluster
         run: |
-          kind load image-archive /tmp/operator.tar
-          kind load image-archive /tmp/runner.tar
-          kind load image-archive /tmp/token.tar
+          export SHELL=/bin/bash
+          eval $(minikube -p minikube docker-env)
+          docker load < /tmp/operator.tar
+          docker load < /tmp/runner.tar
+          docker load < /tmp/token.tar
           NAMESPACE=awx IMG=${OPERATOR_IMAGE} make deploy
+
+      - name: Install the Kubectl binary
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          sudo install ./kubectl /usr/local/bin/
+          kubectl version --short --client
 
       - name: record the ci release of awx-operator
         run: |
