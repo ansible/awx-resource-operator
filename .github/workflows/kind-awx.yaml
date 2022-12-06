@@ -184,6 +184,11 @@ jobs:
           kubectl apply -f config/samples/tower_v1alpha1_ansibleinstancegroup.yaml -n awx
           kubectl wait ansibleinstancegroup -n awx kuber-instance-group --for condition=Successful=True --timeout=240s
 
+      - name: define a workflow template
+        run: |
+          kubectl apply -f config/samples/tower_v1alpha1_workflowtemplate.yaml -n awx
+          kubectl wait workflowtemplate -n awx workflowtemplate-sample --for condition=Successful=True --timeout=240s
+
       - name: dump logs
         if: always()
         run: kubectl get events -n awx && kubectl get jobs -n awx && kubectl get pods -n awx && kubectl logs -n awx -l control-plane=controller-manager --tail 80 --all-containers
