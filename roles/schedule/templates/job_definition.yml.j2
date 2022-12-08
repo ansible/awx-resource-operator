@@ -32,6 +32,13 @@ spec:
               value: "{{ schedule_unified_job_template }}"
             - name: TOWER_VERIFY_SSL
               value: "False"
+{%if state is defined and state != "" %}
+            - name: SCHEDULE_STATE
+              value: "{{ state }}"
+{% else %}
+            - name: SCHEDULE_STATE
+              value: "present"
+{% endif %}
             - name: ANSIBLESCHEDULE_NAME
               value: "{{ ansible_operator_meta.name }}"
             - name: ANSIBLESCHEDULE_NAMESPACE

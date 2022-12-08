@@ -24,7 +24,7 @@
     - lookup('env','INSTANCEGROUP_NAME') != ''
 
 - name: Read AnsibleJob Specs
-  k8s_info:
+  kubernetes.core.k8s_info:
     kind: AnsibleJob
     api_version: tower.ansible.com/v1alpha1
     name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
@@ -35,7 +35,7 @@
     - lookup('env','TOWER_JOB_TEMPLATE_NAME') != ''
 
 - name: Read AnsibleWorkflow Specs
-  k8s_info:
+  kubernetes.core.k8s_info:
     kind: AnsibleWorkflow
     api_version: tower.ansible.com/v1alpha1
     name: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAME') }}"
@@ -58,7 +58,7 @@
     - lookup('env','TOWER_WORKFLOW_TEMPLATE_NAME') != ''
 
 - name: Update AnsibleJob status with Tower job result
-  k8s_status:
+  operator_sdk.util.k8s_status:
     api_version: tower.ansible.com/v1alpha1
     kind: AnsibleJob
     name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
@@ -74,7 +74,7 @@
     - lookup('env','TOWER_JOB_TEMPLATE_NAME') != ''
 
 - name: Update AnsibleWorkflow status with Tower workflow result
-  k8s_status:
+  operator_sdk.util.k8s_status:
     api_version: tower.ansible.com/v1alpha1
     kind: AnsibleWorkflow
     name: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAME') }}"

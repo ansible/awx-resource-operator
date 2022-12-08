@@ -1,9 +1,7 @@
 ## Append samples you want in your CSV to this file as resources ##
 resources:
 - tower_v1alpha1_ansiblejob.yaml
-- tower_v1alpha1_jobtemplate.yaml
 - tower_v1alpha1_ansibleworkflow.yaml
 - tower_v1alpha1_ansibleschedule.yaml
 - tower_v1alpha1_ansibleinstancegroup.yaml
-- tower_v1alpha1_workflowtemplate.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples

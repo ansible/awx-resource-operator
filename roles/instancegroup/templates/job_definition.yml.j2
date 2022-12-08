@@ -26,6 +26,13 @@ spec:
                   key: host
             - name: INSTANCEGROUP_NAME
               value: "{{ instance_group_name }}"
+{% if state is defined and state != "" %}
+            - name: INSTANCEGROUP_STATE
+              value: "{{ state }}"
+{% else %}
+            - name: INSTANCEGROUP_STATE
+              value: "present"
+{% endif %}
             - name: INSTANCE_GROUP_CREDENTIAL_NAME
               value: "{{ credential_name }}"
             - name: IS_CONTAINER_GROUP

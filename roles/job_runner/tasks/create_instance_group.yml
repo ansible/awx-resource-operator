@@ -3,7 +3,7 @@
     - name: Launch instance_group with credentials
       awx.awx.instance_group:
         name: "{{ lookup('env','INSTANCEGROUP_NAME') }}"
-        state: present
+        state: "{{ lookup('env','INSTANCEGROUP_STATE') | default('present') }}"
         credential: "{{ lookup('env','INSTANCE_GROUP_CREDENTIAL_NAME') }}"
         is_container_group: "{{ lookup('env','IS_CONTAINER_GROUP')| default(omit, true) }}"
         pod_spec_override: "{{ lookup('env','POD_SPEC_OVERRIDE')| default(omit, true) }}"
@@ -15,7 +15,7 @@
 
   rescue:
     - name: Update status if creation resulted in an error
-      k8s_status:
+      operator_sdk.util.k8s_status:
         api_version: tower.ansible.com/v1alpha1
         kind: AnsibleInstanceGroup
         name: "{{ lookup('env', 'ANSIBLEINSTANCEGROUP_NAME') }}"
@@ -28,7 +28,7 @@
       meta: end_play
 
 - name: Update AnsibleInstanceGroup status
-  k8s_status:
+  operator_sdk.util.k8s_status:
     api_version: tower.ansible.com/v1alpha1
     kind: AnsibleInstanceGroup
     name: "{{ lookup('env', 'ANSIBLEINSTANCEGROUP_NAME') }}"

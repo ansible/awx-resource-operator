@@ -1,6 +1,6 @@
 ---
 - name: Read Secret Configuration
-  k8s_info:
+  kubernetes.core.k8s_info:
     kind: Secret
     namespace: '{{ ansible_operator_meta.namespace }}'
     name: "{{ tower_auth_secret }}"
@@ -17,14 +17,57 @@
     msg: "{{ tower_config_secret }}"
   no_log: true
 
-- name: Create Workflow Template
+- name: Deploy the template
   awx.awx.workflow_job_template:
     name: "{{ workflow_template_name }}"
     description: "{{ workflow_template_description }}"
     organization: "{{ workflow_template_organization }}"
     extra_vars: "{{ workflow_template_extra_vars | default(omit) }}"
     workflow_nodes: "{{ workflow_nodes }}"
+    allow_simultaneous: "{{ workflow_template_allow_simultaneous | default(omit) }}"
+    ask_inventory_on_launch: "{{ workflow_template_ask_inventory_on_launch | default(omit) }}"
+    ask_labels_on_launch: "{{ workflow_template_ask_labels_on_launch | default(omit) }}"
+    ask_limit_on_launch: "{{ workflow_template_ask_limit_on_launch | default(omit) }}"
+    ask_scm_branch_on_launch: "{{ workflow_template_ask_scm_branch_on_launch | default(omit) }}"
+    ask_skip_tags_on_launch: "{{ workflow_template_ask_skip_tags_on_launch | default(omit) }}"
+    ask_tags_on_launch: "{{ workflow_template_ask_tags_on_launch | default(omit) }}"
+    ask_variables_on_launch: "{{ workflow_template_ask_variables_on_launch | default(omit) }}"
+    inventory: "{{ workflow_template_inventory | default(omit) }}"
+    limit: "{{ workflow_template_limit | default(omit) }}"
+    job_tags: "{{ workflow_template_job_tags | default(omit) }}"
+    labels: "{{ workflow_template_labels | default(omit) }}"
+    skip_tags: "{{ workflow_template_skip_tags | default(omit) }}"
+    survey_enabled: "{{ workflow_template_survey_enabled | default(omit) }}"
+    survey_spec: "{{ workflow_template_survey_spec | default(omit) }}"
+    state: "{{ workflow_template_state | default('present') }}"
   environment:
     - TOWER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
     - TOWER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
     - TOWER_VERIFY_SSL: "False"
+  register: workflow_template
+  ignore_errors: true
+
+- name: Update the k8s status
+  operator_sdk.util.k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: WorkflowTemplate
+    name: '{{ ansible_operator_meta.name }}'
+    namespace: '{{ ansible_operator_meta.namespace }}'
+    status:
+      isFinished: true
+      message: "Workflow Template Created"
+  when:
+    - workflow_template.changed
+
+- name: Update the k8s status
+  operator_sdk.util.k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: WorkflowTemplate
+    name: '{{ ansible_operator_meta.name }}'
+    namespace: '{{ ansible_operator_meta.namespace }}'
+    status:
+      isFinished: true
+      error: true
+      message: "There was an error in the workflow template"
+  when:
+    - workflow_template.failed

@@ -148,8 +148,10 @@ jobs:
 
       - name: launch a template
         run: |
-          kubectl apply -f config/samples/tower_v1alpha1_jobtemplate.yaml -n awx
+          kubectl apply -f config/samples/jobtemplate -n awx
           kubectl wait jobtemplate -n awx jobtemplate-sample --for condition=Successful=True --timeout=60s
+          kubectl wait jobtemplate -n awx jobtemplate-broken --for condition=Successful=True --timeout=60s
+          if [ `kubectl get -n awx jobtemplate jobtemplate-broken --output="jsonpath={.status.error}"` ]; then echo "Job template errored successfully"; else exit 1; fi
 
       - name: define a credential
         run: |
@@ -186,8 +188,10 @@ jobs:
 
       - name: define a workflow template
         run: |
-          kubectl apply -f config/samples/tower_v1alpha1_workflowtemplate.yaml -n awx
+          kubectl apply -f config/samples/workflowtemplate -n awx
           kubectl wait workflowtemplate -n awx workflowtemplate-sample --for condition=Successful=True --timeout=240s
+          kubectl wait workflowtemplate -n awx workflowtemplate-broken --for condition=Successful=True --timeout=240s
+          if [ `kubectl get -n awx workflowtemplate workflowtemplate-broken --output="jsonpath={.status.error}"` ]; then echo "Workflow template errored successfully"; else exit 1; fi
 
       - name: dump logs
         if: always()

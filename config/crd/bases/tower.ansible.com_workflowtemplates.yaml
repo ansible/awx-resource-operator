@@ -56,6 +56,66 @@ spec:
                 description: Workflow Template Inventory is the name of the inventory
                   in Tower
                 type: string
+              allow_simultaneous:
+                description: Allow Simultaneous is a boolean value that determines
+                  if the workflow template will allow simultaneous runs
+                type: boolean
+              ask_inventory_on_launch:
+                description: Ask Inventory on Launch is a boolean value that determines
+                  if the workflow template will ask for an inventory on launch
+                type: boolean
+              ask_variables_on_launch:
+                description: Ask Variables on Launch is a boolean value that determines
+                  if the workflow template will ask for variables on launch
+                type: boolean
+              ask_limit_on_launch:
+                description: Ask Limit on Launch is a boolean value that determines
+                  if the workflow template will ask for a limit on launch
+                type: boolean
+              ask_scm_branch_on_launch:
+                description: Ask SCM Branch on Launch is a boolean value that determines
+                  if the workflow template will ask for an SCM branch on launch
+                type: boolean
+              ask_labels_on_launch:
+                description: Ask Labels on Launch is a boolean value that determines
+                  if the workflow template will ask for labels on launch
+                type: boolean
+              ask_tags_on_launch:
+                description: Ask Tags on Launch is a boolean value that determines
+                  if the workflow template will ask for tags on launch
+                type: boolean
+              ask_skip_tags_on_launch:
+                description: Ask Skip Tags on Launch is a boolean value that determines
+                  if the workflow template will ask for skip tags on launch
+                type: boolean
+              inventory:
+                description: Inventory is the name of the inventory to be used for the
+                  workflow template
+                type: string
+              limit:
+                description: Limit is the limit to be used for the workflow template
+                type: string
+              job_tags:
+                description: Job Tags is the job tags to be used for the workflow template
+                type: string
+              labels:
+                description: Labels is the labels to be used for the workflow template
+                type: string
+              skip_tags:
+                description: Skip Tags is the skip tags to be used for the workflow template
+                type: string
+              survey_enabled:
+                description: Survey Enabled is a boolean value that determines if the
+                  workflow template will have a survey enabled
+                type: boolean
+              survey_spec:
+                description: Survey Spec is the survey spec to be used for the workflow
+                  template
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
+              state: 
+                description: State is the state of the workflow template
+                type: string  
             required:
             - tower_auth_secret
             - workflow_template_name

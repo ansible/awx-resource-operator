@@ -44,6 +44,13 @@ spec:
             - name: PROJECT_BRANCH
               value: "{{ project_branch }}"
 {% endif %}
+{%if state is defined and state != "" %}
+            - name: PROJECT_STATE
+              value: "{{ state }}"
+{% else %}
+            - name: PROJECT_STATE
+              value: "present"
+{% endif %}
             - name: TOWER_VERIFY_SSL
               value: "False"
             - name: ANSIBLEPROJECT_NAME

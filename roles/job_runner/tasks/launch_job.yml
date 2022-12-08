@@ -11,7 +11,7 @@
       register: job
   rescue:
     - name: Update status if job resulted in an error
-      k8s_status:
+      operator_sdk.util.k8s_status:
         api_version: tower.ansible.com/v1alpha1
         kind: AnsibleJob
         name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
@@ -35,7 +35,7 @@
           tower_job_id: "{{ job.id }}"
 
 - name: Update AnsibleJob status with Tower job status and url
-  k8s_status:
+  operator_sdk.util.k8s_status:
     api_version: tower.ansible.com/v1alpha1
     kind: AnsibleJob
     name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
@@ -55,7 +55,7 @@
       register: job_result
   rescue:
     - name: Update status if job results in an error
-      k8s_status:
+      operator_sdk.util.k8s_status:
         api_version: tower.ansible.com/v1alpha1
         kind: AnsibleJob
         name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
