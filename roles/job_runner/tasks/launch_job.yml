@@ -19,6 +19,7 @@
         status:
           ansibleJobResult:
             status: "error"
+          error_message: "{{ job.msg }}"
     - name: End playbook run
       meta: end_play
 
@@ -63,5 +64,6 @@
         status:
           ansibleJobResult:
             status: "error"
+          error_message: "{{ job.msg }}"
     - name: End playbook run
       meta: end_play

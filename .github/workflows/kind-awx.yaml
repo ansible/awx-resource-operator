@@ -145,7 +145,11 @@ jobs:
         run: |
           kubectl apply -f test-e2e/tests/job.yaml
           kubectl wait ansiblejob -n awx demo-job --for condition=Successful=True --timeout=60s
-
+          kubectl apply -f config/samples/tower_v1alpha1_ansiblejob-broken.yaml -n awx
+          kubectl wait ansiblejob -n awx broke-job --for condition=Successful=True --timeout=60s
+          sleep 5s # allow for the status to have time to be set
+          if [[ `kubectl get -n awx ansiblejob broke-job --output="jsonpath={.status.error_message}"` ]]; then echo "job failed with message successfully"; else exit 1; fi
+          
       - name: launch a template
         run: |
           kubectl apply -f config/samples/jobtemplate -n awx
