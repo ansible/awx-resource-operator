@@ -1,7 +1,7 @@
 apiVersion: tower.ansible.com/v1alpha1
 kind: AnsibleWorkflow
 metadata:
-  name: Broken
+  name: broken
 spec:
   inventory: Demo Inventory
   workflow_template_name: Demo jerb 

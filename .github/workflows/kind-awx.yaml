@@ -147,8 +147,6 @@ jobs:
           kubectl wait ansiblejob -n awx demo-job --for condition=Successful=True --timeout=60s
           kubectl apply -f config/samples/tower_v1alpha1_ansiblejob-broken.yaml -n awx
           kubectl wait ansiblejob -n awx broke-job --for condition=Successful=True --timeout=60s
-          sleep 5s # allow for the status to have time to be set
-          if [[ `kubectl get -n awx ansiblejob broke-job --output="jsonpath={.status.error_message}"` ]]; then echo "job failed with message successfully"; else exit 1; fi
           
       - name: launch a template
         run: |
@@ -196,6 +194,12 @@ jobs:
           kubectl wait workflowtemplate -n awx workflowtemplate-sample --for condition=Successful=True --timeout=240s
           kubectl wait workflowtemplate -n awx workflowtemplate-broken --for condition=Successful=True --timeout=240s
           if [ `kubectl get -n awx workflowtemplate workflowtemplate-broken --output="jsonpath={.status.error}"` ]; then echo "Workflow template errored successfully"; else exit 1; fi
+
+      - name: launch a workflow
+        run: |
+          kubectl apply -f config/samples/workflow -n awx
+          kubectl wait ansibleworkflow -n awx workflow --for condition=Successful=True --timeout=240s
+          kubectl wait ansibleworkflow -n awx broken --for condition=Successful=True --timeout=240s
 
       - name: dump logs
         if: always()
