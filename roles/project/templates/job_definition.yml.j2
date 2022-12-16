@@ -28,8 +28,10 @@ spec:
               value: "{{ project_name }}"
             - name: PROJECT_ORGANIZATION
               value: "{{ project_organization }}"
+{% if project_description is defined and project_description != "" %}
             - name: PROJECT_DESCRIPTION
               value: "{{ project_description }}"
+{% endif %}
             - name: SCM_TYPE
               value: "{{ scm_type }}"
 {% if scm_credential is defined and scm_credential != "" %}
