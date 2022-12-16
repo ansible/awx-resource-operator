@@ -4,6 +4,6 @@ metadata:
   name: broken
 spec:
   inventory: Demo Inventory
-  workflow_template_name: Demo jerb 
+  workflow_template_name: Demo jerb
   tower_auth_secret: awxaccess
   runner_pull_policy: IfNotPresent

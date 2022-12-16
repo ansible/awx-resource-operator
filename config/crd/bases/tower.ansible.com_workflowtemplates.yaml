@@ -113,9 +113,9 @@ spec:
                   template
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
-              state: 
+              state:
                 description: State is the state of the workflow template
-                type: string  
+                type: string
             required:
             - tower_auth_secret
             - workflow_template_name

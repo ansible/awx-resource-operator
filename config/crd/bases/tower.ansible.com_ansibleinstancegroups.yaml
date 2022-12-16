@@ -36,10 +36,10 @@ spec:
                 description: The name of the instance_groupe
               credential_name:
                 type: string
-                description: 	Credential to authenticate with Kubernetes or OpenShift. Must be of type "Kubernetes/OpenShift API Bearer Token".
+                description: Credential to authenticate with Kubernetes or OpenShift. Must be of type "Kubernetes/OpenShift API Bearer Token".
               is_container_group:
                 type: boolean
-                description:   Whether or not this is a container group
+                description: Whether or not this is a container group
               policy_spec_override:
                 description: Override the policy spec for this instance group
                 type: string
@@ -62,7 +62,7 @@ spec:
                 description: Runner image version used when running jobs
               runner_pull_policy:
                 type: string
-                description: Runner image pull policy used when running jobs             
+                description: Runner image pull policy used when running jobs
             required:
             - tower_auth_secret
             - instance_group_name

@@ -36,7 +36,7 @@ spec:
                 description: The name of the schedule
               schedule_rrule:
                 type: string
-                description: 	A value representing the schedules iCal recurrence rule.
+                description: A value representing the schedules iCal recurrence rule.
               schedule_unified_job_template:
                 type: string
                 description: The unified job template to schedule
