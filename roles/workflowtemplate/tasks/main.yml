@@ -9,7 +9,7 @@
 - name: Deploy the template
   awx.awx.workflow_job_template:
     name: "{{ workflow_template_name }}"
-    description: "{{ workflow_template_description }}"
+    description: "{{ workflow_template_description | default(omit) }}"
     organization: "{{ workflow_template_organization }}"
     extra_vars: "{{ workflow_template_extra_vars | default(omit) }}"
     workflow_nodes: "{{ workflow_nodes }}"
