@@ -5,13 +5,13 @@
     kind: AnsibleSchedule
     name: "{{ ansible_operator_meta.name }}"
     namespace: "{{ ansible_operator_meta.namespace }}"
-  register: ansiblejob_info
+  register: ansiblesched_info
 
 - name: End play early is AnsibleSchedule has already finished
   meta: end_play
   when:
-    - ansiblejob_info['resources'][0]['status']['isFinished'] is defined
-    - ansiblejob_info['resources'][0]['status']['isFinished']
+    - ansiblesched_info['resources'][0]['status']['isFinished'] is defined
+    - ansiblesched_info['resources'][0]['status']['isFinished']
 
 - block:
     - name: Check number of attempts to execute the job have been made
