@@ -48,20 +48,6 @@
     - k8s_job['resources'] is defined
     - (k8s_job["resources"]|length>0)
 
-- name: Read Secret Configuration
-  kubernetes.core.k8s_info:
-    kind: Secret
-    api_version: v1
-    name: "{{ tower_auth_secret }}"
-    namespace: "{{ ansible_operator_meta.namespace }}"
-  register: tower_config_secret
-
-- name: Validate Secret Exists
-  assert:
-    that:
-      - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
-    fail_msg: "Tower Secret must exist"
-
 - name: Set user provided runner image
   set_fact:
     _custom_runner_image: "{{ runner_image }}:{{ runner_version }}"

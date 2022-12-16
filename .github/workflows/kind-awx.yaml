@@ -166,7 +166,7 @@ jobs:
           kubectl apply -f config/samples/credentials -n awx
           kubectl wait ansiblecredential -n awx aws-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx gh-cred --for condition=Successful=True --timeout=240s
-          kubectl wait ansiblecredential -n awx sc-cred --for condition=Successful=True --timeout=240s
+          kubectl wait ansiblecredential -n awx scm-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx ssh-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx bearer-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx broken-cred --for condition=Successful=True --timeout=240s
@@ -176,7 +176,7 @@ jobs:
           kubectl apply -f config/samples/projects/ -n awx
           kubectl wait ansibleproject -n awx git --for condition=Successful=True --timeout=240s
           kubectl wait ansibleproject -n awx archive --for condition=Successful=True --timeout=240s
-          kubectl wait ansibleproject -n awx sc-git --for condition=Successful=True --timeout=240s
+          kubectl wait ansibleproject -n awx private-git --for condition=Successful=True --timeout=240s
 
       - name: define a schedule
         run: |

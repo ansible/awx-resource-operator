@@ -6,17 +6,6 @@
     name: "{{ tower_auth_secret }}"
   register: tower_config_secret
 
-- name: Validate Secret Exists
-  assert:
-    that:
-      - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
-    fail_msg: "Tower Secret must exist"
-
-- name: Show secret details
-  debug:
-    msg: "{{ tower_config_secret }}"
-  no_log: true
-
 - name: Deploy the template
   awx.awx.workflow_job_template:
     name: "{{ workflow_template_name }}"

@@ -1,13 +1,13 @@
 apiVersion: tower.ansible.com/v1alpha1
 kind: AnsibleProject
 metadata:
-  name: sc-git
+  name: private-git
 spec:
   project_repo: https://github.com/ansible/ansible-tower-samples
   project_branch: master
-  project_name: sc-git
+  project_name: private-git
   scm_type: git
-  scm_credential: sc-cred
+  scm_credential: scm-cred
   project_organization: Default
   project_description: demoProject
   tower_auth_secret: awxaccess
