@@ -150,7 +150,8 @@ jobs:
           
       - name: launch a template
         run: |
-          kubectl apply -f config/samples/jobtemplate -n awx
+          kubectl apply -f config/samples/jobtemplate/tower_v1alpha1_jobtemplate-broken.yaml -n awx
+          kubectl apply -f config/samples/jobtemplate/tower_v1alpha1_jobtemplate.yaml -n awx
           kubectl wait jobtemplate -n awx jobtemplate-sample --for condition=Successful=True --timeout=60s
           kubectl wait jobtemplate -n awx jobtemplate-broken --for condition=Successful=True --timeout=60s
           if [ `kubectl get -n awx jobtemplate jobtemplate-broken --output="jsonpath={.status.error}"` ]; then echo "Job template errored successfully"; else exit 1; fi
@@ -163,7 +164,12 @@ jobs:
           kubectl create secret generic github-secret -n awx --from-literal=username=FSAFDFSDF --from-literal=password=FSDFSDFSDFDFFESFD
           kubectl create secret generic aws-secret -n awx --from-literal=username=FSAFDFSDF --from-literal=password=FSDFSDFSDFDFFESFD
           kubectl create secret generic github-token-secret -n awx --from-literal=token=FASDFDDSFSDFSDFSDF
-          kubectl apply -f config/samples/credentials -n awx
+          kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-aws.yaml -n awx
+          kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-bearer.yaml -n awx
+          kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-broken.yaml -n awx
+          kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-git.yaml -n awx
+          kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-sc.yaml -n awx
+          kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-ssh.yaml -n awx
           kubectl wait ansiblecredential -n awx aws-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx gh-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx scm-cred --for condition=Successful=True --timeout=240s
@@ -173,7 +179,7 @@ jobs:
 
       - name: launch a project
         run: |
-          kubectl apply -f config/samples/projects/ -n awx
+          kubectl apply -k config/samples/projects/ -n awx
           kubectl wait ansibleproject -n awx git --for condition=Successful=True --timeout=240s
           kubectl wait ansibleproject -n awx archive --for condition=Successful=True --timeout=240s
           kubectl wait ansibleproject -n awx private-git --for condition=Successful=True --timeout=240s
@@ -190,14 +196,16 @@ jobs:
 
       - name: define a workflow template
         run: |
-          kubectl apply -f config/samples/workflowtemplate -n awx
+          kubectl apply -f config/samples/workflowtemplate/tower_v1alpha1_workflowtemplate-broken.yaml -n awx
+          kubectl apply -f config/samples/workflowtemplate/tower_v1alpha1_workflowtemplate.yaml -n awx
           kubectl wait workflowtemplate -n awx workflowtemplate-sample --for condition=Successful=True --timeout=240s
           kubectl wait workflowtemplate -n awx workflowtemplate-broken --for condition=Successful=True --timeout=240s
           if [ `kubectl get -n awx workflowtemplate workflowtemplate-broken --output="jsonpath={.status.error}"` ]; then echo "Workflow template errored successfully"; else exit 1; fi
 
       - name: launch a workflow
         run: |
-          kubectl apply -f config/samples/workflow -n awx
+          kubectl apply -f config/samples/workflow/tower_v1alpha1_ansibleworkflow-broken.yaml -n awx
+          kubectl apply -f config/samples/workflow/tower_v1alpha1_ansibleworkflow.yaml -n awx
           kubectl wait ansibleworkflow -n awx workflow --for condition=Successful=True --timeout=240s
           kubectl wait ansibleworkflow -n awx broken --for condition=Successful=True --timeout=240s
 
