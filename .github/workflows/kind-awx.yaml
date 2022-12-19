@@ -101,7 +101,7 @@ jobs:
           name: token.tar
           path: /tmp
 
-      - name: Load the Container Image into the Kind Cluster
+      - name: Load the Container Image into the minikube
         run: |
           export SHELL=/bin/bash
           eval $(minikube -p minikube docker-env)

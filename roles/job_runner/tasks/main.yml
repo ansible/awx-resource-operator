@@ -6,7 +6,7 @@
     - lookup('env','PROJECT_NAME') != ''
 
 - name: Launch Credential
-  include_tasks: create_credential.yml
+  include_tasks: credentials.yml
   when:
     - lookup('env','CREDENTIAL_NAME') is defined
     - lookup('env','CREDENTIAL_NAME') != ''
