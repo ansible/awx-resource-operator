@@ -141,6 +141,15 @@ jobs:
           kubectl apply -f test-e2e/token.yaml
           kubectl wait job -n awx create-token --for condition=Complete --timeout=60s
 
+      - name: pass environment variables to better run on minikube
+        run: |
+          kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_ANSIBLECREDENTIAL_TOWER_ANSIBLE_COM=2
+          kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_ANSIBLEPROJECT_TOWER_ANSIBLE_COM=2
+          kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_ANSIBLEJOB_TOWER_ANSIBLE_COM=2
+          kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_JOBTEMPLATE_TOWER_ANSIBLE_COM=2
+          kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_WORKFLOWTEMPLATE_TOWER_ANSIBLE_COM=2
+          kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_ANSIBLEWORKFLOW_TOWER_ANSIBLE_COM=2
+
       - name: launch a job
         run: |
           kubectl apply -f test-e2e/tests/job.yaml
