@@ -15,7 +15,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: WorkflowTemplate is the Schema for the workflowtemplates API
+        description: (Tech Preview) WorkflowTemplate is the Schema for the workflowtemplates API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation

@@ -15,7 +15,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: AnsibleProject is the Schema for the ansibleprojects API
+        description: (Tech Preview) AnsibleProject is the Schema for the ansibleprojects API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation

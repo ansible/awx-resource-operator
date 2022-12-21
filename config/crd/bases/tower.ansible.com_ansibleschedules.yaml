@@ -15,7 +15,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: AnsibleSchedule is the Schema for the ansibleschedules API
+        description: (Tech Preview) AnsibleSchedule is the Schema for the ansibleschedules API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation

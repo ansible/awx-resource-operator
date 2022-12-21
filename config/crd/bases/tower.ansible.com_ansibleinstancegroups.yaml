@@ -15,7 +15,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: AnsibleInstanceGroup is the Schema for the ansibleinstancegroups API
+        description: (Tech Preview) AnsibleInstanceGroup is the Schema for the ansibleinstancegroups API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
