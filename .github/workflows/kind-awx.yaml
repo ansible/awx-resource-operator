@@ -221,8 +221,8 @@ jobs:
         run: |
           kubectl get ansiblejob -n awx broke-job -o yaml
           kubectl get ansibleworkflow -n awx broken -o yaml
-          # if [[ $(kubectl get ansiblejob -n awx broke-job -o jsonpath={.status.error_message}) ]]; then echo "Job errored correctly"; else exit 1 ;fi
-          # if [[ $(kubectl get ansibleworkflow -n awx broken -o jsonpath={.status.error_message}) ]]; then echo "Workflow errored correctly"; else exit 1 ;fi
+          if [[ $(kubectl get ansiblejob -n awx broke-job -o jsonpath={.status.error_message}) ]]; then echo "Job errored correctly"; else exit 1 ;fi
+          if [[ $(kubectl get ansibleworkflow -n awx broken -o jsonpath={.status.error_message}) ]]; then echo "Workflow errored correctly"; else exit 1 ;fi
 
       - name: dump logs
         if: always()
