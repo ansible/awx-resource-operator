@@ -89,6 +89,11 @@
   set_fact:
     _runner_pull_policy: "{{ runner_pull_policy | default('IfNotPresent') }}"
 
+- name: Create ServiceAccount to run subsequent jobs
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'service_account.yml.j2') }}"
+
 - name: Start K8s Runner Job
   kubernetes.core.k8s:
     state: present
