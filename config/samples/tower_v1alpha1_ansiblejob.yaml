@@ -19,5 +19,5 @@ spec:
     - bbb
     - ccc
     version: 1.23.45
-  job_tags: "provision,install,configuration"
+  job_tags: "provision,install"
   skip_tags: "configuration,restart"
