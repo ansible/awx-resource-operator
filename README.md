@@ -1,4 +1,4 @@
-quay.io/ansible/awx-resource-operator# AWX Resource Operator
+# AWX Resource Operator
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Build Status](https://github.com/ansible/awx-resource-operator/workflows/CI/badge.svg?event=push)](https://github.com/ansible/awx-resource-operator/actions)
