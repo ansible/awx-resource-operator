@@ -15,7 +15,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: AnsibleProject is the Schema for the ansibleprojects API
+        description: (Tech Preview) AnsibleProject is the Schema for the ansibleprojects API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -43,6 +43,12 @@ spec:
               project_organization:
                 type: string
                 description: The organization of the project
+              scm_credential:
+                type: string
+                description: The SCM credential for the project
+              scm_type:
+                type: string
+                description: The SCM type of the project
               tower_auth_secret:
                 description: |
                   A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
@@ -55,11 +61,10 @@ spec:
                 description: Runner image version used when running jobs
               runner_pull_policy:
                 type: string
-                description: Runner image pull policy used when running jobs             
+                description: Runner image pull policy used when running jobs
             required:
             - tower_auth_secret
-            - project_branch
-            - project_repo
+            - scm_type
             - project_name
             - project_organization
             description: Spec defines the definition of the AnsibleProject

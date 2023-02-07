@@ -34,4 +34,32 @@ resources:
   group: tower
   kind: AnsibleWorkflow
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: ansible.com
+  group: tower
+  kind: AnsibleCredential
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: ansible.com
+  group: tower
+  kind: AnsibleSchedule
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: ansible.com
+  group: tower
+  kind: AnsibleInstanceGroup
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: ansible.com
+  group: tower
+  kind: WorkflowTemplate
+  version: v1alpha1
 version: "3"

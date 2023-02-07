@@ -38,6 +38,7 @@ spec:
         - --leader-elect
         - --leader-election-id=awx-resource-operator
         image: controller:latest
+        imagePullPolicy: IfNotPresent
         name: awx-resource-manager
         env:
         - name: ANSIBLE_GATHERING
@@ -75,7 +76,7 @@ spec:
             cpu: 1000m
             memory: 2Gi
           requests:
-            cpu: 10m
+            cpu: 100m
             memory: 256Mi
       serviceAccountName: controller-manager
       imagePullSecrets:

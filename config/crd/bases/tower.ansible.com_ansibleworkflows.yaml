@@ -15,7 +15,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: AnsibleWorkflow is the Schema for the ansibleworkflows API
+        description: (Tech Preview) AnsibleWorkflow is the Schema for the ansibleworkflows API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation

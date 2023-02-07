@@ -1,35 +1,57 @@
 - name: Define a project, if error update AnsibleProject status then end play
   block:
-    - name: Launch project
+    - name: Launch project without credentials
       awx.awx.project:
         name: "{{ lookup('env','PROJECT_NAME') }}"
         description: "{{ lookup('env','PROJECT_DESCRIPTION') }}"
         organization: "{{ lookup('env','PROJECT_ORGANIZATION') }}"
         scm_update_on_launch: True
-        scm_type: git
-        scm_url: "{{ lookup('env','PROJECT_REPO') }}"
-        state: present
-        scm_branch: "{{ lookup('env','PROJECT_BRANCH') }}"
+        scm_type: "{{ lookup('env','SCM_TYPE') }}"
+        scm_url: "{{ lookup('env','PROJECT_REPO') | default(omit) }}"
+        state: "{{ lookup('env','PROJECT_STATE') | default('present') }}"
+        scm_credential:
+        scm_branch: "{{ lookup('env','PROJECT_BRANCH'| default(omit)) }}"
       register: project
+      when:
+      - lookup('env','SCM_CREDENTIAL') is not defined or lookup('env','SCM_CREDENTIAL') == ''
+
+    - name: Launch project with credentials
+      awx.awx.project:
+        name: "{{ lookup('env','PROJECT_NAME') }}"
+        description: "{{ lookup('env','PROJECT_DESCRIPTION') }}"
+        organization: "{{ lookup('env','PROJECT_ORGANIZATION') }}"
+        scm_update_on_launch: True
+        scm_type: "{{ lookup('env','SCM_TYPE') }}"
+        scm_url: "{{ lookup('env','PROJECT_REPO') | default(omit) }}"
+        scm_credential: "{{ lookup('env','SCM_CREDENTIAL') }}"
+        state: "{{ lookup('env','PROJECT_STATE') | default('present') }}"
+        scm_branch: "{{ lookup('env','PROJECT_BRANCH'| default(omit)) }}"
+      register: project
+      when:
+      - lookup('env','SCM_CREDENTIAL') is defined
+      - lookup('env','SCM_CREDENTIAL') != ''
+
   rescue:
     - name: Update status if creation resulted in an error
-      k8s_status:
+      operator_sdk.util.k8s_status:
         api_version: tower.ansible.com/v1alpha1
         kind: AnsibleProject
         name: "{{ lookup('env', 'ANSIBLEPROJECT_NAME') }}"
         namespace: "{{ lookup('env', 'ANSIBLEPROJECT_NAMESPACE') }}"
         status:
-          AnsibleProjectResult:
+          isFinished: true
+          AnsibleCredentialsResult:
             status: "error"
     - name: End playbook run
       meta: end_play
 
 - name: Update AnsibleProject status
-  k8s_status:
+  operator_sdk.util.k8s_status:
     api_version: tower.ansible.com/v1alpha1
     kind: AnsibleProject
     name: "{{ lookup('env', 'ANSIBLEPROJECT_NAME') }}"
     namespace: "{{ lookup('env', 'ANSIBLEPROJECT_NAMESPACE') }}"
     status:
+      isFinished: true
       AnsibleProjectResult:
         changed: "{{ project.changed }}"

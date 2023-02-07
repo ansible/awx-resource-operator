@@ -1,0 +1,39 @@
+- name: Define a instance group, if error update AnsibleInstanceGroup status then end play
+  block:
+    - name: Launch instance_group with credentials
+      awx.awx.instance_group:
+        name: "{{ lookup('env','INSTANCEGROUP_NAME') }}"
+        state: "{{ lookup('env','INSTANCEGROUP_STATE') | default('present') }}"
+        credential: "{{ lookup('env','INSTANCE_GROUP_CREDENTIAL_NAME') }}"
+        is_container_group: "{{ lookup('env','IS_CONTAINER_GROUP')| default(omit, true) }}"
+        pod_spec_override: "{{ lookup('env','POD_SPEC_OVERRIDE')| default(omit, true) }}"
+        policy_instance_percentage: "{{ lookup('env','POLICY_INSTANCE_PERCENTAGE')| default(omit, true) }}"
+        policy_instance_minimum: "{{ lookup('env','POLICY_INSTANCE_MINIMUM')| default(omit, true) }}"
+        policy_instance_list: "{{ lookup('env','POLICY_INSTANCE_LIST')| default(omit, true) }}"
+        instances: "{{ lookup('env','INSTANCES')| default(omit, true) }}"
+      register: instance_group
+
+  rescue:
+    - name: Update status if creation resulted in an error
+      operator_sdk.util.k8s_status:
+        api_version: tower.ansible.com/v1alpha1
+        kind: AnsibleInstanceGroup
+        name: "{{ lookup('env', 'ANSIBLEINSTANCEGROUP_NAME') }}"
+        namespace: "{{ lookup('env', 'ANSIBLEINSTANCEGROUP_NAMESPACE') }}"
+        status:
+          isFinished: true
+          AnsibleCredentialsResult:
+            status: "error"
+    - name: End playbook run
+      meta: end_play
+
+- name: Update AnsibleInstanceGroup status
+  operator_sdk.util.k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleInstanceGroup
+    name: "{{ lookup('env', 'ANSIBLEINSTANCEGROUP_NAME') }}"
+    namespace: "{{ lookup('env', 'ANSIBLEINSTANCEGROUP_NAMESPACE') }}"
+    status:
+      isFinished: true
+      AnsibleProjectResult:
+        changed: "{{ instance_group.changed }}"
