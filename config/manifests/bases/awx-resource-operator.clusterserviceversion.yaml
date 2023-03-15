@@ -163,7 +163,7 @@ spec:
       - displayName: Project Description
         path: project_description
         x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:text  
+        - urn:alm:descriptor:com.tectonic.ui:text
       version: v1alpha1
   description: The Ansible Automation Platform Resource Operator manages launching
     Ansible Jobs and Workflows.

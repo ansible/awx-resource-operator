@@ -13,7 +13,7 @@
         scm_branch: "{{ lookup('env','PROJECT_BRANCH'| default(omit)) }}"
       register: project
       when:
-      - lookup('env','SCM_CREDENTIAL') is not defined or lookup('env','SCM_CREDENTIAL') == ''
+        - lookup('env','SCM_CREDENTIAL') is not defined or lookup('env','SCM_CREDENTIAL') == ''
 
     - name: Launch project with credentials
       awx.awx.project:
@@ -28,8 +28,8 @@
         scm_branch: "{{ lookup('env','PROJECT_BRANCH'| default(omit)) }}"
       register: project
       when:
-      - lookup('env','SCM_CREDENTIAL') is defined
-      - lookup('env','SCM_CREDENTIAL') != ''
+        - lookup('env','SCM_CREDENTIAL') is defined
+        - lookup('env','SCM_CREDENTIAL') != ''
 
   rescue:
     - name: Update status if creation resulted in an error
