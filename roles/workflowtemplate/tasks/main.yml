@@ -1,10 +1,37 @@
 ---
-- name: Read Secret Configuration
+- name: Read Secret Configuration from connection_secret
   kubernetes.core.k8s_info:
     kind: Secret
-    namespace: '{{ ansible_operator_meta.namespace }}'
+    api_version: v1
+    name: "{{ connection_secret }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+  register: tower_connection_secret
+  when: connection_secret is defined
+
+- name: DEPRECATED Read Secret Configuration from tower_auth_secret
+  kubernetes.core.k8s_info:
+    kind: Secret
+    api_version: v1
     name: "{{ tower_auth_secret }}"
-  register: tower_config_secret
+    namespace: "{{ ansible_operator_meta.namespace }}"
+  register: tower_connection_deprecated_secret
+  when: tower_auth_secret is defined
+
+- name: Set fact based on secret results
+  set_fact:
+     tower_config_secret: "{{ tower_connection_secret }}"
+  when: tower_connection_secret is not skipped and tower_connection_deprecated_secret is skipped
+
+- name: Set fact based on secret results
+  set_fact:
+    tower_config_secret: "{{ tower_connection_deprecated_secret }}"
+  when: tower_connection_deprecated_secret is not skipped and tower_connection_secret is skipped
+
+- name: Validate Secret Exists
+  assert:
+    that:
+      - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
+    fail_msg: "Tower Secret must exist"
 
 - name: Deploy the template
   awx.awx.workflow_job_template:

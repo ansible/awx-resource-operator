@@ -48,13 +48,33 @@
     - k8s_job['resources'] is defined
     - (k8s_job["resources"]|length>0)
 
-- name: Read Secret Configuration
+- name: Read Secret Configuration from connection_secret
+  kubernetes.core.k8s_info:
+    kind: Secret
+    api_version: v1
+    name: "{{ connection_secret }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+  register: tower_connection_secret
+  when: connection_secret is defined
+
+- name: DEPRECATED Read Secret Configuration from tower_auth_secret
   kubernetes.core.k8s_info:
     kind: Secret
     api_version: v1
     name: "{{ tower_auth_secret }}"
     namespace: "{{ ansible_operator_meta.namespace }}"
-  register: tower_config_secret
+  register: tower_connection_deprecated_secret
+  when: tower_auth_secret is defined
+
+- name: Set fact based on secret results
+  set_fact:
+     tower_config_secret: "{{ tower_connection_secret }}"
+  when: tower_connection_secret is not skipped and tower_connection_deprecated_secret is skipped
+
+- name: Set fact based on secret results
+  set_fact:
+    tower_config_secret: "{{ tower_connection_deprecated_secret }}"
+  when: tower_connection_deprecated_secret is not skipped and tower_connection_secret is skipped
 
 - name: Validate Secret Exists
   assert:
@@ -108,6 +128,6 @@
         namespacedName: "{{ ansible_operator_meta.namespace+'/'+ansible_operator_meta.name }}"
         env:
           inventory: "{{ inventory | default(omit) }}"
-          secretNamespacedName: "{{ ansible_operator_meta.namespace+'/'+tower_auth_secret }}"
+          secretNamespacedName: "{{ ansible_operator_meta.namespace+'/'+connection_secret }}"
           instance_groupName: "{{ _instance_group_name }}"
           verifySSL: false

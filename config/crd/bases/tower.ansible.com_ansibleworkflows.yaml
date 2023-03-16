@@ -48,11 +48,15 @@ spec:
                 type: string
                 description: Runner image pull policy used when running jobs
               tower_auth_secret:
+                description: |
+                  (DEPRECATED) A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
                 type: string
+              connection_secet:
                 description: |
                   A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
+                type: string            
             required:
-            - tower_auth_secret
+            - connection_secret
             description: Spec defines the desired state of AnsibleWorkflow
             type: object
             x-kubernetes-preserve-unknown-fields: true

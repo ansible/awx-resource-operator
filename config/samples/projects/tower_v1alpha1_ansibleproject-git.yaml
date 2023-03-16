@@ -9,5 +9,5 @@ spec:
   scm_type: git
   project_organization: Default
   project_description: demoProject
-  tower_auth_secret: awxaccess
+  connection_secret: awxaccess
   runner_pull_policy: IfNotPresent

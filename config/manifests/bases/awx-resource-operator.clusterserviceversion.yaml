@@ -26,8 +26,12 @@ spec:
         path: job_template_name
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
-      - displayName: AWX Authentication Secret
+      - displayName: AWX Authentication Secret(DEPRECATED)
         path: tower_auth_secret
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: AWX Authentication Secret
+        path: connection_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: AWX Inventory
@@ -73,8 +77,12 @@ spec:
         path: workflow_template_name
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
-      - displayName: AWX Authentication Secret
+      - displayName: AWX Authentication Secret(DEPRECATED)
         path: tower_auth_secret
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: AWX Authentication Secret
+        path: connection_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: AWX Inventory
@@ -144,8 +152,12 @@ spec:
         path: project_name
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
-      - displayName: AWX Authentication Secret
+      - displayName: AWX Authentication Secret(DEPRECATED)
         path: tower_auth_secret
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: AWX Authentication Secret
+        path: connection_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Git Repository URL

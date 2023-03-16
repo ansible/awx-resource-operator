@@ -49,10 +49,6 @@ spec:
               runner_pull_policy:
                 type: string
                 description: Runner image pull policy used when running jobs
-              tower_auth_secret:
-                type: string
-                description: |
-                  A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
               job_ttl:
                 description: Time to live for k8s job object after the playbook run has finished
                 type: integer
@@ -62,8 +58,14 @@ spec:
               skip_tags:
                 type: string
                 description: A comma-separated list of tags to specify which sets of ansible tasks in a job should not be run
-            required:
-            - tower_auth_secret
+              tower_auth_secret:
+                description: |
+                  (DEPRECATED) A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
+                type: string
+              connection_secet:
+                description: |
+                  A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
+                type: string            
             description: Spec defines the desired state of AnsibleJob
             type: object
             x-kubernetes-preserve-unknown-fields: true

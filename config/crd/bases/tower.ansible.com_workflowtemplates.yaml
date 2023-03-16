@@ -31,10 +31,6 @@ spec:
             type: object
           spec:
             properties:
-              tower_auth_secret:
-                description: Tower Auth Secret is the name of the secret containing the
-                  username and password for the Tower instance
-                type: string
               workflow_template_name:
                 description: Workflow Template Name is the name of the workflow template
                   in Tower
@@ -98,6 +94,14 @@ spec:
               job_tags:
                 description: Job Tags is the job tags to be used for the workflow template
                 type: string
+              tower_auth_secret:
+                description: |
+                  (DEPRECATED) A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
+                type: string
+              connection_secet:
+                description: |
+                  A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
+                type: string  
               labels:
                 description: Labels is the labels to be used for the workflow template
                 type: string
@@ -115,9 +119,9 @@ spec:
                 x-kubernetes-preserve-unknown-fields: true
               state:
                 description: State is the state of the workflow template
-                type: string
+                type: string          
             required:
-            - tower_auth_secret
+            - connection_secret
             - workflow_template_name
             - workflow_template_organization
             - workflow_template_inventory
