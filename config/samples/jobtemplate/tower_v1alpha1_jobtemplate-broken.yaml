@@ -8,4 +8,4 @@ spec:
   job_template_project: BROKEN PROJECT
   job_template_playbook: hello_squirrel.yml
   job_template_inventory: Demo Inventory
-  runner_pull_policy: IfNotPresent 
+  runner_pull_policy: IfNotPresent

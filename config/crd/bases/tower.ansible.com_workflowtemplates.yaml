@@ -94,14 +94,10 @@ spec:
               job_tags:
                 description: Job Tags is the job tags to be used for the workflow template
                 type: string
-              tower_auth_secret:
-                description: |
-                  (DEPRECATED) A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
-                type: string
-              connection_secet:
+              connection_secret:
                 description: |
                   A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
-                type: string  
+                type: string
               labels:
                 description: Labels is the labels to be used for the workflow template
                 type: string
@@ -119,7 +115,7 @@ spec:
                 x-kubernetes-preserve-unknown-fields: true
               state:
                 description: State is the state of the workflow template
-                type: string          
+                type: string
             required:
             - connection_secret
             - workflow_template_name
