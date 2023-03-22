@@ -14,6 +14,7 @@ spec:
           image: "{{ _runner_image }}"
           imagePullPolicy: "{{ _runner_pull_policy }}"
           env:
+{% if tower_auth_secret is defined and tower_auth_secret != "" %}
             - name: TOWER_OAUTH_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -24,6 +25,19 @@ spec:
                 secretKeyRef:
                   name: "{{ tower_auth_secret }}"
                   key: host
+{% endif %}
+{% if connection_secret is defined and connection_secret != "" %}
+            - name: TOWER_OAUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ connection_secret }}"
+                  key: token
+            - name: TOWER_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ connection_secret }}"
+                  key: host
+{% endif %}
 {% if job_template_name is defined and job_template_name != "" %}
             - name: TOWER_JOB_TEMPLATE_NAME
               value: "{{ job_template_name }}"

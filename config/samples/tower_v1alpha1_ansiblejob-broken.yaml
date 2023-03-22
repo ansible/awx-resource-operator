@@ -3,7 +3,7 @@ kind: AnsibleJob
 metadata:
   name: broke-job
 spec:
-  tower_auth_secret: awxaccess
+  connection_secret: awxaccess
   job_template_name: Demo Jerb
   inventory: Demo Inventory # Inventory prompt on launch needs to be enabled
   runner_pull_policy: IfNotPresent
