@@ -1,0 +1,23 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleJob
+metadata:
+  name: demo-job-deprecated
+  # generateName: demo-job- # generate a unique suffix per 'kubectl create'
+spec:
+  tower_auth_secret: awxaccess
+  job_template_name: Demo Job Template
+  inventory: Demo Inventory # Inventory prompt on launch needs to be enabled
+  extra_vars: # Extra variables prompt on launch needs to be enabled
+    cost: 6.88
+    ghosts: ["inky", "pinky", "clyde", "sue"]
+    is_enable: false
+    other_variable: foo
+    pacman: mrs
+    size: 8
+    targets_list:
+    - aaa
+    - bbb
+    - ccc
+    version: 1.23.45
+  job_tags: "provision,install,configuration"
+  skip_tags: "configuration,restart"

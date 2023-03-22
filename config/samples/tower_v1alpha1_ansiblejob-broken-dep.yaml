@@ -1,0 +1,9 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleJob
+metadata:
+  name: broke-job-deprecated
+spec:
+  tower_auth_secret: awxaccess
+  job_template_name: Demo Jerb
+  inventory: Demo Inventory # Inventory prompt on launch needs to be enabled
+  runner_pull_policy: IfNotPresent
