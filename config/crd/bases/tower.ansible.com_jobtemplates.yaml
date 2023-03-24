@@ -32,16 +32,34 @@ spec:
           spec:
             properties:
               job_template_inventory:
+                description: This field is deprecated, please use 'inventory' instead.
                 type: string
               job_template_name:
+                description: This field is deprecated, please use 'name' instead.
                 type: string
               job_template_playbook:
+                description: This field is deprecated, please use 'playbook' instead.
                 type: string
               job_template_project:
+                description: This field is deprecated, please use 'project' instead.
                 type: string
               job_template_ask_vars:
+                description: This field is deprecated, please use 'ask_variables_on_launch' instead.
                 type: boolean
               job_template_ask_inventory:
+                description: This field is deprecated, please use 'ask_inventory_on_launch' instead.
+                type: boolean
+              inventory:
+                type: string
+              name:
+                type: string
+              playbook:
+                type: string
+              project:
+                type: string
+              ask_variables_on_launch:
+                type: boolean
+              ask_inventory_on_launch:
                 type: boolean
               tower_auth_secret:
                 type: string
@@ -63,3 +81,4 @@ spec:
     storage: true
     subresources:
       status: {}
+

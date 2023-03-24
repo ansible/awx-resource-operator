@@ -25,6 +25,10 @@ spec:
       - displayName: Job Template Name
         path: job_template_name
         x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:hidden
+      - displayName: Job Template Name
+        path: name
+        x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: AWX Authentication Secret(DEPRECATED)
         path: tower_auth_secret
@@ -217,6 +221,10 @@ spec:
       - displayName: Job Template Name
         path: job_template_name
         x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:hidden
+      - displayName: Job Template Name
+        path: name
+        x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: AWX Authentication Secret(DEPRECATED)
         path: tower_auth_secret
@@ -229,21 +237,41 @@ spec:
       - displayName: Job Template Inventory
         path: job_template_inventory
         x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:hidden
+      - displayName: Job Template Inventory
+        path: inventory
+        x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Job Template Playbook
         path: job_template_playbook
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:hidden
+      - displayName: Job Template Playbook
+        path: playbook
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Job Template Project
         path: job_template_project
         x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:hidden
+      - displayName: Job Template Project
+        path: project
+        x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Job Template Ask Vars
         path: job_template_ask_vars
         x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:hidden
+      - displayName: Job Template Ask Variables on Launch
+        path: ask_variables_on_launch
+        x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Job Template Ask Inventory
         path: job_template_ask_inventory
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:hidden
+      - displayName: Job Template Ask Inventory on Launch
+        path: ask_inventory_on_launch
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       version: v1alpha1
