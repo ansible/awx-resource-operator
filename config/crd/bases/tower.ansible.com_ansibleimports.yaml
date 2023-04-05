@@ -1,0 +1,61 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: ansibleimports.tower.ansible.com
+spec:
+  group: tower.ansible.com
+  names:
+    kind: AnsibleImport
+    listKind: AnsibleImportList
+    plural: ansibleimports
+    singular: ansibleimport
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: AnsibleImport is the Schema for the ansibleimports API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              import_name:
+                type: string
+                description: Name of the import to be created
+              configmap:
+                type: string
+              runner_image:
+                type: string
+                description: Runner image used when running jobs
+              runner_version:
+                type: string
+                description: Runner image version used when running jobs
+              runner_pull_policy:
+                type: string
+                description: Runner image pull policy used when running jobs
+            required:
+            - configmap
+            description: Spec defines the desired state of AnsibleImport
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+          status:
+            description: Status defines the observed state of AnsibleImport
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

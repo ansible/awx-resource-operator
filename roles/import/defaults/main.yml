@@ -1,0 +1,4 @@
+---
+# defaults file for AnsibleImport
+job_ttl: 60
+backoff_limit: 1

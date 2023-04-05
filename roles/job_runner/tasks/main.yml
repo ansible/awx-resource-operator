@@ -11,6 +11,12 @@
     - lookup('env','CREDENTIAL_NAME') is defined
     - lookup('env','CREDENTIAL_NAME') != ''
 
+- name: Launch Import
+  include_tasks: import.yml
+  when:
+    - lookup('env','IMPORT_NAME') is defined
+    - lookup('env','IMPORT_NAME') != ''
+
 - name: Launch Schedule
   include_tasks: create_schedule.yml
   when:

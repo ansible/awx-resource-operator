@@ -1,0 +1,43 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ ansible_operator_meta.name }}"
+  namespace: "{{ ansible_operator_meta.namespace }}"
+spec:
+  ttlSecondsAfterFinished: {{ job_ttl }}
+  template:
+    spec:
+      serviceAccountName: resource-operator-controller-manager-job
+      containers:
+        - name: "{{ ansible_operator_meta.name }}"
+          image: "{{ _runner_image }}"
+          imagePullPolicy: "{{ _runner_pull_policy }}"
+          volumeMounts:
+            - name: importfile
+              mountPath: /opt/import
+          env:
+            - name: IMPORT_NAME
+              value: "{{ import_name }}"
+            - name: TOWER_OAUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ tower_auth_secret }}"
+                  key: token
+            - name: TOWER_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ tower_auth_secret }}"
+                  key: host
+            - name: TOWER_VERIFY_SSL
+              value: "False"
+            - name: ANSIBLEIMPORT_NAME
+              value: "{{ ansible_operator_meta.name }}"
+            - name: ANSIBLEIMPORT_NAMESPACE
+              value: "{{ ansible_operator_meta.namespace }}"
+      volumes:
+        - name: importfile
+          configMap:
+            name: "{{ configmap }}"
+      restartPolicy: Never
+  backoffLimit: {{ backoff_limit }}

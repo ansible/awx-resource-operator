@@ -1,0 +1,9 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleImport
+metadata:
+  name: ansibleimport-sample
+spec:
+  configmap: importcm
+  import_name: fix
+  tower_auth_secret: awxaccess
+  runner_pull_policy: IfNotPresent

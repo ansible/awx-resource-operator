@@ -1,0 +1,30 @@
+- name: Define a Import, if error update AnsibleImport status then end play
+  block:
+    - name: Launch Import
+      awx.awx.import:
+        assets: "{{ lookup('file', '/opt/import/import_me.yaml') | from_yaml() }}"
+      register: Import
+
+  rescue:
+    - name: Update status if creation resulted in an error
+      operator_sdk.util.k8s_status:
+        api_version: tower.ansible.com/v1alpha1
+        kind: AnsibleImport
+        name: "{{ lookup('env', 'ANSIBLEIMPORT_NAME') }}"
+        namespace: "{{ lookup('env', 'ANSIBLEIMPORT_NAMESPACE') }}"
+        status:
+          isFinished: true
+
+    - name: End playbook run
+      meta: end_play
+
+- name: Update AnsibleImport status
+  operator_sdk.util.k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleImport
+    name: "{{ lookup('env', 'ANSIBLEIMPORT_NAME') }}"
+    namespace: "{{ lookup('env', 'ANSIBLEIMPORT_NAMESPACE') }}"
+    status:
+      isFinished: true
+      AnsibleImportResult:
+        changed: "{{ Import.changed }}"
