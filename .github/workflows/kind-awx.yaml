@@ -7,7 +7,7 @@ on:
     branches: [devel, iaac-poc]
 
   push:
-    branches: [devel, iacc-poc]
+    branches: [devel, iacc-poc, configmap-demo]
 
 env:
   GO_VERSION: "1.17"
@@ -69,6 +69,22 @@ jobs:
         with:
           name: token.tar
           path: token.tar
+
+  import-test:
+    runs-on: ubuntu-20.04
+    name: import-test
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build configmap from import file
+        run: |
+          kubectl create cm importcm --from-file=${IMPORT_FILE_PATH} -n awx
+          kubectl get cm test -o jsonpath='{.metadata.uid},{.metadata.resourceVersion}'
+
+      - name: Create Anisble Import
+        run: |
+          kubectl apply -f config/samples/import/tower_v1alpha1_ansibleimport.yaml -n awx
+          kubectl get anisbleimport ansibleimport -n awx -o jsonpath='{.metadata.uid},{.metadata.resourceVersion}'
 
   minikube-test:
     runs-on: ubuntu-20.04
