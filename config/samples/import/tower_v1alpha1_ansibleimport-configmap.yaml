@@ -1,0 +1,10 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleImport
+metadata:
+  name: ansibleimport-configmap
+spec:
+  kuberenetes_resource_name: anisble-import-configmap
+  import_type: configmap
+  import_name: fix
+  tower_auth_secret: awxaccess
+  runner_pull_policy: Always

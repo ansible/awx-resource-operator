@@ -31,11 +31,18 @@ spec:
             type: object
           spec:
             properties:
+              kuberenetes_resource_name:
+                type: string
+                description: Name of the Kubernetes Configmap or Secret
               import_name:
                 type: string
                 description: Name of the import to be created
-              configmap:
+              import_type:
                 type: string
+                description: Describes if the base import manifest is a Configmap or Secret
+                enum:
+                  - "secret"
+                  - "configmap"
               runner_image:
                 type: string
                 description: Runner image used when running jobs
@@ -46,7 +53,8 @@ spec:
                 type: string
                 description: Runner image pull policy used when running jobs
             required:
-            - configmap
+            - import_type
+            - kuberenetes_resource_name
             description: Spec defines the desired state of AnsibleImport
             type: object
             x-kubernetes-preserve-unknown-fields: true

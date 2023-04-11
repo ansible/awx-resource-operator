@@ -17,6 +17,10 @@ spec:
             - name: importfile
               mountPath: /opt/import
           env:
+            - name: KUBERNETES_RESOURCE_NAME
+              value: " {{ kubernetes_resource_name }}"
+            - name: IMPORT_TYPE
+              value: "{{ import_type }}"
             - name: IMPORT_NAME
               value: "{{ import_name }}"
             - name: TOWER_OAUTH_TOKEN
@@ -37,7 +41,12 @@ spec:
               value: "{{ ansible_operator_meta.namespace }}"
       volumes:
         - name: importfile
+{% if IMPORT_TYPE is defined and IMPORT_TYPE == "configmap" %}
           configMap:
-            name: "{{ configmap }}"
+            name: {{ kubernetes_resource_name }}
+{% else %}
+          secret:
+            secretName: {{ kubernetes_resource_name }}
+{% endif %}
       restartPolicy: Never
   backoffLimit: {{ backoff_limit }}

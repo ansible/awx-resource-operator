@@ -4,9 +4,9 @@ resources:
 - tower_v1alpha1_ansibleschedule.yaml
 - tower_v1alpha1_ansibleinstancegroup.yaml
 - ./credentials/
+- ./import/
 - ./projects/
 - ./jobtemplate/
 - ./workflow/
 - ./workflowtemplate/
-- tower_v1alpha1_ansibleimport.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples
