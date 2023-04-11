@@ -75,7 +75,7 @@
 
 - name: Set Import name
   set_fact:
-    _import_name: "{{ import_name}}"
+    _import_name: "{{ import_name }}"
 
 - name: Update AnsibleImport status with K8s job info
   operator_sdk.util.k8s_status:

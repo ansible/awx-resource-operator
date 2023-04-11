@@ -1,9 +1,32 @@
 - name: Define a Import, if error update AnsibleImport status then end play
   block:
-    - name: Launch Import
+    - name: Launch Import from ConfigMap from_yaml
       awx.awx.import:
         assets: "{{ lookup('file', '/opt/import/import_me.yaml') | from_yaml() }}"
       register: Import
+      when:
+        - lookup('env','IMPORT_FORMAT') == 'yaml' and lookup('env','IMPORT_TYPE') == 'configmap'
+
+    - name: Launch Import from ConfigMap from_json
+      awx.awx.import:
+        assets: "{{ lookup('file', '/opt/import/import_me.json') | from_json() }}"
+      register: Import
+      when:
+        - lookup('env','IMPORT_FORMAT') == 'json' and lookup('env','IMPORT_TYPE') == 'configmap' 
+
+    - name: Launch Import from Secret from_yaml
+      awx.awx.import:
+        assets: "{{ lookup('file', '/opt/import/import_me.yaml') | from_yaml() }}"
+      register: Import
+      when:
+        - lookup('env','IMPORT_FORMAT') == 'yaml' and lookup('env','IMPORT_TYPE') == 'secret'
+
+    - name: Launch Import from Secret from_json
+      awx.awx.import:
+        assets: "{{ lookup('file', '/opt/import/import_me.json') | from_json() }}"
+      register: Import
+      when:
+        - lookup('env','IMPORT_FORMAT') == 'json' and lookup('env','IMPORT_TYPE') == 'secret'
 
   rescue:
     - name: Update status if creation resulted in an error

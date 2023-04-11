@@ -23,6 +23,8 @@ spec:
               value: "{{ import_type }}"
             - name: IMPORT_NAME
               value: "{{ import_name }}"
+            - name: IMPORT_FORMAT
+              value: "{{ import_format }}"
             - name: TOWER_OAUTH_TOKEN
               valueFrom:
                 secretKeyRef:

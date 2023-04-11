@@ -43,6 +43,12 @@ spec:
                 enum:
                   - "secret"
                   - "configmap"
+              import_format:
+                type: string
+                description: Describes if the base import manifest format is JSON or YAML
+                enum:
+                  - "json"
+                  - "yaml"
               runner_image:
                 type: string
                 description: Runner image used when running jobs
