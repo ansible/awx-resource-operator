@@ -3,8 +3,8 @@ kind: AnsibleImport
 metadata:
   name: ansibleimport-configmap
 spec:
-  kuberenetes_resource_name: anisble-import-configmap
+  kuberenetes_resource_name: importcm
   import_type: configmap
   import_name: fix
   tower_auth_secret: awxaccess
-  runner_pull_policy: Always
+  runner_pull_policy: IfNotPresent

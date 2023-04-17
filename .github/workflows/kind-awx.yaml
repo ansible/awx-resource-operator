@@ -151,7 +151,7 @@ jobs:
 
       - name: generate token
         run: |
-          sleep 10
+          sleep 10s
           kubectl wait awx -n awx awx-demo --for condition=Successful=true --timeout=500s
           kubectl wait deployment -n awx awx-demo --for condition=Available=True --timeout=500s
           kubectl apply -f test-e2e/token.yaml
@@ -239,6 +239,12 @@ jobs:
           kubectl get ansibleworkflow -n awx broken -o yaml
           if [[ $(kubectl get ansiblejob -n awx broke-job -o jsonpath={.status.error_message}) ]]; then echo "Job errored correctly"; else exit 1 ;fi
           if [[ $(kubectl get ansibleworkflow -n awx broken -o jsonpath={.status.error_message}) ]]; then echo "Workflow errored correctly"; else exit 1 ;fi
+
+      - name: launch an import
+        run: |
+          kubectl create configmap -n awx importcm --from-file=test-e2e/import-testing/import_me.yaml
+          kubectl apply -f config/samples/import/tower_v1alpha1_ansibleimport-configmap.yaml -n awx
+          kubectl wait ansibleimport -n awx ansibleimport-configmap --for condition=Successful=True --timeout=240s
 
       - name: dump logs
         if: always()
