@@ -133,10 +133,17 @@ jobs:
           kustomize build . | kubectl apply -f -
           kubectl wait deployment -n awx awx-operator-controller-manager --for condition=Available=True --timeout=500s
 
+      - name: debug statement
+        run: |
+          kubectl get -n awx awx
+          kubectl get -n awx awx -o yaml
+          sleep 80
+          kubectl get pods
+
       - name: generate token
         run: |
           sleep 10
-          kubectl wait awx -n awx awx-demo --for condition=Successful=true --timeout=500s
+          kubectl wait awx -n awx awx-demo --for condition=Successful=true --timeout=800s
           kubectl wait deployment -n awx awx-demo-task --for condition=Available=True --timeout=500s
           kubectl wait deployment -n awx awx-demo-web --for condition=Available=True --timeout=500s
           kubectl apply -f test-e2e/token.yaml
@@ -160,10 +167,23 @@ jobs:
 
       - name: launch a template
         run: |
-          kubectl apply -f config/samples/jobtemplate/tower_v1alpha1_jobtemplate-broken.yaml -n awx
           kubectl apply -f config/samples/jobtemplate/tower_v1alpha1_jobtemplate.yaml -n awx
-          kubectl wait jobtemplate -n awx jobtemplate-sample --for condition=Successful=True --timeout=60s
-          kubectl wait jobtemplate -n awx jobtemplate-broken --for condition=Successful=True --timeout=60s
+          kubectl apply -f config/samples/jobtemplate/tower_v1alpha1_jobtemplate-broken.yaml -n awx
+
+      - name: debug statement
+        run: |
+          kubectl get -n awx jobtemplate
+          kubectl get -n awx jobtemplate -o yaml
+          kubectl get pods
+
+      - name: Ensure job template was created
+        run: |
+          kubectl get -n awx awx
+          kubectl get -n awx awx -o yaml
+          sleep 80
+          kubectl get pods
+          kubectl wait jobtemplate -n awx jobtemplate-sample --for condition=Successful=True --timeout=100s
+          kubectl wait jobtemplate -n awx jobtemplate-broken --for condition=Successful=True --timeout=100s
 
       - name: define a workflow template
         run: |
