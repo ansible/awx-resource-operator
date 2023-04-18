@@ -136,7 +136,7 @@ jobs:
       - name: generate token
         run: |
           sleep 10
-          kubectl wait awx -n awx awx-demo --for condition=Successful=true --timeout=500s
+          kubectl wait awx -n awx awx-demo --for condition=Successful=true --timeout=720s
           kubectl wait deployment -n awx awx-demo-task --for condition=Available=True --timeout=500s
           kubectl wait deployment -n awx awx-demo-web --for condition=Available=True --timeout=500s
           kubectl apply -f test-e2e/token.yaml
