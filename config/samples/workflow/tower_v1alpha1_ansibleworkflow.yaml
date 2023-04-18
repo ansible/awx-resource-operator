@@ -1,0 +1,9 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleWorkflow
+metadata:
+  name: workflow
+spec:
+  inventory: Demo Inventory
+  workflow_template_name: Demo Job Template
+  tower_auth_secret: awxaccess
+  runner_pull_policy: IfNotPresent

@@ -6,7 +6,7 @@
       - (job_template_name | default('') | length) or (workflow_template_name | default('') | length)
 
 - name: Read K8s job info
-  k8s_info:
+  kubernetes.core.k8s_info:
     kind: Job
     api_version: batch/v1
     name: "{{ ansible_operator_meta.name }}"
@@ -14,7 +14,7 @@
   register: k8s_job
 
 - name: Update AnsibleJob isFinished status if job succeeded
-  k8s_status:
+  operator_sdk.util.k8s_status:
     api_version: tower.ansible.com/v1alpha1
     kind: AnsibleJob
     name: "{{ ansible_operator_meta.name }}"
@@ -26,7 +26,7 @@
     - k8s_job['resources'][0]['status']['succeeded'] == 1
 
 - name: Read AnsibleJob info
-  k8s_info:
+  kubernetes.core.k8s_info:
     api_version: tower.ansible.com/v1alpha1
     kind: AnsibleJob
     name: "{{ ansible_operator_meta.name }}"
@@ -49,7 +49,7 @@
         _failures_allowed: "{{ backoff_limit }} + 1"
 
     - name: Update AnsibleJob status if backoff limit is exceeded
-      k8s_status:
+      operator_sdk.util.k8s_status:
         api_version: tower.ansible.com/v1alpha1
         kind: AnsibleJob
         name: "{{ ansible_operator_meta.name }}"
@@ -61,7 +61,7 @@
         - _attempts >= _failures_allowed
 
     - name: Update AnsibleJob status with message
-      k8s_status:
+      operator_sdk.util.k8s_status:
         api_version: tower.ansible.com/v1alpha1
         kind: AnsibleJob
         name: "{{ ansible_operator_meta.name }}"
@@ -74,20 +74,6 @@
     - k8s_job['resources'] is defined
     - (k8s_job["resources"]|length>0)
 
-- name: Read Secret Configuration
-  k8s_info:
-    kind: Secret
-    api_version: v1
-    name: "{{ tower_auth_secret }}"
-    namespace: "{{ ansible_operator_meta.namespace }}"
-  register: tower_config_secret
-
-- name: Validate Secret Exists
-  assert:
-    that:
-      - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
-    fail_msg: "Tower Secret must exist"
-
 - name: Set user provided runner image
   set_fact:
     _custom_runner_image: "{{ runner_image }}:{{ runner_version }}"
@@ -99,13 +85,17 @@
   set_fact:
     _runner_image: "{{ _custom_runner_image | default(lookup('env', 'RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE')) }}"
 
-- name: Create ServiceAccount to run pod with if it does not exist
-  k8s:
+- name: Set Runner Pull Policy
+  set_fact:
+    _runner_pull_policy: "{{ runner_pull_policy | default('IfNotPresent') }}"
+
+- name: Create ServiceAccount to run subsequent jobs
+  kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('template', 'service_account.yml.j2') }}"
 
 - name: Start K8s Runner Job
-  k8s:
+  kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('template', 'job_definition.yml.j2') }}"
 
@@ -114,7 +104,7 @@
     _job_name: "{{ job_template_name |  default(workflow_template_name)}}"
 
 - name: Update AnsibleJob status with K8s job info
-  k8s_status:
+  operator_sdk.util.k8s_status:
     api_version: tower.ansible.com/v1alpha1
     kind: AnsibleJob
     name: "{{ ansible_operator_meta.name }}"

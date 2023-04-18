@@ -1,44 +1,32 @@
 ---
 
-name: AWX test
+name: AWX Integration
 
 on:
   pull_request:
-    branches: [devel, iaac-poc]
+    branches: [devel]
 
   push:
-    branches: [devel, iacc-poc]
+    branches: [devel]
 
 env:
   GO_VERSION: "1.17"
-  OPERATOR_IMAGE: "quay.io/ansible/awx-resource-operator"
-  RUNNER_IMAGE: "quay.io/ansible/awx-resource-runner"
-  TOKEN_IMAGE: "quay.io/ansible/token-playbook"
+  OPERATOR_IMAGE: "quay.io/ansible/awx-resource-operator:ci"
+  RUNNER_IMAGE: "quay.io/ansible/awx-resource-runner:latest"
+  TOKEN_IMAGE: "quay.io/ansible/token-playbook:latest"
 
 jobs:
-  image-build:
+  operator-image-build:
     runs-on: ubuntu-20.04
-    name: image-build
+    name: operator-image-build
     steps:
       - uses: actions/checkout@v3
 
       - name: Build operator container
-        run: podman build -t ${{ env.OPERATOR_IMAGE }}:latest .
-
-      - name: Build runner container
-        run: podman build -f Dockerfile.runner -t ${{ env.RUNNER_IMAGE }}:latest
-
-      - name: Build token generator
-        run: cd test-e2e/token-container && podman build . --tag ${{ env.TOKEN_IMAGE }}:latest
+        run: podman build -t ${{ env.OPERATOR_IMAGE }} .
 
       - name: archive operator image
-        run: podman save ${OPERATOR_IMAGE}:latest > operator.tar
-
-      - name: archive runner image
-        run: podman save ${RUNNER_IMAGE}:latest > runner.tar
-
-      - name: archive token image
-        run: podman save ${TOKEN_IMAGE}:latest > token.tar
+        run: podman save ${OPERATOR_IMAGE} > operator.tar
 
       - name: upload operator image
         uses: actions/upload-artifact@v3
@@ -46,11 +34,35 @@ jobs:
           name: operator.tar
           path: operator.tar
 
+  runner-image-build:
+    runs-on: ubuntu-20.04
+    name: runner-image-build
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build runner container
+        run: podman build -f Dockerfile.runner -t ${{ env.RUNNER_IMAGE }}
+
+      - name: archive runner image
+        run: podman save ${RUNNER_IMAGE} > runner.tar
+
       - name: upload runner image
         uses: actions/upload-artifact@v3
         with:
           name: runner.tar
           path: runner.tar
+
+  token-image-build:
+    runs-on: ubuntu-20.04
+    name: token-image-build
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build token generator
+        run: cd test-e2e/token-container && podman build . --tag ${{ env.TOKEN_IMAGE }}
+
+      - name: archive token image
+        run: podman save ${TOKEN_IMAGE} > token.tar
 
       - name: upload token image
         uses: actions/upload-artifact@v3
@@ -58,28 +70,18 @@ jobs:
           name: token.tar
           path: token.tar
 
-  kind-test:
+  minikube-test:
     runs-on: ubuntu-20.04
-    name: kind-test
-    needs: image-build
+    name: minikube-test
+    needs: [operator-image-build, runner-image-build, token-image-build]
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install the Kubectl binary
-        run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          sudo install ./kubectl /usr/local/bin/
-          kubectl version --short --client
-
-      - name: Install the Kind binary
-        run: |
-          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.12.0/kind-linux-amd64
-          chmod +x ./kind
-          sudo mv ./kind /usr/local/bin/kind
-          kind version
-
-      - name: Create a Kind Cluster
-        run: kind create cluster
+      - name: Start minikube
+        uses: medyagh/setup-minikube@master
+        with:
+          memory: max
+          cpus: max
 
       - name: Pull the Container Image from Artifacts
         uses: actions/download-artifact@v3
@@ -99,16 +101,24 @@ jobs:
           name: token.tar
           path: /tmp
 
-      - name: Load the Container Image into the Kind Cluster
+      - name: Load the Container Image into the minikube
         run: |
-          kind load image-archive /tmp/operator.tar
-          kind load image-archive /tmp/runner.tar
-          kind load image-archive /tmp/token.tar
+          export SHELL=/bin/bash
+          eval $(minikube -p minikube docker-env)
+          docker load < /tmp/operator.tar
+          docker load < /tmp/runner.tar
+          docker load < /tmp/token.tar
           NAMESPACE=awx IMG=${OPERATOR_IMAGE} make deploy
 
-      - name: record the latest release of awx-operator
+      - name: Install the Kubectl binary
         run: |
-          echo "LATEST_RELEASE=$(curl -s https://api.github.com/repos/ansible/awx-operator/releases/latest | grep tag_name | cut -d '"' -f 4)" >> $GITHUB_ENV
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          sudo install ./kubectl /usr/local/bin/
+          kubectl version --short --client
+
+      - name: record the ci release of awx-operator
+        run: |
+          echo "LATEST_RELEASE=$(curl -s https://api.github.com/repos/ansible/awx-operator/releases/ci | grep tag_name | cut -d '"' -f 4)" >> $GITHUB_ENV
 
       - name: Clone and install awx operator
         run: |
@@ -126,18 +136,95 @@ jobs:
       - name: generate token
         run: |
           sleep 10
-          kubectl wait awx -n awx awx-demo --for condition=Successful=true --timeout=500s
-          kubectl wait deployment -n awx awx-demo --for condition=Available=True --timeout=500s
+          kubectl wait awx -n awx awx-demo --for condition=Successful=true --timeout=720s
+          kubectl wait deployment -n awx awx-demo-task --for condition=Available=True --timeout=500s
+          kubectl wait deployment -n awx awx-demo-web --for condition=Available=True --timeout=500s
           kubectl apply -f test-e2e/token.yaml
-          kubectl wait job -n awx create-token --for condition=Complete --timeout=500s
+          kubectl wait job -n awx create-token --for condition=Complete --timeout=60s
+
+      - name: pass environment variables to better run on minikube
+        run: |
+          kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_ANSIBLECREDENTIAL_TOWER_ANSIBLE_COM=2
+          kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_ANSIBLEPROJECT_TOWER_ANSIBLE_COM=2
+          kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_ANSIBLEJOB_TOWER_ANSIBLE_COM=2
+          kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_JOBTEMPLATE_TOWER_ANSIBLE_COM=2
+          kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_WORKFLOWTEMPLATE_TOWER_ANSIBLE_COM=2
+          kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_ANSIBLEWORKFLOW_TOWER_ANSIBLE_COM=2
 
       - name: launch a job
         run: |
           kubectl apply -f test-e2e/tests/job.yaml
-          kubectl wait ansiblejob -n awx demo-job --for condition=Successful=True --timeout=500s
+          kubectl wait ansiblejob -n awx demo-job --for condition=Successful=True --timeout=60s
+          kubectl apply -f config/samples/tower_v1alpha1_ansiblejob-broken.yaml -n awx
+          kubectl wait ansiblejob -n awx broke-job --for condition=Successful=True --timeout=60s
 
       - name: launch a template
         run: |
-          kubectl apply -f config/samples/tower_v1alpha1_jobtemplate.yaml -n awx
-          kubectl wait jobtemplate -n awx jobtemplate-sample --for condition=Successful=True --timeout=500s
-          NAMESPACE=awx IMG=${OPERATOR_IMAGE} make deploy
+          kubectl apply -f config/samples/jobtemplate/tower_v1alpha1_jobtemplate-broken.yaml -n awx
+          kubectl apply -f config/samples/jobtemplate/tower_v1alpha1_jobtemplate.yaml -n awx
+          kubectl wait jobtemplate -n awx jobtemplate-sample --for condition=Successful=True --timeout=60s
+          kubectl wait jobtemplate -n awx jobtemplate-broken --for condition=Successful=True --timeout=60s
+
+      - name: define a workflow template
+        run: |
+          kubectl apply -f config/samples/workflowtemplate/tower_v1alpha1_workflowtemplate-broken.yaml -n awx
+          kubectl apply -f config/samples/workflowtemplate/tower_v1alpha1_workflowtemplate.yaml -n awx
+          kubectl wait workflowtemplate -n awx workflowtemplate-sample --for condition=Successful=True --timeout=240s
+          kubectl wait workflowtemplate -n awx workflowtemplate-broken --for condition=Successful=True --timeout=240s
+          if [ `kubectl get -n awx workflowtemplate workflowtemplate-broken --output="jsonpath={.status.error}"` ]; then echo "Workflow template errored successfully"; else exit 1; fi
+
+      - name: launch a workflow
+        run: |
+          kubectl apply -f config/samples/workflow/tower_v1alpha1_ansibleworkflow-broken.yaml -n awx
+          kubectl apply -f config/samples/workflow/tower_v1alpha1_ansibleworkflow.yaml -n awx
+          kubectl wait ansibleworkflow -n awx workflow --for condition=Successful=True --timeout=240s
+          kubectl wait ansibleworkflow -n awx broken --for condition=Successful=True --timeout=240s
+
+      - name: define a credential
+        run: |
+          ssh-keygen -t rsa -b 4096 -f /tmp/id_rsa -N ""
+          kubectl create secret generic my-ssh-secret --from-file=/tmp/id_rsa -n awx
+          kubectl apply -n awx -f test-e2e/tests/bearer.yaml
+          kubectl create secret generic github-secret -n awx --from-literal=username=FSAFDFSDF --from-literal=password=FSDFSDFSDFDFFESFD
+          kubectl create secret generic aws-secret -n awx --from-literal=username=FSAFDFSDF --from-literal=password=FSDFSDFSDFDFFESFD
+          kubectl create secret generic github-token-secret -n awx --from-literal=token=FASDFDDSFSDFSDFSDF
+          kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-aws.yaml -n awx
+          kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-bearer.yaml -n awx
+          kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-broken.yaml -n awx
+          kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-git.yaml -n awx
+          kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-sc.yaml -n awx
+          kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-ssh.yaml -n awx
+          kubectl wait ansiblecredential -n awx aws-cred --for condition=Successful=True --timeout=240s
+          kubectl wait ansiblecredential -n awx gh-cred --for condition=Successful=True --timeout=240s
+          kubectl wait ansiblecredential -n awx scm-cred --for condition=Successful=True --timeout=240s
+          kubectl wait ansiblecredential -n awx ssh-cred --for condition=Successful=True --timeout=240s
+          kubectl wait ansiblecredential -n awx bearer-cred --for condition=Successful=True --timeout=240s
+          kubectl wait ansiblecredential -n awx broken-cred --for condition=Successful=True --timeout=240s
+
+      - name: launch a project
+        run: |
+          kubectl apply -k config/samples/projects/ -n awx
+          kubectl wait ansibleproject -n awx git --for condition=Successful=True --timeout=240s
+          kubectl wait ansibleproject -n awx archive --for condition=Successful=True --timeout=240s
+          kubectl wait ansibleproject -n awx private-git --for condition=Successful=True --timeout=240s
+
+      - name: define a schedule
+        run: |
+          kubectl apply -f config/samples/tower_v1alpha1_ansibleschedule.yaml -n awx
+          kubectl wait ansibleschedule -n awx schedule --for condition=Successful=True --timeout=240s
+
+      - name: define an instance group
+        run: |
+          kubectl apply -f config/samples/tower_v1alpha1_ansibleinstancegroup.yaml -n awx
+          kubectl wait ansibleinstancegroup -n awx kuber-instance-group --for condition=Successful=True --timeout=240s
+
+      - name: validate error message
+        run: |
+          kubectl get ansiblejob -n awx broke-job -o yaml
+          kubectl get ansibleworkflow -n awx broken -o yaml
+          if [[ $(kubectl get ansiblejob -n awx broke-job -o jsonpath={.status.error_message}) ]]; then echo "Job errored correctly"; else exit 1 ;fi
+          if [[ $(kubectl get ansibleworkflow -n awx broken -o jsonpath={.status.error_message}) ]]; then echo "Workflow errored correctly"; else exit 1 ;fi
+
+      - name: dump logs
+        if: always()
+        run: kubectl get events -n awx && kubectl get jobs -n awx && kubectl get pods -n awx && kubectl logs -n awx -l control-plane=controller-manager --tail 80 --all-containers

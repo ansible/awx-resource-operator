@@ -1,0 +1,11 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: JobTemplate
+metadata:
+  name: jobtemplate-broken
+spec:
+  tower_auth_secret: awxaccess
+  job_template_name: ExampleBrokenTemplate
+  job_template_project: BROKEN PROJECT
+  job_template_playbook: hello_squirrel.yml
+  job_template_inventory: Demo Inventory
+  runner_pull_policy: IfNotPresent

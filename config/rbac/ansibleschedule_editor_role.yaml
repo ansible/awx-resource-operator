@@ -1,0 +1,24 @@
+# permissions for end users to edit ansibleschedules.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ansibleschedule-editor-role
+rules:
+- apiGroups:
+  - tower.ansible.com
+  resources:
+  - ansibleschedules
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - tower.ansible.com
+  resources:
+  - ansibleschedules/status
+  verbs:
+  - get

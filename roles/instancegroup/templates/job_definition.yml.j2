@@ -1,0 +1,55 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ ansible_operator_meta.name }}"
+  namespace: "{{ ansible_operator_meta.namespace }}"
+spec:
+  ttlSecondsAfterFinished: {{ job_ttl }}
+  template:
+    spec:
+      serviceAccountName: resource-operator-controller-manager-job
+      containers:
+        - name: "{{ ansible_operator_meta.name }}"
+          image: "{{ _runner_image }}"
+          imagePullPolicy: "{{ _runner_pull_policy }}"
+          env:
+            - name: TOWER_OAUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ tower_auth_secret }}"
+                  key: token
+            - name: TOWER_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ tower_auth_secret }}"
+                  key: host
+            - name: INSTANCEGROUP_NAME
+              value: "{{ instance_group_name }}"
+{% if state is defined and state != "" %}
+            - name: INSTANCEGROUP_STATE
+              value: "{{ state }}"
+{% else %}
+            - name: INSTANCEGROUP_STATE
+              value: "present"
+{% endif %}
+            - name: INSTANCE_GROUP_CREDENTIAL_NAME
+              value: "{{ credential_name }}"
+            - name: IS_CONTAINER_GROUP
+              value: "{{ is_container_group }}"
+            - name: POLICY_SPEC_OVERRIDE
+              value: "{{ policy_spec_override }}"
+            - name: POLICY_INSTANCE_PERCENTAGE
+              value: "{{ policy_instance_percentage }}"
+            - name: POLICY_INSTANCE_MINIMUM
+              value: "{{ policy_instance_minimum }}"
+            - name: INSTANCE_LIST
+              value: "{{ instance_list }}"
+            - name: TOWER_VERIFY_SSL
+              value: "False"
+            - name: ANSIBLEINSTANCEGROUP_NAME
+              value: "{{ ansible_operator_meta.name }}"
+            - name: ANSIBLEINSTANCEGROUP_NAMESPACE
+              value: "{{ ansible_operator_meta.namespace }}"
+      restartPolicy: Never
+  backoffLimit: {{ backoff_limit }}

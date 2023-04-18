@@ -12,7 +12,7 @@ spec:
       containers:
         - name: "{{ ansible_operator_meta.name }}"
           image: "{{ _runner_image }}"
-          imagePullPolicy: Always
+          imagePullPolicy: "{{ _runner_pull_policy }}"
           env:
             - name: TOWER_OAUTH_TOKEN
               valueFrom:

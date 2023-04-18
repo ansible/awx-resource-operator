@@ -1,0 +1,63 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ ansible_operator_meta.name }}"
+  namespace: "{{ ansible_operator_meta.namespace }}"
+spec:
+  ttlSecondsAfterFinished: {{ job_ttl }}
+  template:
+    spec:
+      serviceAccountName: resource-operator-controller-manager-job
+      containers:
+        - name: "{{ ansible_operator_meta.name }}"
+          image: "{{ _runner_image }}"
+          imagePullPolicy: "{{ _runner_pull_policy }}"
+          env:
+            - name: TOWER_OAUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ tower_auth_secret }}"
+                  key: token
+            - name: TOWER_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ tower_auth_secret }}"
+                  key: host
+            - name: PROJECT_NAME
+              value: "{{ project_name }}"
+            - name: PROJECT_ORGANIZATION
+              value: "{{ project_organization }}"
+{% if project_description is defined and project_description != "" %}
+            - name: PROJECT_DESCRIPTION
+              value: "{{ project_description }}"
+{% endif %}
+            - name: SCM_TYPE
+              value: "{{ scm_type }}"
+{% if scm_credential is defined and scm_credential != "" %}
+            - name: SCM_CREDENTIAL
+              value: "{{ scm_credential }}"
+{% endif %}
+{% if project_repo is defined and project_repo != "" %}
+            - name: PROJECT_REPO
+              value: "{{ project_repo }}"
+{% endif %}
+{% if project_branch is defined and project_branch != "" %}
+            - name: PROJECT_BRANCH
+              value: "{{ project_branch }}"
+{% endif %}
+{%if state is defined and state != "" %}
+            - name: PROJECT_STATE
+              value: "{{ state }}"
+{% else %}
+            - name: PROJECT_STATE
+              value: "present"
+{% endif %}
+            - name: TOWER_VERIFY_SSL
+              value: "False"
+            - name: ANSIBLEPROJECT_NAME
+              value: "{{ ansible_operator_meta.name }}"
+            - name: ANSIBLEPROJECT_NAMESPACE
+              value: "{{ ansible_operator_meta.namespace }}"
+      restartPolicy: Never
+  backoffLimit: {{ backoff_limit }}

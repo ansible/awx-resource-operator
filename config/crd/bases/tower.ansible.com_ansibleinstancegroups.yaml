@@ -1,0 +1,81 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: ansibleinstancegroups.tower.ansible.com
+spec:
+  group: tower.ansible.com
+  names:
+    kind: AnsibleInstanceGroup
+    listKind: AnsibleInstanceGroupList
+    plural: ansibleinstancegroups
+    singular: ansibleinstancegroup
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: (Tech Preview) AnsibleInstanceGroup is the Schema for the ansibleinstancegroups API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              instance_group_name:
+                type: string
+                description: The name of the instance_groupe
+              credential_name:
+                type: string
+                description: Credential to authenticate with Kubernetes or OpenShift. Must be of type "Kubernetes/OpenShift API Bearer Token".
+              is_container_group:
+                type: boolean
+                description: Whether or not this is a container group
+              policy_spec_override:
+                description: Override the policy spec for this instance group
+                type: string
+              policy_instance_percentage:
+                description: The percentage of instances to use for this instance group
+                type: integer
+              policy_instance_minimum:
+                description: The minimum number of instances to use for this instance group
+                type: integer
+              instance_list:
+                description: A list of instances to use for this instance group
+                type: array
+                items:
+                  type: string
+              runner_image:
+                type: string
+                description: Runner image used when running jobs
+              runner_version:
+                type: string
+                description: Runner image version used when running jobs
+              runner_pull_policy:
+                type: string
+                description: Runner image pull policy used when running jobs
+            required:
+            - tower_auth_secret
+            - instance_group_name
+            - credential_name
+            description: Spec defines the definition of the AnsibleSchedule
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+          status:
+            description: Status defines the observed state of AnsibleInstanceGroup
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

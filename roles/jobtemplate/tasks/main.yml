@@ -1,7 +1,7 @@
 ---
 
 - name: Read Secret Configuration
-  k8s_info:
+  kubernetes.core.k8s_info:
     kind: Secret
     namespace: '{{ ansible_operator_meta.namespace }}'
     name: "{{ tower_auth_secret }}"
@@ -19,7 +19,7 @@
   no_log: true
 
 - name: Create Job Template
-  awx.awx.tower_job_template:
+  awx.awx.job_template:
     name: "{{ job_template_name }}"
     job_type: "{{ job_template_type | default('run') }}"
     inventory: "{{ job_template_inventory }}"
@@ -60,3 +60,30 @@
     - TOWER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
     - TOWER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
     - TOWER_VERIFY_SSL: "False"
+  register: job_template
+  ignore_errors: true
+
+- name: Update the k8s status
+  operator_sdk.util.k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: jobtemplate
+    name: '{{ ansible_operator_meta.name }}'
+    namespace: '{{ ansible_operator_meta.namespace }}'
+    status:
+      isFinished: true
+      message: "Job Template Created"
+  when:
+    - job_template.changed
+
+- name: Update the k8s status
+  operator_sdk.util.k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: jobtemplate
+    name: '{{ ansible_operator_meta.name }}'
+    namespace: '{{ ansible_operator_meta.namespace }}'
+    status:
+      isFinished: true
+      error: true
+      message: "There was an error in the job template"
+  when:
+    - job_template.failed

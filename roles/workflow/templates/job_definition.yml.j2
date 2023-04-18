@@ -1,0 +1,42 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ ansible_operator_meta.name }}"
+  namespace: "{{ ansible_operator_meta.namespace }}"
+spec:
+  ttlSecondsAfterFinished: {{ job_ttl }}
+  template:
+    spec:
+      serviceAccountName: resource-operator-controller-manager-job
+      containers:
+        - name: "{{ ansible_operator_meta.name }}"
+          image: "{{ _runner_image }}"
+          imagePullPolicy: "{{ _runner_pull_policy }}"
+          env:
+            - name: TOWER_OAUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ tower_auth_secret }}"
+                  key: token
+            - name: TOWER_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ tower_auth_secret }}"
+                  key: host
+{% if workflow_template_name is defined and workflow_template_name != "" %}
+            - name: TOWER_WORKFLOW_TEMPLATE_NAME
+              value: "{{ workflow_template_name }}"
+{% endif %}
+{% if workflow_template_name is defined and workflow_template_name != "" %}
+            - name: TOWER_WORKFLOW_TEMPLATE_NAME
+              value: "{{ workflow_template_name }}"
+{% endif %}
+            - name: TOWER_VERIFY_SSL
+              value: "False"
+            - name: ANSIBLEWORKFLOW_NAME
+              value: "{{ ansible_operator_meta.name }}"
+            - name: ANSIBLEWORKFLOW_NAMESPACE
+              value: "{{ ansible_operator_meta.namespace }}"
+      restartPolicy: Never
+  backoffLimit: {{ backoff_limit }}
