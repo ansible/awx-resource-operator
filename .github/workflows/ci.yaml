@@ -11,7 +11,7 @@ on:
 
 jobs:
   pull_request:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     name: pull_request
     env:
       DOCKER_API_VERSION: "1.38"
