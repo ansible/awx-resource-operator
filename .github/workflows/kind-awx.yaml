@@ -1,13 +1,13 @@
 ---
 
-name: AWX test
+name: AWX Integration
 
 on:
   pull_request:
-    branches: [devel, iaac-poc]
+    branches: [devel]
 
   push:
-    branches: [devel, iacc-poc]
+    branches: [devel]
 
 env:
   GO_VERSION: "1.17"
@@ -137,7 +137,8 @@ jobs:
         run: |
           sleep 10
           kubectl wait awx -n awx awx-demo --for condition=Successful=true --timeout=500s
-          kubectl wait deployment -n awx awx-demo --for condition=Available=True --timeout=500s
+          kubectl wait deployment -n awx awx-demo-task --for condition=Available=True --timeout=500s
+          kubectl wait deployment -n awx awx-demo-web --for condition=Available=True --timeout=500s
           kubectl apply -f test-e2e/token.yaml
           kubectl wait job -n awx create-token --for condition=Complete --timeout=60s
 
