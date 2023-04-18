@@ -63,8 +63,12 @@ spec:
               runner_pull_policy:
                 type: string
                 description: Runner image pull policy used when running jobs
+              connection_secret:
+                description: |
+                  A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
+                type: string
             required:
-            - tower_auth_secret
+            - connection_secret
             - instance_group_name
             - credential_name
             description: Spec defines the definition of the AnsibleSchedule

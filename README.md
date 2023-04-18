@@ -104,7 +104,7 @@ kubectl create -f awx-connection-secret.yml
 
 ### AnsibleJob
 
-Launch an automation job on AWX by creating an AnsibleJob resource. Be sure to specify the connection secret on `tower_auth_secret` as well as the Job Template you wish to launch.
+Launch an automation job on AWX by creating an AnsibleJob resource. Be sure to specify the connection secret on `connection_secret` as well as the Job Template you wish to launch.
 
 ```
 ---
@@ -113,7 +113,7 @@ kind: AnsibleJob
 metadata:
   generateName: demo-job-1 # generate a unique suffix per 'kubectl create'
 spec:
-  tower_auth_secret: awx-access
+  connection_secret: awx-access
   job_template_name: Demo Job Template
 ```
 
@@ -121,7 +121,7 @@ It is possible to configure other things like inventory, extra vars, and time to
 
 ```
 spec:
-  tower_auth_secret: awx-access
+  connection_secret: awx-access
   job_template_name: Demo Job Template
   inventory: Demo Inventory                    # Inventory prompt on launch needs to be enabled
   runner_image: quay.io/ansible/awx-resource-runner
@@ -154,7 +154,7 @@ kind: AnsibleJob
 metadata:
   generateName: demo-job-1 # generate a unique suffix per 'kubectl create'
 spec:
-  tower_auth_secret: awx-access
+  connection_secret: awx-access
   workflow_template_name: Demo Workflow Template
 ```
 
@@ -169,7 +169,7 @@ kind: JobTemplate
 metadata:
   name: jobtemplate-4
 spec:
-  tower_auth_secret: awx-access
+  connection_secret: awx-access
   job_template_name: ExampleJobTemplate4
   job_template_project: Demo Project
   job_template_playbook: hello_world.yml
