@@ -19,7 +19,7 @@
   no_log: true
 
 - name: Create Job Template
-  awx.awx.tower_job_template:
+  awx.awx.job_template:
     name: "{{ job_template_name }}"
     job_type: "{{ job_template_type | default('run') }}"
     inventory: "{{ job_template_inventory }}"
