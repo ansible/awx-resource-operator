@@ -5,5 +5,5 @@ metadata:
 spec:
   inventory: Demo Inventory
   workflow_template_name: Demo Job Template
-  tower_auth_secret: awxaccess
+  connection_secret: awxaccess
   runner_pull_policy: IfNotPresent

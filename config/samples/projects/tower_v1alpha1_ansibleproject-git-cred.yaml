@@ -10,5 +10,5 @@ spec:
   scm_credential: scm-cred
   project_organization: Default
   project_description: demoProject
-  tower_auth_secret: awxaccess
+  connection_secret: awxaccess
   runner_pull_policy: IfNotPresent

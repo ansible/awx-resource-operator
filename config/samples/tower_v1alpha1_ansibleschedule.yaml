@@ -3,7 +3,7 @@ kind: AnsibleSchedule
 metadata:
   name: schedule
 spec:
-  tower_auth_secret: awxaccess
+  connection_secret: awxaccess
   runner_pull_policy: IfNotPresent
   schedule_name: "Demo Schedule"
   schedule_rrule: "DTSTART:20210101T000000Z RRULE:FREQ=DAILY;INTERVAL=1;COUNT=1"

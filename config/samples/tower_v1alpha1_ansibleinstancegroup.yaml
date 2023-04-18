@@ -11,4 +11,4 @@ spec:
   policy_instance_minimum: 1
   instance_list: []
   runner_pull_policy: IfNotPresent
-  tower_auth_secret: awxaccess
+  connection_secret: awxaccess

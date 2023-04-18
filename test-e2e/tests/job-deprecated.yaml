@@ -1,10 +1,10 @@
----
 apiVersion: tower.ansible.com/v1alpha1
 kind: AnsibleJob
 metadata:
-  name: demo-job
+  name: demo-job-deprecated
   namespace: awx
 spec:
-  connection_secret: awxaccess
+  tower_auth_secret: awxaccess
   job_template_name: Demo Job Template
   runner_pull_policy: IfNotPresent
+

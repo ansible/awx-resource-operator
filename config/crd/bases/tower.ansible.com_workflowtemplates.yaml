@@ -31,7 +31,7 @@ spec:
             type: object
           spec:
             properties:
-              tower_auth_secret:
+              connection_secret:
                 description: Tower Auth Secret is the name of the secret containing the
                   username and password for the Tower instance
                 type: string
@@ -117,7 +117,7 @@ spec:
                 description: State is the state of the workflow template
                 type: string
             required:
-            - tower_auth_secret
+            - connection_secret
             - workflow_template_name
             - workflow_template_organization
             - workflow_template_inventory

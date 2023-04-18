@@ -52,7 +52,7 @@
   kubernetes.core.k8s_info:
     kind: Secret
     api_version: v1
-    name: "{{ tower_auth_secret }}"
+    name: "{{ connection_secret }}"
     namespace: "{{ ansible_operator_meta.namespace }}"
   register: tower_config_secret
 
@@ -108,6 +108,6 @@
         namespacedName: "{{ ansible_operator_meta.namespace+'/'+ansible_operator_meta.name }}"
         env:
           inventory: "{{ inventory | default(omit) }}"
-          secretNamespacedName: "{{ ansible_operator_meta.namespace+'/'+tower_auth_secret }}"
+          secretNamespacedName: "{{ ansible_operator_meta.namespace+'/'+connection_secret }}"
           instance_groupName: "{{ _instance_group_name }}"
           verifySSL: false

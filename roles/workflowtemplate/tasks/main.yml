@@ -3,7 +3,7 @@
   kubernetes.core.k8s_info:
     kind: Secret
     namespace: '{{ ansible_operator_meta.namespace }}'
-    name: "{{ tower_auth_secret }}"
+    name: "{{ connection_secret }}"
   register: tower_config_secret
 
 - name: Deploy the template

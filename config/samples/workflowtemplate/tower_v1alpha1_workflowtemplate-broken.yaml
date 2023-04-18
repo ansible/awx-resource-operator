@@ -3,7 +3,7 @@ kind: WorkflowTemplate
 metadata:
   name: workflowtemplate-broken
 spec:
-  tower_auth_secret: awxaccess
+  connection_secret: awxaccess
   workflow_template_name: BrokenTemplate
   workflow_template_description: Example Workflow Template
   workflow_template_organization: Default

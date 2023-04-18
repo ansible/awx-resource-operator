@@ -157,6 +157,10 @@ jobs:
           kubectl wait ansiblejob -n awx demo-job --for condition=Successful=True --timeout=60s
           kubectl apply -f config/samples/tower_v1alpha1_ansiblejob-broken.yaml -n awx
           kubectl wait ansiblejob -n awx broke-job --for condition=Successful=True --timeout=60s
+          kubectl apply -f test-e2e/tests/job-deprecated.yaml
+          kubectl wait ansiblejob -n awx demo-job-deprecated --for condition=Successful=True --timeout=60s
+          kubectl apply -f config/samples/tower_v1alpha1_ansiblejob-broken-dep.yaml -n awx
+          kubectl wait ansiblejob -n awx broke-job-deprecated --for condition=Successful=True --timeout=60s
 
       - name: launch a template
         run: |
