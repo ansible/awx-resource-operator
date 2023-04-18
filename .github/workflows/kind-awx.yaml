@@ -4,7 +4,6 @@ name: AWX Integration
 
 on:
   pull_request:
-    branches: [devel]
 
   push:
     branches: [devel]
