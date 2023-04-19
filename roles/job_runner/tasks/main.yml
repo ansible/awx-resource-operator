@@ -2,26 +2,26 @@
 - name: Launch Project
   include_tasks: create_project.yml
   when:
-    - lookup('env','PROJECT_NAME') is defined
-    - lookup('env','PROJECT_NAME') != ''
+    - lookup('env','ANSIBLEPROJECT_NAME') is defined
+    - lookup('env','ANSIBLEPROJECT_NAME') != ''
 
 - name: Launch Credential
   include_tasks: credentials.yml
   when:
-    - lookup('env','CREDENTIAL_NAME') is defined
-    - lookup('env','CREDENTIAL_NAME') != ''
+    - lookup('env','ANSIBLECREDENTIAL_NAME') is defined
+    - lookup('env','ANSIBLECREDENTIAL_NAME') != ''
 
 - name: Launch Schedule
   include_tasks: create_schedule.yml
   when:
-    - lookup('env','SCHEDULE_NAME') is defined
-    - lookup('env','SCHEDULE_NAME') != ''
+    - lookup('env','ANSIBLESCHEDULE_NAME') is defined
+    - lookup('env','ANSIBLESCHEDULE_NAME') != ''
 
 - name: Launch Instance Group
   include_tasks: create_instance_group.yml
   when:
-    - lookup('env','INSTANCEGROUP_NAME') is defined
-    - lookup('env','INSTANCEGROUP_NAME') != ''
+    - lookup('env','ANSIBLEINSTANCEGROUP_NAME') is defined
+    - lookup('env','ANSIBLEINSTANCEGROUP_NAME') != ''
 
 - name: Read AnsibleJob Specs
   kubernetes.core.k8s_info:

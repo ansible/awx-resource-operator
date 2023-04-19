@@ -89,7 +89,7 @@
 
 - name: Set instance_group name
   set_fact:
-    _instance_group_name: "{{ instance_group_name}}"
+    _instance_group_name: "{{ name}}"
 
 - name: Update AnsibleInstanceGroup status with K8s job info
   operator_sdk.util.k8s_status:

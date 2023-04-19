@@ -31,9 +31,9 @@ spec:
             type: object
           spec:
             properties:
-              instance_group_name:
+              name:
                 type: string
-                description: The name of the instance_groupe
+                description: The name of the Instance Group
               credential_name:
                 type: string
                 description: Credential to authenticate with Kubernetes or OpenShift. Must be of type "Kubernetes/OpenShift API Bearer Token".
@@ -69,9 +69,9 @@ spec:
                 type: string
             required:
             - connection_secret
-            - instance_group_name
+            - name
             - credential_name
-            description: Spec defines the definition of the AnsibleSchedule
+            description: Spec defines the definition of the Ansible Instance Group
             type: object
             x-kubernetes-preserve-unknown-fields: true
           status:

@@ -68,13 +68,117 @@ spec:
         - urn:alm:descriptor:com.tectonic.ui:text
         - urn:alm:descriptor:com.tectonic.ui:advanced
       version: v1alpha1
+    - description: Define a Credential
+      displayuName: AWX Credential
+      kind: AnsibleCredential
+      name: ansiblecredentials.tower.ansible.com
+      specDescriptors:
+      - displayName: Credential Name
+        path: name
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Credential Type
+        path: type
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Credential Organization
+        path: organization
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Credential Description
+        path: description
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Credential Inputs
+        path: inputs
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: SSH Key Secret
+        path: ssh_secret
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Kubernetes Bearer Token Secret
+        path: kubernetes_bearer_token_secret
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Connection Secret
+        path: connection_secret
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Kubernetes API
+        path: kubernetes_api
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: SSH Username
+        path: ssh_username
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Ansible Runner Image
+        path: runner_image
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      - displayName: Ansible Runner Version
+        path: runner_version
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      version: v1alpha1
+    - description: Define an Instance Group
+      displayName: AWX Instance Group
+      kind: AnsibleInstanceGroup
+      name: ansibleinstancegroupss.tower.ansible.com
+      specDescriptors:
+      - displayName: Instance Group Name
+        path: name
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: OpenShift or Kubernetes credential
+        path: credential_name
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Container Group
+        path: is_container_group
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      - displayName: Policy Spec Override
+        path: policy_spec_override
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Policy Instance Percentage
+        path: policy_instance_percentage
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:int
+      - displayName: Policy Instance Minimum
+        path: policy_instance_minimum
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:int
+      - displayName: Instances for Group
+        path: instance_list
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:array
+      - displayName: Connection Secret
+        path: connection_secret
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Ansible Runner Image
+        path: runner_image
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      - displayName: Ansible Runner Version
+        path: runner_version
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      version: v1alpha1
     - description: Launch a new workflow via awx
       displayName: AWX workflow
       kind: AnsibleWorkflow
       name: ansibleworkflows.tower.ansible.com
       specDescriptors:
       - displayName: Workflow Template Name
-        path: workflow_template_name
+        path: name
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Authentication Secret
@@ -143,13 +247,94 @@ spec:
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       version: v1alpha1
+    - description: Define a new workflow template
+      displayName: AWX Workflow Template
+      kind: WorkflowTemplate
+      name: workflowtemplates.tower.ansible.com
+      specDescriptors:
+      - displayName: Workflow Template Name
+        path: name
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Authentication Secret
+        path: connection_secret
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Workflow Inventory
+        path: inventory
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Workflow Organization
+        path: organization
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Allow Simultaneous
+        path: allow_simultaneous
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      - displayName: Ask Inventory on launch
+        path: ask_inventory_on_launch
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      - displayName: Ask Variables on launch
+        path: ask_variables_on_launch
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      - displayName: Ask limit on launch
+        path: ask_limit_on_launch
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      - displayName: Ask scm branch on launch
+        path: ask_scm_branch_on_launch
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      - displayName: Ask labels on launch
+        path: ask_labels_on_launch
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      - displayName: Ask tags on launch
+        path: ask_tags_on_launch
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      - displayName: Ask skip tags on launch
+        path: ask_skip_tags_on_launch
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      - displayName: Workflow limit
+        path: limit
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Job tags
+        path: job_tags
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Labels for the template
+        path: labels
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Skip Tags
+        path: skip_tags
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Workflow description
+        path: description
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Survey Enabled
+        path: survey_enabled
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      - displayName: Survey Spec
+        path: survey_spec
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
     - description: Define a new project in awx
       displayName: AWX project
       kind: AnsibleProject
       name: ansibleprojects.tower.ansible.com
       specDescriptors:
       - displayName: Project Name
-        path: project_name
+        path: name
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Authentication Secret
@@ -157,19 +342,45 @@ spec:
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Git Repository URL
-        path: project_repo
+        path: repo
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Git Repository Branch
-        path: project_branch
+        path: branch
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Project Organization
-        path: project_organization
+        path: organization
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Project SCM Type
+        path: scm_type
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Project Description
-        path: project_description
+        path: description
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      version: v1alpha1
+    - description: Define a new Schedule in awx
+      displayName: AWX Schedule
+      kind: AnsibleSchedule
+      name: ansibleschedules.tower.ansible.com
+      specDescriptors:
+      - displayName: Schedule Name
+        path: name
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Authentication Secret
+        path: connection_secret
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Schedule Rules
+        path: rrules
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Unified Job Template
+        path: unified_job_template
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       version: v1alpha1
