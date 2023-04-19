@@ -178,7 +178,7 @@ spec:
       name: ansibleworkflows.tower.ansible.com
       specDescriptors:
       - displayName: Workflow Template Name
-        path: name
+        path: workflow_template_name
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Authentication Secret
