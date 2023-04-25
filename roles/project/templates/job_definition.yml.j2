@@ -24,13 +24,13 @@ spec:
                 secretKeyRef:
                   name: "{{ connection_secret }}"
                   key: host
-            - name: PROJECT_NAME
-              value: "{{ project_name }}"
-            - name: PROJECT_ORGANIZATION
-              value: "{{ project_organization }}"
-{% if project_description is defined and project_description != "" %}
-            - name: PROJECT_DESCRIPTION
-              value: "{{ project_description }}"
+            - name: NAME
+              value: "{{ name }}"
+            - name: ORGANIZATION
+              value: "{{ organization }}"
+{% if description is defined and description != "" %}
+            - name: DESCRIPTION
+              value: "{{ description }}"
 {% endif %}
             - name: SCM_TYPE
               value: "{{ scm_type }}"
@@ -38,19 +38,19 @@ spec:
             - name: SCM_CREDENTIAL
               value: "{{ scm_credential }}"
 {% endif %}
-{% if project_repo is defined and project_repo != "" %}
-            - name: PROJECT_REPO
-              value: "{{ project_repo }}"
+{% if repo is defined and repo != "" %}
+            - name: REPO
+              value: "{{ repo }}"
 {% endif %}
-{% if project_branch is defined and project_branch != "" %}
-            - name: PROJECT_BRANCH
-              value: "{{ project_branch }}"
+{% if branch is defined and branch != "" %}
+            - name: BRANCH
+              value: "{{ branch }}"
 {% endif %}
 {%if state is defined and state != "" %}
-            - name: PROJECT_STATE
+            - name: STATE
               value: "{{ state }}"
 {% else %}
-            - name: PROJECT_STATE
+            - name: STATE
               value: "present"
 {% endif %}
             - name: TOWER_VERIFY_SSL

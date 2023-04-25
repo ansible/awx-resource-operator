@@ -75,7 +75,7 @@
 
 - name: Set schedule name
   set_fact:
-    _schedule_name: "{{ schedule_name}}"
+    _schedule_name: "{{ name}}"
 
 - name: Update AnsibleSchedule status with K8s job info
   operator_sdk.util.k8s_status:

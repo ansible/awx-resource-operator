@@ -1,11 +1,11 @@
 - name: Define a schedule, if error update AnsibleSchedule status then end play
   block:
     - name: Launch schedule
-      awx.awx.tower_schedule:
-        name: "{{ lookup('env','SCHEDULE_NAME') }}"
-        rrule: "{{ lookup('env','SCHEDULE_RRULE') }}"
-        state: "{{ lookup('env','SCHEDULE_STATE') | default('present') }}"
-        unified_job_template: "{{ lookup('env','SCHEDULE_UNIFIED_JOB_TEMPLATE') }}"
+      awx.awx.schedule:
+        name: "{{ lookup('env','NAME') }}"
+        rrule: "{{ lookup('env','RRULE') }}"
+        state: "{{ lookup('env','STATE') | default('present') }}"
+        unified_job_template: "{{ lookup('env','UNIFIED_JOB_TEMPLATE') }}"
       register: schedule
   rescue:
     - name: Update status if creation resulted in an error

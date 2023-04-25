@@ -4,10 +4,10 @@ metadata:
   name: workflowtemplate-broken
 spec:
   connection_secret: awxaccess
-  workflow_template_name: BrokenTemplate
-  workflow_template_description: Example Workflow Template
-  workflow_template_organization: Default
-  workflow_template_inventory: Demo Inventory
+  name: BrokenTemplate
+  description: Example Workflow Template
+  organization: Default
+  inventory: Demo Inventory
   workflow_nodes:
   - identifier: node101
     unified_job_template:

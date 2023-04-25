@@ -3,12 +3,12 @@ kind: AnsibleProject
 metadata:
   name: private-git
 spec:
-  project_repo: https://github.com/ansible/ansible-tower-samples
-  project_branch: master
-  project_name: private-git
+  repo: https://github.com/ansible/ansible-tower-samples
+  branch: master
+  name: private-git
   scm_type: git
   scm_credential: scm-cred
-  project_organization: Default
-  project_description: demoProject
+  organization: Default
+  description: demoProject
   connection_secret: awxaccess
   runner_pull_policy: IfNotPresent

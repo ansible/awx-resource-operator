@@ -31,16 +31,16 @@ spec:
             type: object
           spec:
             properties:
-              project_repo:
+              repo:
                 type: string
-                description: The URL of the project repository
-              project_branch:
+                description: The URL of the project resources
+              branch:
                 type: string
                 description: The branch of the project repository
-              project_name:
+              name:
                 type: string
                 description: The name of the project
-              project_organization:
+              organization:
                 type: string
                 description: The organization of the project
               scm_credential:
@@ -49,6 +49,9 @@ spec:
               scm_type:
                 type: string
                 description: The SCM type of the project
+              description:
+                type: string
+                description: The description of the project
               connection_secret:
                 description: |
                   A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
@@ -65,8 +68,8 @@ spec:
             required:
             - connection_secret
             - scm_type
-            - project_name
-            - project_organization
+            - name
+            - organization
             description: Spec defines the definition of the AnsibleProject
             type: object
             x-kubernetes-preserve-unknown-fields: true
