@@ -222,6 +222,13 @@ jobs:
           kubectl apply -f config/samples/tower_v1alpha1_ansibleinstancegroup.yaml -n awx
           kubectl wait ansibleinstancegroup -n awx kuber-instance-group --for condition=Successful=True --timeout=240s
 
+      - name: create two inventories
+        run: |
+          kubectl apply -f config/samples/inventory/tower_v1alpha1_ansibleinventory-clone.yaml -n awx
+          kubectl apply -f config/samples/inventory/tower_v1alpha1_ansibleinventory-new.yaml -n awx
+          kubectl wait ansibleinventory -n awx inventory-clone --for condition=Successful=True --timeout=240s
+          kubectl wait ansibleinventory -n awx inventory-new --for condition=Successful=True --timeout=240s
+
       - name: validate error message
         run: |
           kubectl get ansiblejob -n awx broke-job -o yaml

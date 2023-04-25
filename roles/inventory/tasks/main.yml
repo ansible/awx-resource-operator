@@ -1,0 +1,60 @@
+---
+- name: Read Secret Configuration from connection_secret
+  kubernetes.core.k8s_info:
+    kind: Secret
+    api_version: v1
+    name: "{{ connection_secret }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+  register: tower_connection_secret
+  when: connection_secret is defined
+
+- name: Set fact based on secret results
+  set_fact:
+     tower_config_secret: "{{ tower_connection_secret }}"
+
+- name: Validate Secret Exists
+  assert:
+    that:
+      - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
+    fail_msg: "Tower Secret must exist"
+
+- name: Create inventory based on a copy of the source inventory
+  awx.awx.inventory:
+    name: "{{ name }}"
+    description: "{{ description }}"
+    organization: "{{ organization }}"
+    copy_from: "{{ copy_from | default(omit) }}"
+    state: "{{ state | default('present') }}"
+    instance_groups: "{{ instance_groups | default(omit) }}"
+  environment:
+    - TOWER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
+    - TOWER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
+    - TOWER_VERIFY_SSL: "False"
+  register: inventory
+  ignore_errors: true
+
+- name: Update the k8s status
+  operator_sdk.util.k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: ansibleinventory
+    name: '{{ ansible_operator_meta.name }}'
+    namespace: '{{ ansible_operator_meta.namespace }}'
+    status:
+      isFinished: true
+      message: "Inventory Created"
+  when:
+    - inventory.changed
+
+- name: Update the k8s status
+  operator_sdk.util.k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: ansibleinventory
+    name: '{{ ansible_operator_meta.name }}'
+    namespace: '{{ ansible_operator_meta.namespace }}'
+    status:
+      isFinished: true
+      error: true
+      message: "There was an error when creating the inventory"
+  when:
+    - inventory.failed
+
