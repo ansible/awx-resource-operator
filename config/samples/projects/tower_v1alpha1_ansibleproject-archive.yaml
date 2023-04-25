@@ -7,6 +7,6 @@ spec:
   name: archive
   scm_type: archive
   organization: Default
-  escription: demoProject
+  description: demoProject
   connection_secret: awxaccess
   runner_pull_policy: IfNotPresent
