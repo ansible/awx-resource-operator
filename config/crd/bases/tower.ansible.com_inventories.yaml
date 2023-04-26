@@ -44,7 +44,7 @@ spec:
               connection_secret:
                 type: string
                 description: |
-                  A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.               
+                  A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
             description: Spec defines the desired state of Inventory
             type: object
             x-kubernetes-preserve-unknown-fields: true

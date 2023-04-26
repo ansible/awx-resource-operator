@@ -5,7 +5,7 @@ metadata:
 spec:
   connection_secret: awxaccess
   description: my new inventory
-  name: newinventory 
+  name: newinventory
   organization: Default
   state: present
   instance_groups: default
