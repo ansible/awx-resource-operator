@@ -6,7 +6,7 @@ metadata:
     capabilities: Basic Install
     categories: Integration & Delivery,OpenShift Optional
     certified: "false"
-    containerImage: quay.io/open-cluster-management/platform-resource-operator:latest
+    containerImage: quay.io/ansible/awx-resource-runner:latest
     description: The Ansible Automation Platform Resource Operator manages launching
       Ansible Jobs and Workflows.
     repository: https://github.com/ansible/awx-resource-operator
@@ -18,7 +18,7 @@ spec:
   customresourcedefinitions:
     owned:
     - description: Launch a new job via awx
-      displayName: AWX job
+      displayName: AWX Job
       kind: AnsibleJob
       name: ansiblejobs.tower.ansible.com
       specDescriptors:
@@ -26,7 +26,7 @@ spec:
         path: job_template_name
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
-      - displayName: AWX Authentication Secret(DEPRECATED)
+      - displayName: AWX Authentication Secret (DEPRECATED)
         path: tower_auth_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
@@ -69,7 +69,7 @@ spec:
         - urn:alm:descriptor:com.tectonic.ui:advanced
       version: v1alpha1
     - description: Define a Credential
-      displayuName: AWX Credential
+      displayName: AWX Credential
       kind: AnsibleCredential
       name: ansiblecredentials.tower.ansible.com
       specDescriptors:
@@ -173,7 +173,7 @@ spec:
         - urn:alm:descriptor:com.tectonic.ui:advanced
       version: v1alpha1
     - description: Launch a new workflow via awx
-      displayName: AWX workflow
+      displayName: AWX Workflow
       kind: AnsibleWorkflow
       name: ansibleworkflows.tower.ansible.com
       specDescriptors:
@@ -210,7 +210,7 @@ spec:
         - urn:alm:descriptor:com.tectonic.ui:advanced
       version: v1alpha1
     - description: Define a new job template in awx
-      displayName: AWX job template
+      displayName: AWX Job Template
       kind: JobTemplate
       name: jobtemplates.tower.ansible.com
       specDescriptors:
@@ -329,7 +329,7 @@ spec:
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
     - description: Define a new project in awx
-      displayName: AWX project
+      displayName: AWX Project
       kind: AnsibleProject
       name: ansibleprojects.tower.ansible.com
       specDescriptors:
@@ -413,7 +413,7 @@ spec:
   - ci
   - cd
   links:
-  - name: AWX Operator
+  - name: AWX Resource Operator
     url: https://github.com/ansible/awx-resource-operator
   maintainers:
   - email: ocm-dev@open-cluster-management.io
