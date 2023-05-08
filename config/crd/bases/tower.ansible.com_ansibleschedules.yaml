@@ -31,13 +31,13 @@ spec:
             type: object
           spec:
             properties:
-              schedule_name:
+              name:
                 type: string
                 description: The name of the schedule
-              schedule_rrule:
+              rrule:
                 type: string
                 description: A value representing the schedules iCal recurrence rule.
-              schedule_unified_job_template:
+              unified_job_template:
                 type: string
                 description: The unified job template to schedule
               connection_secret:
@@ -55,9 +55,9 @@ spec:
                 description: Runner image pull policy used when running jobs
             required:
             - connection_secret
-            - schedule_name
-            - schedule_rrule
-            - schedule_unified_job_template
+            - name
+            - rrule
+            - unified_job_template
             description: Spec defines the definition of the AnsibleSchedule
             type: object
             x-kubernetes-preserve-unknown-fields: true

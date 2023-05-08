@@ -2,30 +2,30 @@
   block:
     - name: Launch project without credentials
       awx.awx.project:
-        name: "{{ lookup('env','PROJECT_NAME') }}"
-        description: "{{ lookup('env','PROJECT_DESCRIPTION') }}"
-        organization: "{{ lookup('env','PROJECT_ORGANIZATION') }}"
+        name: "{{ lookup('env','NAME') }}"
+        description: "{{ lookup('env','DESCRIPTION') }}"
+        organization: "{{ lookup('env','ORGANIZATION') }}"
         scm_update_on_launch: True
         scm_type: "{{ lookup('env','SCM_TYPE') }}"
-        scm_url: "{{ lookup('env','PROJECT_REPO') | default(omit) }}"
-        state: "{{ lookup('env','PROJECT_STATE') | default('present') }}"
+        scm_url: "{{ lookup('env','REPO') | default(omit) }}"
+        state: "{{ lookup('env','STATE') | default('present') }}"
         scm_credential:
-        scm_branch: "{{ lookup('env','PROJECT_BRANCH'| default(omit)) }}"
+        scm_branch: "{{ lookup('env','BRANCH'| default(omit)) }}"
       register: project
       when:
         - lookup('env','SCM_CREDENTIAL') is not defined or lookup('env','SCM_CREDENTIAL') == ''
 
     - name: Launch project with credentials
       awx.awx.project:
-        name: "{{ lookup('env','PROJECT_NAME') }}"
-        description: "{{ lookup('env','PROJECT_DESCRIPTION') }}"
-        organization: "{{ lookup('env','PROJECT_ORGANIZATION') }}"
+        name: "{{ lookup('env','NAME') }}"
+        description: "{{ lookup('env','DESCRIPTION') }}"
+        organization: "{{ lookup('env','ORGANIZATION') }}"
         scm_update_on_launch: True
         scm_type: "{{ lookup('env','SCM_TYPE') }}"
-        scm_url: "{{ lookup('env','PROJECT_REPO') | default(omit) }}"
+        scm_url: "{{ lookup('env','REPO') | default(omit) }}"
         scm_credential: "{{ lookup('env','SCM_CREDENTIAL') }}"
-        state: "{{ lookup('env','PROJECT_STATE') | default('present') }}"
-        scm_branch: "{{ lookup('env','PROJECT_BRANCH'| default(omit)) }}"
+        state: "{{ lookup('env','STATE') | default('present') }}"
+        scm_branch: "{{ lookup('env','BRANCH'| default(omit)) }}"
       register: project
       when:
         - lookup('env','SCM_CREDENTIAL') is defined

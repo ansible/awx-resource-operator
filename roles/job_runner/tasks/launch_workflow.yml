@@ -50,7 +50,7 @@
 - name: Wait for the tower workflow, if error update AnsibleWorkflow status then end play
   block:
     - name: Register Job result when complete
-      awx.awx.tower_job_wait:
+      awx.awx.job_wait:
         job_id: "{{ job.id }}"
         job_type: workflow_jobs
       register: job_result

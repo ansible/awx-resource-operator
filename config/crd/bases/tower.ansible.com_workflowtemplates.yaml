@@ -35,25 +35,21 @@ spec:
                 description: Tower Auth Secret is the name of the secret containing the
                   username and password for the Tower instance
                 type: string
-              workflow_template_name:
+              name:
                 description: Workflow Template Name is the name of the workflow template
                   in Tower
                 type: string
-              workflow_template_extra_vars:
+              extra_vars:
                 description: Workflow Template Extra Vars is a list of extra vars to
                   be passed to the workflow template in Tower
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
-              workflow_template_description:
+              description:
                 description: Workflow Template Description is the description of the
                   workflow template in Tower
                 type: string
-              workflow_template_organization:
+              organization:
                 description: Workflow Template Organization is the name of the organization
-                  in Tower
-                type: string
-              workflow_template_inventory:
-                description: Workflow Template Inventory is the name of the inventory
                   in Tower
                 type: string
               allow_simultaneous:
@@ -118,9 +114,9 @@ spec:
                 type: string
             required:
             - connection_secret
-            - workflow_template_name
-            - workflow_template_organization
-            - workflow_template_inventory
+            - name
+            - organization
+            - inventory
             - workflow_nodes
             description: Spec defines the desired state of WorkfkowTemplate
             type: object

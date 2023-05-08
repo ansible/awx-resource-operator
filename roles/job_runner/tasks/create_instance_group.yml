@@ -2,9 +2,9 @@
   block:
     - name: Launch instance_group with credentials
       awx.awx.instance_group:
-        name: "{{ lookup('env','INSTANCEGROUP_NAME') }}"
-        state: "{{ lookup('env','INSTANCEGROUP_STATE') | default('present') }}"
-        credential: "{{ lookup('env','INSTANCE_GROUP_CREDENTIAL_NAME') }}"
+        name: "{{ lookup('env','NAME') }}"
+        state: "{{ lookup('env','STATE') | default('present') }}"
+        credential: "{{ lookup('env','NAME') }}"
         is_container_group: "{{ lookup('env','IS_CONTAINER_GROUP')| default(omit, true) }}"
         pod_spec_override: "{{ lookup('env','POD_SPEC_OVERRIDE')| default(omit, true) }}"
         policy_instance_percentage: "{{ lookup('env','POLICY_INSTANCE_PERCENTAGE')| default(omit, true) }}"

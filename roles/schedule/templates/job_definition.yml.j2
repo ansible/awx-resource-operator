@@ -24,19 +24,19 @@ spec:
                 secretKeyRef:
                   name: "{{ connection_secret }}"
                   key: host
-            - name: SCHEDULE_NAME
-              value: "{{ schedule_name }}"
-            - name: SCHEDULE_RRULE
-              value: "{{ schedule_rrule }}"
-            - name: SCHEDULE_UNIFIED_JOB_TEMPLATE
-              value: "{{ schedule_unified_job_template }}"
+            - name: NAME
+              value: "{{ name }}"
+            - name: RRULE
+              value: "{{ rrule }}"
+            - name: UNIFIED_JOB_TEMPLATE
+              value: "{{ unified_job_template }}"
             - name: TOWER_VERIFY_SSL
               value: "False"
 {%if state is defined and state != "" %}
-            - name: SCHEDULE_STATE
+            - name: STATE
               value: "{{ state }}"
 {% else %}
-            - name: SCHEDULE_STATE
+            - name: STATE
               value: "present"
 {% endif %}
             - name: ANSIBLESCHEDULE_NAME

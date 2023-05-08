@@ -24,16 +24,16 @@ spec:
                 secretKeyRef:
                   name: "{{ connection_secret }}"
                   key: host
-            - name: INSTANCEGROUP_NAME
-              value: "{{ instance_group_name }}"
+            - name: NAME
+              value: "{{ name }}"
 {% if state is defined and state != "" %}
-            - name: INSTANCEGROUP_STATE
+            - name: STATE
               value: "{{ state }}"
 {% else %}
-            - name: INSTANCEGROUP_STATE
+            - name: STATE
               value: "present"
 {% endif %}
-            - name: INSTANCE_GROUP_CREDENTIAL_NAME
+            - name: CREDENTIAL_NAME
               value: "{{ credential_name }}"
             - name: IS_CONTAINER_GROUP
               value: "{{ is_container_group }}"
