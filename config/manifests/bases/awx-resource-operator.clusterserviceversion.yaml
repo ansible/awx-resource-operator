@@ -127,7 +127,7 @@ spec:
     - description: Define an Instance Group
       displayName: AWX Instance Group
       kind: AnsibleInstanceGroup
-      name: ansibleinstancegroupss.tower.ansible.com
+      name: ansibleinstancegroups.tower.ansible.com
       specDescriptors:
       - displayName: Instance Group Name
         path: name
@@ -328,6 +328,7 @@ spec:
         path: survey_spec
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+      version: v1alpha1
     - description: Define a new project in awx
       displayName: AWX Project
       kind: AnsibleProject
