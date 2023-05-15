@@ -4,7 +4,7 @@ metadata:
   name: jobtemplate-sample
 spec:
   tower_auth_secret: awxaccess
-  job_template_name: ExampleJobTemplate
-  job_template_project: Demo Project
-  job_template_playbook: hello_world.yml
-  job_template_inventory: Demo Inventory
+  name: ExampleJobTemplate
+  project: Demo Project
+  playbook: hello_world.yml
+  inventory: Demo Inventory
