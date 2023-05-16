@@ -13,6 +13,13 @@
   when:
     - ansibleproj_info['resources'][0]['status']['generation'] is defined
 
+- name: debug the generation in the metadata
+  debug:
+    msg: "{{ ansibleproj_info['resources'][0]['metadata']['generation'] }}"
+  when:
+    - ansibleproj_info['resources'][0]['metadata']['generation'] is defined
+
+
 - name: Set isFinished to false if generation in status does not match metadata
   set_fact:
     _isFinished: false
