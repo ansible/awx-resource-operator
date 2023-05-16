@@ -413,6 +413,33 @@ spec:
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       version: v1alpha1
+    - description: Define a new Inventory in awx
+      displayName: AWX Schedule
+      kind: AnsibleInventory
+      name: ansibleinventories.tower.ansible.com
+      specDescriptors:
+      - displayName: Inventory Name
+        path: name
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Inventory Organization
+        path: organization
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Inventory Description
+        path: description
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Inventory Instance Group
+        path: instance_groups
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: Copy inventory from another inventory
+        displayName: Copy Inventory
+        path: copy_from
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      version: v1alpha1
   description: The Ansible Automation Platform Resource Operator manages launching
     Ansible Jobs and Workflows.
   displayName: AWX Resource Operator

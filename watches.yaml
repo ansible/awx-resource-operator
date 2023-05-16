@@ -40,4 +40,8 @@
   kind: WorkflowTemplate
   role: workflowtemplate
   watchDependentResources: True
+- version: v1alpha1
+  group: tower.ansible.com
+  kind: AnsibleInventory
+  role: inventory
 #+kubebuilder:scaffold:watch
