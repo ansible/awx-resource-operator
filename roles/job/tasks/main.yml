@@ -38,6 +38,8 @@
   when:
     - ansiblejob_info['resources'][0]['status']['isFinished'] is defined
     - ansiblejob_info['resources'][0]['status']['isFinished']
+    - ansiblejob_info['resources'][0]['status']['generation'] is defined
+    - ansiblejob_info['resources'][0]['status']['generation']|int == ansiblejob_info['resources'][0]['metadata']['generation']|int
 
 - block:
     - name: Check number of attempts to execute the job have been made
@@ -111,6 +113,7 @@
     namespace: "{{ ansible_operator_meta.namespace }}"
     status:
       k8sJob:
+        generation: "{{ k8s_job['resources'][0]['metadata']['generation'] }}"
         created: true
         message: |-
           Monitor the job.batch status for more details with the following commands:
