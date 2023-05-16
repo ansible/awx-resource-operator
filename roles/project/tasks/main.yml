@@ -20,9 +20,9 @@
     - ansibleproj_info['resources'][0]['metadata']['generation'] is defined
 
 
-- name: Set isFinished to false if generation in status does not match metadata
+- name: if generation in status does not match metadata set reconcile to true
   set_fact:
-    _isFinished: false
+    reconcile: true
   when:
     - ansibleproj_info['resources'][0]['status']['isFinished'] is defined
     - ansibleproj_info['resources'][0]['status']['generation'] is defined
@@ -31,7 +31,8 @@
 - name: End play early is AnsibleProject has already finished
   meta: end_play
   when:
-    - _isFinished is not defined
+    - reconcile is defined
+    - reconcile
     - ansibleproj_info['resources'][0]['status']['isFinished'] is defined
     - ansibleproj_info['resources'][0]['status']['isFinished']
 
