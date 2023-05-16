@@ -1,0 +1,11 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleInventory
+metadata:
+  name: inventory-clone
+spec:
+  connection_secret: awxaccess
+  copy_from: Demo Inventory
+  description: my inventory
+  name: sampleinv
+  organization: Default
+  state: present

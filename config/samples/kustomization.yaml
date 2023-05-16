@@ -4,6 +4,7 @@ resources:
 - tower_v1alpha1_ansibleschedule.yaml
 - tower_v1alpha1_ansibleinstancegroup.yaml
 - ./credentials/
+- ./inventory/
 - ./projects/
 - ./jobtemplate/
 - ./workflow/

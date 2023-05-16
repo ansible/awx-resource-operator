@@ -38,4 +38,8 @@
   group: tower.ansible.com
   kind: WorkflowTemplate
   role: workflowtemplate
+- version: v1alpha1
+  group: tower.ansible.com
+  kind: AnsibleInventory
+  role: inventory
 #+kubebuilder:scaffold:watch
