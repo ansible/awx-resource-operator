@@ -19,12 +19,12 @@
   when:
     - ansibleproj_info['resources'][0]['metadata']['generation'] is defined
 
-- name: End play early is AnsibleProject has already finished
+- name: End play early is AnsibleProject has already finished or if generation in metadata is equal to generation in status
   meta: end_play
   when:
-    - ansibleproj_info['resources'][0]['status']['generation'] == ansibleproj_info['resources'][0]['metadata']['generation']
     - ansibleproj_info['resources'][0]['status']['isFinished'] is defined
     - ansibleproj_info['resources'][0]['status']['isFinished']
+    - ansibleproj_info['resources'][0]['status']['generation'] is defined
 
 - block:
     - name: Check number of attempts to execute the job have been made
