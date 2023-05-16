@@ -44,4 +44,5 @@
   group: tower.ansible.com
   kind: AnsibleInventory
   role: inventory
+  watchDependentResources: True
 #+kubebuilder:scaffold:watch
