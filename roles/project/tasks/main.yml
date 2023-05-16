@@ -19,13 +19,17 @@
   when:
     - ansibleproj_info['resources'][0]['metadata']['generation'] is defined
 
+- name: message a failed check
+  msg: "this makes no sense"
+  when:
+    - ansibleproj_info['resources'][0]['status']['generation'] == ansibleproj_info['resources'][0]['metadata']['generation']
+
 - name: End play early is AnsibleProject has already finished or if generation in metadata is equal to generation in status
   meta: end_play
   when:
     - ansibleproj_info['resources'][0]['status']['isFinished'] is defined
     - ansibleproj_info['resources'][0]['status']['isFinished']
     - ansibleproj_info['resources'][0]['status']['generation'] is defined
-    - ansibleproj_info['resources'][0]['status']['generation'] == ansibleproj_info['resources'][0]['metadata']['generation']
 
 - block:
     - name: Check number of attempts to execute the job have been made
