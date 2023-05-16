@@ -7,9 +7,18 @@
     namespace: "{{ ansible_operator_meta.namespace }}"
   register: ansibleproj_info
 
+- name: Set isFinished to false if generation in status does not match metadata
+  set_fact:
+    _isFinished: false
+  when:
+    - ansibleproj_info['resources'][0]['status']['isFinished'] is defined
+    - ansibleproj_info['resources'][0]['status']['generation'] is defined
+    - ansibleproj_info['resources'][0]['status']['generation'] != ansibleproj_info['resources'][0]['metadata']['generation']
+
 - name: End play early is AnsibleProject has already finished
   meta: end_play
   when:
+    - _isFinished is not defined
     - ansibleproj_info['resources'][0]['status']['isFinished'] is defined
     - ansibleproj_info['resources'][0]['status']['isFinished']
 
@@ -84,6 +93,7 @@
     name: "{{ ansible_operator_meta.name }}"
     namespace: "{{ ansible_operator_meta.namespace }}"
     status:
+      generation: "{{ ansibleproj_info['resources'][0]['metadata']['generation'] }}"
       k8sJob:
         created: true
         message: |-
