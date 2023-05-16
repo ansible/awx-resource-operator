@@ -7,6 +7,12 @@
     namespace: "{{ ansible_operator_meta.namespace }}"
   register: ansibleproj_info
 
+- name: debug the generation value in status if present
+  debug:
+    msg: "{{ ansibleproj_info['resources'][0]['status']['generation'] }}"
+  when:
+    - ansibleproj_info['resources'][0]['status']['generation'] is defined
+
 - name: Set isFinished to false if generation in status does not match metadata
   set_fact:
     _isFinished: false
@@ -86,7 +92,7 @@
   set_fact:
     _project_name: "{{ name}}"
 
-- name: Update AnsibleProject status with K8s job info
+- name: Update AnsibleProject status with K8s job info and generation integer not in quotes
   operator_sdk.util.k8s_status:
     api_version: tower.ansible.com/v1alpha1
     kind: AnsibleProject
