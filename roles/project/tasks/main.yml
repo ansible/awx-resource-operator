@@ -19,19 +19,10 @@
   when:
     - ansibleproj_info['resources'][0]['metadata']['generation'] is defined
 
-- name: if generation in status does not match metadata remove field from status
-  set_fact:
-    reconcile: true
-  register: modified
-  when:
-    - ansibleproj_info['resources'][0]['status']['isFinished'] is defined
-    - ansibleproj_info['resources'][0]['status']['generation'] is defined
-    - ansibleproj_info['resources'][0]['status']['generation'] != ansibleproj_info['resources'][0]['metadata']['generation']
-
 - name: End play early is AnsibleProject has already finished
   meta: end_play
   when:
-    - modified is skipped
+    - ansibleproj_info['resources'][0]['status']['generation'] == ansibleproj_info['resources'][0]['metadata']['generation']
     - ansibleproj_info['resources'][0]['status']['isFinished'] is defined
     - ansibleproj_info['resources'][0]['status']['isFinished']
 
