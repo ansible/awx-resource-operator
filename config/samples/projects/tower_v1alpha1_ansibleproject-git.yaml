@@ -3,11 +3,11 @@ kind: AnsibleProject
 metadata:
   name: git
 spec:
-  repo: https://github.com/ansible/ansible-tower-samples
+  repo: https://github.com/cooktheryan/ansible-tower-samples
   branch: master
   name: ProjectDemo-git
   scm_type: git
   organization: Default
-  description: demoProject
+  description: demoProject2
   connection_secret: awxaccess
   runner_pull_policy: IfNotPresent
