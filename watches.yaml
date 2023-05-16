@@ -5,11 +5,6 @@
   kind: AnsibleJob
   role: job
   watchDependentResources: True
-  # finalizer:
-  #   name: finalizer.tower.ansible.com
-  #   vars:
-  #     tower_resource_state: absent
-
 - version: v1alpha1
   group: tower.ansible.com
   kind: JobTemplate
@@ -19,22 +14,27 @@
   group: tower.ansible.com
   kind: AnsibleProject
   role: project
+  watchDependentResources: True
 - version: v1alpha1
   group: tower.ansible.com
   kind: AnsibleWorkflow
   role: workflow
+  watchDependentResources: True
 - version: v1alpha1
   group: tower.ansible.com
   kind: AnsibleCredential
   role: credential
+  watchDependentResources: True
 - version: v1alpha1
   group: tower.ansible.com
   kind: AnsibleSchedule
   role: schedule
+  watchDependentResources: True
 - version: v1alpha1
   group: tower.ansible.com
   kind: AnsibleInstanceGroup
   role: instancegroup
+  watchDependentResources: True
 - version: v1alpha1
   group: tower.ansible.com
   kind: WorkflowTemplate
