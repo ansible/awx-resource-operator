@@ -25,6 +25,7 @@
     - ansibleproj_info['resources'][0]['status']['isFinished'] is defined
     - ansibleproj_info['resources'][0]['status']['isFinished']
     - ansibleproj_info['resources'][0]['status']['generation'] is defined
+    - ansibleproj_info['resources'][0]['status']['generation'] == ansibleproj_info['resources'][0]['metadata']['generation']
 
 - block:
     - name: Check number of attempts to execute the job have been made
