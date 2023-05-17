@@ -4,7 +4,6 @@
   group: tower.ansible.com
   kind: AnsibleJob
   role: job
-  watchDependentResources: True
 - version: v1alpha1
   group: tower.ansible.com
   kind: JobTemplate
@@ -19,7 +18,6 @@
   group: tower.ansible.com
   kind: AnsibleWorkflow
   role: workflow
-  watchDependentResources: True
 - version: v1alpha1
   group: tower.ansible.com
   kind: AnsibleCredential
