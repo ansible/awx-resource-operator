@@ -40,7 +40,7 @@
         namespace: "{{ lookup('env', 'ANSIBLEPROJECT_NAMESPACE') }}"
         status:
           isFinished: true
-          AnsibleCredentialsResult:
+          AnsibleProjectResult:
             status: "error"
     - name: End playbook run
       meta: end_play
