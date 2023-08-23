@@ -1,0 +1,31 @@
+# permissions for end users to edit ansibleexecutionenvironments.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: ansibleexecutionenvironment-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: awx-resource-operator
+    app.kubernetes.io/part-of: awx-resource-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: ansibleexecutionenvironment-editor-role
+rules:
+- apiGroups:
+  - tower.ansible.com
+  resources:
+  - ansibleexecutionenvironments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - tower.ansible.com
+  resources:
+  - ansibleexecutionenvironments/status
+  verbs:
+  - get

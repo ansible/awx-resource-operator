@@ -1,0 +1,53 @@
+- name: Define a project, if error update AnsibleExecutionEnvironment status then end play
+  block:
+    - name: Launch project without credentials
+      awx.awx.execution_environment:
+        name: "{{ lookup('env', 'NAME') }}"
+        description: "{{ lookup('env', 'DESCRIPTION') }}"
+        image: "{{ lookup('env', 'IMAGE') }}"
+        organization: "{{ lookup('env', 'ORGANIZATION') }}"
+        pull: "{{ lookup('env', 'PULL') | default(omit) }}"
+        state: "{{ lookup('env', 'STATE') | default('present') }}"
+      register: execution_environment
+      when:
+        - lookup('env','CREDENTIAL') is not defined or lookup('env','CREDENTIAL') == ''
+
+    - name: Launch execution_environment with credentials
+      awx.awx.execution_environment:
+        name: "{{ lookup('env', 'NAME') }}"
+        credential: "{{ lookup('env', 'CREDENTIAL') }}"
+        description: "{{ lookup('env', 'DESCRIPTION') }}"
+        image: "{{ lookup('env', 'IMAGE') }}"
+        organization: "{{ lookup('env', 'ORGANIZATION') }}"
+        pull: "{{ lookup('env', 'PULL') | default(omit) }}"
+        state: "{{ lookup('env', 'STATE') | default('present') }}"
+      register: execution_environment
+      when:
+        - lookup('env','CREDENTIAL') is defined
+        - lookup('env','CREDENTIAL') != ''
+
+  rescue:
+    - name: Update status if creation resulted in an error
+      operator_sdk.util.k8s_status:
+        api_version: tower.ansible.com/v1alpha1
+        kind: AnsibleExecutionEnvironment
+        name: "{{ lookup('env', 'ANSIBLE_EE_NAME') }}"
+        namespace: "{{ lookup('env', 'ANSIBLE_EE_NAMESPACE') }}"
+        status:
+          isFinished: true
+          AnsibleExecutionEnvironmentResult:
+            status: "error"
+
+    - name: End playbook run
+      ansible.builtin.meta: end_play
+
+- name: Update AnsibleExecutionEnvironment status
+  operator_sdk.util.k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleExecutionEnvironment
+    name: "{{ lookup('env', 'ANSIBLE_EE_NAME') }}"
+    namespace: "{{ lookup('env', 'ANSIBLE_EE_NAMESPACE') }}"
+    status:
+      isFinished: true
+      AnsibleExecutionEnvironmentResult:
+        changed: "{{ project.changed }}"

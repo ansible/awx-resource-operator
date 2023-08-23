@@ -1,0 +1,59 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ ansible_operator_meta.name }}"
+  namespace: "{{ ansible_operator_meta.namespace }}"
+spec:
+  ttlSecondsAfterFinished: {{ job_ttl }}
+  template:
+    spec:
+      serviceAccountName: resource-operator-controller-manager-job
+      containers:
+        - name: "{{ ansible_operator_meta.name }}"
+          image: "{{ _runner_image }}"
+          imagePullPolicy: "{{ _runner_pull_policy }}"
+          env:
+            - name: ANSIBLE_EE_NAME
+              value: "{{ ansible_operator_meta.name }}"
+            - name: ANSIBLE_EE_NAMESPACE
+              value: "{{ ansible_operator_meta.namespace }}"
+{% if credential is defined and credential != "" %}
+            - name: CREDENTIAL
+              value: "{{ credential }}"
+{% endif %}
+{% if description is defined and description != "" %}
+            - name: DESCRIPTION
+              value: "{{ description }}"
+{% endif %}
+            - name: IMAGE
+              value: "{{ image }}"
+            - name: NAME
+              value: "{{ name }}"
+            - name: ORGANIZATION
+              value: "{{ organization }}"
+{% if pull is defined and pull != "" %}
+            - name: PULL
+              value: "{{ pull }}"
+{% endif %}
+{% if state is defined and state != "" %}
+            - name: STATE
+              value: "{{ state }}"
+{% else %}
+            - name: STATE
+              value: "present"
+{% endif %}
+            - name: TOWER_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ connection_secret }}"
+                  key: host
+            - name: TOWER_OAUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ connection_secret }}"
+                  key: token
+            - name: TOWER_VERIFY_SSL
+              value: "False"
+      restartPolicy: Never
+  backoffLimit: {{ backoff_limit }}

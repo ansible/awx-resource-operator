@@ -1,0 +1,4 @@
+---
+# defaults file for AnsibleExecutionEnvironment
+job_ttl: 60
+backoff_limit: 1

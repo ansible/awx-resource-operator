@@ -1,0 +1,102 @@
+---
+# tasks file for AnsibleExecutionEnvironment
+- name: Read AnsibleExecutionEnvironment info
+  kubernetes.core.k8s_info:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleExecutionEnvironment
+    name: "{{ ansible_operator_meta.name }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+  register: ansible_ee_info
+
+- name: End play early as AnsibleExecutionEnvironment has already finished
+  ansible.builtin.meta: end_play
+  when:
+    - ansible_ee_info['resources'][0]['status']['isFinished'] is defined
+    - ansible_ee_info['resources'][0]['status']['isFinished']
+
+- name: Check backoff status
+  when:
+    - k8s_job['resources'] is defined
+    - (k8s_job["resources"]|length>0)
+  block:
+    - name: Check number of attempts to execute the job have been made
+      ansible.builtin.set_fact:
+        _attempts: "{{ k8s_job['resources'][0]['status']['failed'] | default(0) }}"
+
+    - name: Set the maximum failed attempts allowed based on the backoffLimit
+      ansible.builtin.set_fact:
+        _failures_allowed: "{{ backoff_limit }} + 1"
+
+    - name: Update AnsibleExecutionEnvironment status if backoff limit is exceeded
+      operator_sdk.util.k8s_status:
+        api_version: tower.ansible.com/v1alpha1
+        kind: AnsibleExecutionEnvironment
+        name: "{{ ansible_operator_meta.name }}"
+        namespace: "{{ ansible_operator_meta.namespace }}"
+        status:
+          isFinished: true
+          message: "This job instance reached its backoff limit. Inspect playbook output for more info."
+      when:
+        - _attempts >= _failures_allowed
+
+    - name: Update AnsibleExecutionEnvironment status with message
+      operator_sdk.util.k8s_status:
+        api_version: tower.ansible.com/v1alpha1
+        kind: AnsibleExecutionEnvironment
+        name: "{{ ansible_operator_meta.name }}"
+        namespace: "{{ ansible_operator_meta.namespace }}"
+        status:
+          message: "This job instance is already running or has reached its end state."
+
+    - name: End play early
+      ansible.builtin.meta: end_play
+
+- name: Set user provided runner image
+  ansible.builtin.set_fact:
+    _custom_runner_image: "{{ runner_image }}:{{ runner_version }}"
+  when:
+    - runner_image is defined
+    - runner_version is defined
+
+- name: Set Runner image URL
+  ansible.builtin.set_fact:
+    _runner_image: "{{ _custom_runner_image | default(lookup('env', 'RELATED_IMAGE_ANSIBLE_JOB_RUNNER_IMAGE')) }}"
+
+- name: Set Runner Pull Policy
+  ansible.builtin.set_fact:
+    _runner_pull_policy: "{{ runner_pull_policy | default('IfNotPresent') }}"
+
+- name: Create ServiceAccount to run subsequent jobs
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'service_account.yml.j2') }}"
+
+- name: Start K8s Runner Job
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'job_definition.yml.j2') }}"
+
+- name: Set execution environment name
+  ansible.builtin.set_fact:
+    _execution_environment_name: "{{ name }}"
+
+- name: Update AnsibleExecutionEnvironment status with K8s job info
+  operator_sdk.util.k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: AnsibleExecutionEnvironment
+    name: "{{ ansible_operator_meta.name }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+    status:
+      k8sJob:
+        created: true
+        message: |-
+          Monitor the job.batch status for more details with the following commands:
+          'kubectl -n {{ ansible_operator_meta.namespace }} get job.batch/{{ ansible_operator_meta.name }}'
+          'kubectl -n {{ ansible_operator_meta.namespace }} describe job.batch/{{ ansible_operator_meta.name }}'
+          'kubectl -n {{ ansible_operator_meta.namespace }} logs -f job.batch/{{ ansible_operator_meta.name }}'
+        namespacedName: "{{ ansible_operator_meta.namespace + '/' + ansible_operator_meta.name }}"
+        env:
+          inventory: "{{ inventory | default(omit) }}"
+          secretNamespacedName: "{{ ansible_operator_meta.namespace + '/' + connection_secret }}"
+          executionEnvironmentName: "{{ _execution_environment_name }}"
+          verifySSL: false

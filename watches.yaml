@@ -42,4 +42,8 @@
   group: tower.ansible.com
   kind: AnsibleInventory
   role: inventory
+- version: v1alpha1
+  group: tower.ansible.com
+  kind: AnsibleExecutionEnvironment
+  role: ee
 #+kubebuilder:scaffold:watch

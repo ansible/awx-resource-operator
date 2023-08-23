@@ -73,4 +73,11 @@ resources:
   group: tower
   kind: AnsibleInventory
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: ansible.com
+  group: tower
+  kind: AnsibleExecutionEnvironment
+  version: v1alpha1
 version: "3"
