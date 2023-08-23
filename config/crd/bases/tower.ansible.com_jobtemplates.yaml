@@ -49,6 +49,9 @@ spec:
               job_template_ask_inventory:
                 description: This field is deprecated, please use 'ask_inventory_on_launch' instead.
                 type: boolean
+              execution_environment:
+                description: Execution Environment name, ID, or named URL to use for the job template.
+                type: string
               inventory:
                 type: string
               name:
