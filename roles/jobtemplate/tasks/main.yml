@@ -18,17 +18,17 @@
   when: tower_auth_secret is defined
 
 - name: Set fact based on secret results
-  ansible.builtin.set_fact:
-    tower_config_secret: "{{ tower_connection_secret }}"
+  set_fact:
+     tower_config_secret: "{{ tower_connection_secret }}"
   when: tower_connection_secret is not skipped and tower_connection_deprecated_secret is skipped
 
 - name: Set fact based on secret results
-  ansible.builtin.set_fact:
+  set_fact:
     tower_config_secret: "{{ tower_connection_deprecated_secret }}"
   when: tower_connection_deprecated_secret is not skipped and tower_connection_secret is skipped
 
 - name: Validate Secret Exists
-  ansible.builtin.assert:
+  assert:
     that:
       - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
     fail_msg: "Tower Secret must exist"
@@ -45,7 +45,6 @@
     forks: "{{ forks | default(job_template_forks | default(omit)) }}"
     limit: "{{ limit | default(job_template_limit | default(omit)) }}"
     verbosity: "{{ verbosity | default(job_template_verbosity | default(omit)) }}"
-    execution_environment: "{{ execution_environment | default(omit) }}"
     extra_vars: "{{ extra_vars | default(job_template_extra_vars | default(omit)) }}"
     become_enabled: "{{ become_enabled | default(job_template_become_enabled | default(omit)) }}"
     allow_simultaneous: "{{ allow_simultaneous | default(job_template_allow_simultaneous | default(omit)) }}"
@@ -103,3 +102,4 @@
       message: "There was an error in the job template"
   when:
     - job_template.failed
+
