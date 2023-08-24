@@ -9,5 +9,4 @@ resources:
 - ./jobtemplate/
 - ./workflow/
 - ./workflowtemplate/
-- tower_v1alpha1_ansibleexecutionenvironment.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples
