@@ -46,6 +46,11 @@ RUNNER_IMAGE_TAG_BASE ?= quay.io/ansible/awx-resource-runner
 RUNNER_VERSION ?= latest
 RUNNER_IMG ?= $(RUNNER_IMAGE_TAG_BASE):$(RUNNER_VERSION)
 
+OS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
+ARCHA := $(shell uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/')
+ARCHX := $(shell uname -m | sed -e 's/amd64/x86_64/' -e 's/aarch64/arm64/')
+
+
 # BUNDLE_GEN_FLAGS are the flags passed to the operator-sdk generate bundle command
 BUNDLE_GEN_FLAGS ?= -q --overwrite --version $(VERSION) $(BUNDLE_METADATA_OPTS)
 
