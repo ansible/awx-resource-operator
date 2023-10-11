@@ -17,6 +17,7 @@
     
     jobs:
       helm-template:
+        runs-on: ubuntu-20.04
         name: operator-image-build
         steps:
           - uses: actions/checkout@v3
