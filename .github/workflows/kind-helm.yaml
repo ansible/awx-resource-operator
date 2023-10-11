@@ -55,8 +55,8 @@
             with:
                 name: helm-chart.tar
                 path: /tmp
-          - name: Display structure of downloaded files
-            run: ls -R /tmp
+        #   - name: Display structure of downloaded files
+        #     run: ls -R /tmp
           - name: Install the Kubectl binary
             run: |
                 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -64,4 +64,9 @@
                 kubectl version --client
           - name: Install awx-resource-operator chart
             run: |
-                helm install awx-resource-operator /tmp/awx-resource-operator-0.2.0.tgz
+                helm install awx-resource-operator /tmp/awx-resource-operator-0.2.0.tgz -n awx 
+  
+          - name: dump logs
+            if: always()
+            run: kubectl get events -n awx && kubectl get jobs -n awx && kubectl get pods -n awx && kubectl logs -n awx -l control-plane=controller-manager --tail 80 --all-containers
+        
