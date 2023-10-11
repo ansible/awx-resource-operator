@@ -1,0 +1,27 @@
+---
+
+    name: Build Helm Chart 
+    
+    on:
+      pull_request:
+        branches: [devel]
+    
+      push:
+        branches: [devel]
+    
+    env:
+      GO_VERSION: "1.17"
+      OPERATOR_IMAGE: "quay.io/ansible/awx-resource-operator:ci"
+      RUNNER_IMAGE: "quay.io/ansible/awx-resource-runner:latest"
+      TOKEN_IMAGE: "quay.io/ansible/token-playbook:latest"
+    
+    jobs:
+      helm-template:
+        name: operator-image-build
+        steps:
+          - uses: actions/checkout@v3
+    
+          - name: make helm chart
+            run: make helm-chart
+
+     
