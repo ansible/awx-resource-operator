@@ -16,6 +16,24 @@
       TOKEN_IMAGE: "quay.io/ansible/token-playbook:latest"
     
     jobs:
+      operator-image-build:
+        runs-on: ubuntu-20.04
+        name: operator-image-build
+        steps:
+            - uses: actions/checkout@v3
+    
+            - name: Build operator container
+            run: podman build -t ${{ env.OPERATOR_IMAGE }} .
+    
+            - name: archive operator image
+            run: podman save ${OPERATOR_IMAGE} > operator.tar
+    
+            - name: upload operator image
+            uses: actions/upload-artifact@v3
+            with:
+                name: operator.tar
+                path: operator.tar
+
       helm-template:
         runs-on: ubuntu-20.04
         name: helm-template
@@ -55,8 +73,18 @@
             with:
                 name: helm-chart.tar
                 path: /tmp
-        #   - name: Display structure of downloaded files
-        #     run: ls -R /tmp
+          - name: Pull the Container Image from Artifacts
+            uses: actions/download-artifact@v3
+            with:
+                name: operator.tar
+                path: /tmp
+     
+          - name: Load the Container Image into the minikube
+            run: |
+                export SHELL=/bin/bash
+                eval $(minikube -p minikube docker-env)
+                docker load < /tmp/operator.tar
+                
           - name: Install the Kubectl binary
             run: |
                 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -65,10 +93,10 @@
           - name: Install awx-resource-operator chart
             run: |
                 helm install awx-resource-operator /tmp/awx-resource-operator-0.2.0.tgz -n awx --create-namespace
-          - name: generate token
+          - name: Check deployment status
             run: |
                 sleep 10
-                kubectl wait deployment -n awx resource-operator-controller-manager --for condition=Available=True --timeout=500s
+                kubectl wait deployment -n awx resource-operator-controller-manager --for condition=Available=True --timeout=100s
           
           - name: dump logs
             if: always()

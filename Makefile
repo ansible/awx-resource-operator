@@ -338,8 +338,8 @@ helm-chart-generate: kustomize helm kubectl-slice yq charts
 	# remove the raw-files folder
 	rm -rf charts/$(CHART_NAME)/raw-files
 
-# # create and populate NOTES.txt
-# @echo "AWX Operator installed with Helm Chart version $(VERSION)" > charts/$(CHART_NAME)/templates/NOTES.txt
+	# create and populate NOTES.txt
+	@echo "AWX Resource Operator installed with Helm Chart version $(VERSION)" > charts/$(CHART_NAME)/templates/NOTES.txt
 
-# @echo "Helm chart successfully configured for $(CHART_NAME) version $(VERSION)"
+	@echo "Helm chart successfully configured for $(CHART_NAME) version $(VERSION)"
 
