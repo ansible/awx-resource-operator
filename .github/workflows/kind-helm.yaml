@@ -65,7 +65,11 @@
           - name: Install awx-resource-operator chart
             run: |
                 helm install awx-resource-operator /tmp/awx-resource-operator-0.2.0.tgz -n awx --create-namespace
-  
+          - name: generate token
+            run: |
+                sleep 10
+                kubectl wait deployment -n awx resource-operator-controller-manager --for condition=Available=True --timeout=500s
+          
           - name: dump logs
             if: always()
             run: kubectl get events -n awx && kubectl get jobs -n awx && kubectl get pods -n awx && kubectl logs -n awx -l control-plane=controller-manager --tail 80 --all-containers
