@@ -62,4 +62,4 @@
                 kubectl version --client
           - name: Install awx-resource-operator chart
             run: |
-                helm install awx-resource-operator tmp/awx-resource-operator-0.1.0.tgz
+                helm install awx-resource-operator /tmp/awx-resource-operator-0.1.0.tgz
