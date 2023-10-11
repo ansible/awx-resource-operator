@@ -24,5 +24,42 @@
     
           - name: make helm chart
             run: make helm-chart
-
-     
+        
+          - name: helm template
+            run: |
+                cd charts/awx-resource-operator
+                helm template .
+          - name: helm package
+            run: |
+                cd charts/awx-resource-operator
+                helm package .
+          - name: upload awx-resource-operator image
+            uses: actions/upload-artifact@v3
+            with:
+                name: helm-chart.tgz
+                path: charts/awx-resource-operator/*.tgz
+      minikube-test:
+        runs-on: ubuntu-20.04
+        name: minikube-test
+        needs: [helm-template]
+        steps:
+          - uses: actions/checkout@v3
+    
+          - name: Start minikube
+            uses: medyagh/setup-minikube@master
+            with:
+                memory: max
+                cpus: max
+          - name: Pull the Helm Chart Image from Artifacts
+            uses: actions/download-artifact@v3
+            with:
+                name: helm-chart.tgz
+                path: /tmp
+          - name: Install the Kubectl binary
+            run: |
+                curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                sudo install ./kubectl /usr/local/bin/
+                kubectl version --client
+          - name: Install awx-resource-operator chart
+            run: |
+                helm install mynginx tmp/nginx-1.2.3.tgz
