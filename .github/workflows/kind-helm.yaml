@@ -12,23 +12,21 @@
     env:
       GO_VERSION: "1.17"
       OPERATOR_IMAGE: "quay.io/ansible/awx-resource-operator:ci"
-      RUNNER_IMAGE: "quay.io/ansible/awx-resource-runner:latest"
-      TOKEN_IMAGE: "quay.io/ansible/token-playbook:latest"
     
     jobs:
       operator-image-build:
         runs-on: ubuntu-20.04
         name: operator-image-build
         steps:
-            - uses: actions/checkout@v3
-    
-            - name: Build operator container
+          - uses: actions/checkout@v3
+
+          - name: Build operator container
             run: podman build -t ${{ env.OPERATOR_IMAGE }} .
-    
-            - name: archive operator image
+
+          - name: archive operator image
             run: podman save ${OPERATOR_IMAGE} > operator.tar
-    
-            - name: upload operator image
+
+          - name: upload operator image
             uses: actions/upload-artifact@v3
             with:
                 name: operator.tar
@@ -59,7 +57,7 @@
       minikube-test:
         runs-on: ubuntu-20.04
         name: minikube-test
-        needs: [helm-template]
+        needs: [helm-template, operator-image-build]
         steps:
           - uses: actions/checkout@v3
     
