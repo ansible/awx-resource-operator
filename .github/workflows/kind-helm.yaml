@@ -21,10 +21,10 @@
           - uses: actions/checkout@v3
 
           - name: Build operator container
-            run: podman build -t ${{ env.OPERATOR_IMAGE }} .
+            run: make docker-build
 
           - name: archive operator image
-            run: podman save ${OPERATOR_IMAGE} > operator.tar
+            run: make docker-save
 
           - name: upload operator image
             uses: actions/upload-artifact@v3

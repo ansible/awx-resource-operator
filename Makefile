@@ -93,6 +93,10 @@ run: ansible-operator ## Run against the configured Kubernetes cluster in ~/.kub
 docker-build: ## Build docker image with the manager.
 	$(ENGINE) build -t ${IMG} .
 
+.PHONY: docker-save
+docker-save: ## Save docker image with the manager.
+	$(ENGINE) save ${IMG} > operator.tar
+
 .PHONY: docker-push
 docker-push: ## Push docker image with the manager.
 	$(ENGINE) push ${IMG}
