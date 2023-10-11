@@ -55,6 +55,8 @@
             with:
                 name: helm-chart.tar
                 path: /tmp
+          - name: Display structure of downloaded files
+            run: ls -R /tmp
           - name: Install the Kubectl binary
             run: |
                 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
