@@ -64,7 +64,7 @@
                 kubectl version --client
           - name: Install awx-resource-operator chart
             run: |
-                helm install awx-resource-operator /tmp/awx-resource-operator-0.2.0.tgz -n awx 
+                helm install awx-resource-operator /tmp/awx-resource-operator-0.2.0.tgz -n awx --create-namespace
   
           - name: dump logs
             if: always()
