@@ -26,6 +26,8 @@
     copy_from: "{{ copy_from | default(omit) }}"
     state: "{{ state | default('present') }}"
     instance_groups: "{{ instance_groups | default(omit) }}"
+    kind: "{{ kind }}"
+    variables: {{ variables | to_yaml }}
   environment:
     - TOWER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
     - TOWER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
