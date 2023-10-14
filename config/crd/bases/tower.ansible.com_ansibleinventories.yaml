@@ -61,6 +61,8 @@ spec:
               variables:
                 type: object
                 description: The desired inventory variables for the inventory
+                additionalProperties:
+                  type: string
               connection_secret:
                 type: string
                 description: |
