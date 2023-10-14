@@ -40,6 +40,11 @@ spec:
               organization:
                 type: string
                 description: Organization name, ID, or named URL the inventory belongs to
+              instance_groups:
+                type: array
+                description: list of Instance Group names, IDs, or named URLs for this Organization to run on
+                items:
+                  type: string
               copy_from:
                 type: string
                 description: Name or id to copy the inventory from
@@ -50,12 +55,12 @@ spec:
               state:
                 type: string
                 default: present
-                enum: ["", "smart", "constructed"]
+                enum: ["present", "absent", "exists"]
                 description: Desired state of the resource
               kind:
                 type: string
                 default: ""
-                enum: ["present", "absent", "exists"]
+                enum: ["", "smart", "constructed"]
                 description: The kind field
                   Cannot be modified after created
               variables:
