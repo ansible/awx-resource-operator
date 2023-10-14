@@ -448,6 +448,10 @@ spec:
         path: variables
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+       - displayName: Authentication Secret
+        path: connection_secret
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
       - description: Copy inventory from another inventory
         displayName: Copy Inventory
         path: copy_from
