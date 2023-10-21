@@ -8,4 +8,15 @@ spec:
   name: newinventory
   organization: Default
   state: present
-  instance_groups: default
+  instance_groups: 
+    - default
+  variables: 
+    string: "string_value"
+    bool: true
+    number: 1
+    list:
+      - item1: true
+      - item2: "1"
+    object:
+      string: "string_value"
+      number: 2

@@ -26,12 +26,12 @@
     copy_from: "{{ copy_from | default(omit) }}"
     state: "{{ state | default('present') }}"
     instance_groups: "{{ instance_groups | default(omit) }}"
-    kind: "{{ kind }}"
-    variables: {{ variables | to_yaml }}
+    kind: "{{ kind | default('') }}"
+    variables: "{{ variables | default(omit) }}"
   environment:
-    - TOWER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
-    - TOWER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
-    - TOWER_VERIFY_SSL: "False"
+    TOWER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
+    TOWER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
+    TOWER_VERIFY_SSL: "False"
   register: inventory
   ignore_errors: true
 

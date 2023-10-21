@@ -60,14 +60,19 @@ spec:
               kind:
                 type: string
                 default: ""
-                enum: ["", "smart", "constructed"]
+                enum: [""] # "smart", "constructed"
                 description: The kind field
                   Cannot be modified after created
               variables:
                 type: object
                 description: The desired inventory variables for the inventory
-                additionalProperties:
-                  type: string
+                additionalProperties: 
+                  x-kubernetes-preserve-unknown-fields: true
+              # input_inventories:
+              #  type: array
+              #  description: List of Inventory names, IDs, or named URLs to use as input for Constructed Inventory.
+              #  items:
+              #    type: string
               connection_secret:
                 type: string
                 description: |

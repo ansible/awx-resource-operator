@@ -9,3 +9,15 @@ spec:
   name: sampleinv
   organization: Default
   state: present
+  variables:
+    msg: "awx is the best"
+    is_true: true
+    how_much: 10
+    item:
+      - name: apple
+        value: red
+      - name: grape
+        value: blue
+      - foo: bar
+    example:
+      moreexample: "example"
