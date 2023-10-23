@@ -430,16 +430,8 @@ spec:
         path: description
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
-      #- displayName: Inventory Input Inventories
-      #  path: input_inventories
-      # x-descriptors:
-      #  - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Inventory Instance Group
         path: instance_groups
-        x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:text
-      - displayName: Inventory Kind
-        path: kind
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Inventory State
