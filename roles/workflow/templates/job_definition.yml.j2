@@ -28,10 +28,6 @@ spec:
             - name: TOWER_WORKFLOW_TEMPLATE_NAME
               value: "{{ workflow_template_name }}"
 {% endif %}
-{% if workflow_template_name is defined and workflow_template_name != "" %}
-            - name: TOWER_WORKFLOW_TEMPLATE_NAME
-              value: "{{ workflow_template_name }}"
-{% endif %}
             - name: TOWER_VERIFY_SSL
               value: "False"
             - name: ANSIBLEWORKFLOW_NAME

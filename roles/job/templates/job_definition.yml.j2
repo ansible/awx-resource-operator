@@ -43,7 +43,7 @@ spec:
               value: "{{ job_template_name }}"
 {% endif %}
 {% if workflow_template_name is defined and workflow_template_name != "" %}
-            - name: TOWER_WORKFLOW_TEMPLATE_NAME
+            - name: TOWER_DEPRECATED_WORKFLOW_TEMPLATE_NAME
               value: "{{ workflow_template_name }}"
 {% endif %}
             - name: TOWER_VERIFY_SSL

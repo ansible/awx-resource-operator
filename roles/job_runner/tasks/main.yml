@@ -30,9 +30,9 @@
     name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
     namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
   register: ansible_job
-  when:
-    - lookup('env','TOWER_JOB_TEMPLATE_NAME') is defined
-    - lookup('env','TOWER_JOB_TEMPLATE_NAME') != ''
+  when: >-
+    (lookup('env', 'TOWER_JOB_TEMPLATE_NAME') is defined and lookup('env', 'TOWER_JOB_TEMPLATE_NAME') != '') or
+    (lookup('env', 'TOWER_DEPRECATED_WORKFLOW_TEMPLATE_NAME') is defined and lookup('env', 'TOWER_DEPRECATED_WORKFLOW_TEMPLATE_NAME') != '')
 
 - name: Read AnsibleWorkflow Specs
   kubernetes.core.k8s_info:
@@ -47,9 +47,9 @@
 
 - name: Launch a job
   include_tasks: launch_job.yml
-  when:
-    - lookup('env','TOWER_JOB_TEMPLATE_NAME') is defined
-    - lookup('env','TOWER_JOB_TEMPLATE_NAME') != ''
+  when: >-
+    (lookup('env', 'TOWER_JOB_TEMPLATE_NAME') is defined and lookup('env', 'TOWER_JOB_TEMPLATE_NAME') != '') or
+    (lookup('env', 'TOWER_DEPRECATED_WORKFLOW_TEMPLATE_NAME') is defined and lookup('env', 'TOWER_DEPRECATED_WORKFLOW_TEMPLATE_NAME') != '')
 
 - name: Launch Workflow
   include_tasks: launch_workflow.yml
@@ -69,9 +69,9 @@
         finished: "{{ job_result.finished }}"
         started: "{{ job_result.started }}"
         status: "{{ job_result.status }}"
-  when:
-    - lookup('env','TOWER_JOB_TEMPLATE_NAME') is defined
-    - lookup('env','TOWER_JOB_TEMPLATE_NAME') != ''
+  when: >-
+    (lookup('env', 'TOWER_JOB_TEMPLATE_NAME') is defined and lookup('env', 'TOWER_JOB_TEMPLATE_NAME') != '') or
+    (lookup('env', 'TOWER_DEPRECATED_WORKFLOW_TEMPLATE_NAME') is defined and lookup('env', 'TOWER_DEPRECATED_WORKFLOW_TEMPLATE_NAME') != '')
 
 - name: Update AnsibleWorkflow status with Tower workflow result
   operator_sdk.util.k8s_status:
