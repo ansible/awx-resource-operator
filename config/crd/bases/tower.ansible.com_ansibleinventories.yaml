@@ -60,7 +60,7 @@ spec:
               variables:
                 type: object
                 description: The desired inventory variables for the inventory
-                additionalProperties: 
+                additionalProperties:
                   x-kubernetes-preserve-unknown-fields: true
               connection_secret:
                 type: string
@@ -69,9 +69,9 @@ spec:
             description: Spec defines the desired state of Inventory
             type: object
             x-kubernetes-preserve-unknown-fields: true
-            required: 
-              - name
-              - organization
+            required:
+            - name
+            - organization
           status:
             description: Status defines the observed state of Inventory
             type: object

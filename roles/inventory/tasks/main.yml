@@ -10,7 +10,7 @@
 
 - name: Set fact based on secret results
   set_fact:
-     tower_config_secret: "{{ tower_connection_secret }}"
+    tower_config_secret: "{{ tower_connection_secret }}"
 
 - name: Validate Secret Exists
   assert:
@@ -58,4 +58,3 @@
       message: "There was an error when creating the inventory"
   when:
     - inventory.failed
-

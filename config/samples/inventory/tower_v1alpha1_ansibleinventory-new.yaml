@@ -8,9 +8,9 @@ spec:
   name: newinventory
   organization: Default
   state: present
-  instance_groups: 
+  instance_groups:
     - default
-  variables: 
+  variables:
     string: "string_value"
     bool: true
     number: 1
