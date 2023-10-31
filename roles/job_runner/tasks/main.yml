@@ -23,46 +23,58 @@
     - lookup('env','ANSIBLEINSTANCEGROUP_NAME') is defined
     - lookup('env','ANSIBLEINSTANCEGROUP_NAME') != ''
 
+- name: Read in Environment Variables
+  set_fact:
+    ansible_job_name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
+    ansible_job_namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
+    ansible_workflow_name: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAME') }}"
+    ansible_workflow_namespace: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAMESPACE') }}"
+    tower_job_template_name: "{{ lookup('env', 'TOWER_JOB_TEMPLATE_NAME') }}"
+    tower_workflow_template_name: "{{ lookup('env', 'TOWER_WORKFLOW_TEMPLATE_NAME') }}"
+    tower_deprecated_workflow_template_name: "{{ lookup('env', 'TOWER_DEPRECATED_WORKFLOW_TEMPLATE_NAME') }}"
+
+- name: Set Conditions as Facts
+  set_fact:
+    is_tower_job_template_defined: "{{ tower_job_template_name is defined and tower_job_template_name != '' }}"
+    is_tower_workflow_template_defined: "{{ tower_workflow_template_name is defined and tower_workflow_template_name != '' }}"
+    is_tower_deprecated_workflow_template_defined: "{{ tower_deprecated_workflow_template_name is defined and tower_deprecated_workflow_template_name != '' }}"
+
 - name: Read AnsibleJob Specs
   kubernetes.core.k8s_info:
     kind: AnsibleJob
     api_version: tower.ansible.com/v1alpha1
-    name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
-    namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
+    name: "{{ ansible_job_name }}"
+    namespace: "{{ ansible_job_namespace }}"
   register: ansible_job
-  when: >-
-    (lookup('env', 'TOWER_JOB_TEMPLATE_NAME') is defined and lookup('env', 'TOWER_JOB_TEMPLATE_NAME') != '') or
-    (lookup('env', 'TOWER_DEPRECATED_WORKFLOW_TEMPLATE_NAME') is defined and lookup('env', 'TOWER_DEPRECATED_WORKFLOW_TEMPLATE_NAME') != '')
+  when: is_tower_job_template_defined or is_tower_deprecated_workflow_template_defined
 
 - name: Read AnsibleWorkflow Specs
   kubernetes.core.k8s_info:
     kind: AnsibleWorkflow
     api_version: tower.ansible.com/v1alpha1
-    name: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAME') }}"
-    namespace: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAMESPACE') }}"
+    name: "{{ ansible_workflow_name }}"
+    namespace: "{{ ansible_workflow_namespace }}"
   register: ansible_workflow
-  when:
-    - lookup('env','TOWER_WORKFLOW_TEMPLATE_NAME') is defined
-    - lookup('env','TOWER_WORKFLOW_TEMPLATE_NAME') != ''
+  when: is_tower_workflow_template_defined
 
 - name: Launch a job
   include_tasks: launch_job.yml
-  when: >-
-    (lookup('env', 'TOWER_JOB_TEMPLATE_NAME') is defined and lookup('env', 'TOWER_JOB_TEMPLATE_NAME') != '') or
-    (lookup('env', 'TOWER_DEPRECATED_WORKFLOW_TEMPLATE_NAME') is defined and lookup('env', 'TOWER_DEPRECATED_WORKFLOW_TEMPLATE_NAME') != '')
+  when: is_tower_job_template_defined
+
+- name: Launch (Deprecated) AnsibleJob Workflow
+  include_tasks: launch_deprecated_job.yml
+  when: is_tower_deprecated_workflow_template_defined
 
 - name: Launch Workflow
   include_tasks: launch_workflow.yml
-  when:
-    - lookup('env','TOWER_WORKFLOW_TEMPLATE_NAME') is defined
-    - lookup('env','TOWER_WORKFLOW_TEMPLATE_NAME') != ''
+  when: is_tower_workflow_template_defined
 
 - name: Update AnsibleJob status with Tower job result
   operator_sdk.util.k8s_status:
     api_version: tower.ansible.com/v1alpha1
     kind: AnsibleJob
-    name: "{{ lookup('env', 'ANSIBLEJOB_NAME') }}"
-    namespace: "{{ lookup('env', 'ANSIBLEJOB_NAMESPACE') }}"
+    name: "{{ ansible_job_name }}"
+    namespace: "{{ ansible_job_namespace }}"
     status:
       ansibleJobResult:
         elapsed: "{{ job_result.elapsed }}"
@@ -70,21 +82,19 @@
         started: "{{ job_result.started }}"
         status: "{{ job_result.status }}"
   when: >-
-    (lookup('env', 'TOWER_JOB_TEMPLATE_NAME') is defined and lookup('env', 'TOWER_JOB_TEMPLATE_NAME') != '') or
-    (lookup('env', 'TOWER_DEPRECATED_WORKFLOW_TEMPLATE_NAME') is defined and lookup('env', 'TOWER_DEPRECATED_WORKFLOW_TEMPLATE_NAME') != '')
+    is_tower_job_template_defined or
+    is_tower_deprecated_workflow_template_defined
 
 - name: Update AnsibleWorkflow status with Tower workflow result
   operator_sdk.util.k8s_status:
     api_version: tower.ansible.com/v1alpha1
     kind: AnsibleWorkflow
-    name: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAME') }}"
-    namespace: "{{ lookup('env', 'ANSIBLEWORKFLOW_NAMESPACE') }}"
+    name: "{{ ansible_workflow_name }}"
+    namespace: "{{ ansible_workflow_namespace }}"
     status:
       ansibleWorkflowResult:
         elapsed: "{{ job_result.elapsed }}"
         finished: "{{ job_result.finished }}"
         started: "{{ job_result.started }}"
         status: "{{ job_result.status }}"
-  when:
-    - lookup('env','TOWER_WORKFLOW_TEMPLATE_NAME') is defined
-    - lookup('env','TOWER_WORKFLOW_TEMPLATE_NAME') != ''
+  when: is_tower_workflow_template_defined
