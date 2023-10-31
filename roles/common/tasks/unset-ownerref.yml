@@ -1,0 +1,15 @@
+---
+- name: Remove ownerReferences on persistent resources
+  k8s:
+    definition:
+      apiVersion: "{{ item.apiVersion }}"
+      kind: "{{ item.kind }}"
+      metadata:
+        name: "resource-operator-controller-manager-job"
+        namespace: '{{ ansible_operator_meta.namespace }}'
+        ownerReferences: null
+  loop:
+    - { kind: 'ServiceAccount', apiVersion: 'v1' }
+    - { kind: 'Role', apiVersion: 'rbac.authorization.k8s.io/v1' }
+    - { kind: 'RoleBinding', apiVersion: 'rbac.authorization.k8s.io/v1' }
+  no_log: "{{ no_log }}"

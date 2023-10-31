@@ -57,4 +57,3 @@
       message: "There was an error when creating the inventory"
   when:
     - inventory.failed
-
