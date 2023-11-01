@@ -18,7 +18,7 @@
         status:
           AnsibleWorkflowResult:
             status: "error"
-          error_message: "{{ job.msg }}"
+          error_message: "{{ job.msg | default('Job failed to launch. Verify that the credentials in your connection_secret are correct. If they are, check the job standard output for more details.') }}"
     - name: End playbook run
       meta: end_play
 
@@ -64,6 +64,7 @@
         status:
           ansibleWorkflowesult:
             status: "error"
-          error_message: "{{ job_result.msg }}"
+          error_message: "{{ job_result.msg | default('Job failed, check the job for more information: lookup('env', 'TOWER_HOST') + '/#/jobs/workflow/' + (job.id|string)') }}"
+
     - name: End playbook run
       meta: end_play
