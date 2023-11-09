@@ -414,7 +414,7 @@ spec:
         - urn:alm:descriptor:com.tectonic.ui:text
       version: v1alpha1
     - description: Define a new Inventory in awx
-      displayName: AWX Schedule
+      displayName: AWX Inventory
       kind: AnsibleInventory
       name: ansibleinventories.tower.ansible.com
       specDescriptors:
