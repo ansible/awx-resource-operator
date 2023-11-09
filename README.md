@@ -115,6 +115,7 @@ metadata:
 spec:
   connection_secret: awx-access
   job_template_name: Demo Job Template
+  labels: job-label # optional field allowing for the job to be easily grouped within the Ansible UI
 ```
 
 It is possible to configure other things like inventory, extra vars, and time to live for the job.
@@ -127,7 +128,7 @@ spec:
   runner_image: quay.io/ansible/awx-resource-runner
   runner_version: latest
   job_ttl: 100
-
+  labels: template-label  # optional field allowing for the template to be easily grouped within the Ansible UI
   extra_vars:                                  # Extra variables prompt on launch needs to be enabled
      test_var: test
 

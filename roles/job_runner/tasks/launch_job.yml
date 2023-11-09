@@ -8,6 +8,7 @@
         inventory: "{{ ansible_job['resources'][0]['spec']['inventory'] | default(omit) }}"
         tags: "{{ ansible_job['resources'][0]['spec']['job_tags'] | default(omit) }}"
         skip_tags: "{{ ansible_job['resources'][0]['spec']['skip_tags'] | default(omit) }}"
+        labels: "{{ lookup('env','LABELS') | default(omit) }}"
       register: job
   rescue:
     - name: Update status if job resulted in an error

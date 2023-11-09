@@ -49,6 +49,17 @@ spec:
               job_template_ask_inventory:
                 description: This field is deprecated, please use 'ask_inventory_on_launch' instead.
                 type: boolean
+              job_template_ask_labels_on_launch:
+                description: This field is deprecated, please use 'ask_labels_on_launch' instead.
+                type: boolean
+              ask_labels_on_launch:
+                description: Prompt user for job template labels on launch.
+                type: boolean
+              labels:
+                description: Job template labels.
+                items:
+                  type: string
+                type: array
               inventory:
                 type: string
               name:
