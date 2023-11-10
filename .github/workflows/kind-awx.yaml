@@ -146,7 +146,7 @@ jobs:
         run: |
           kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_ANSIBLECREDENTIAL_TOWER_ANSIBLE_COM=2
           kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_ANSIBLEPROJECT_TOWER_ANSIBLE_COM=2
-          kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_ANSIBLEJOB_TOWER_ANSIBLE_COM=2
+          kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_ANSIBLEJOB_TOWER_ANSIBLE_COM=5
           kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_JOBTEMPLATE_TOWER_ANSIBLE_COM=2
           kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_WORKFLOWTEMPLATE_TOWER_ANSIBLE_COM=2
           kubectl -n awx set env -c awx-resource-manager deployment/resource-operator-controller-manager MAX_CONCURRENT_RECONCILES_ANSIBLEWORKFLOW_TOWER_ANSIBLE_COM=2
