@@ -33,6 +33,13 @@
       - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
     fail_msg: "Tower Secret must exist"
 
+- name: If a label is defined ensure that it exists before proceeding
+  awx.awx.label:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ labels | default(job_template_labels | default(omit)) }}"
+  when: labels is defined or job_template_labels is defined and labels is not "" and job_template_labels is not ""
+
 - name: Create Job Template
   awx.awx.job_template:
     name: "{{ name | default(job_template_name) }}"
