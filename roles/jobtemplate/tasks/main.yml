@@ -37,7 +37,7 @@
   awx.awx.label:
     name: "{{ item }}"
     state: present
-  loop: "{{ labels | default(job_template_labels | default(omit)) }}"
+  loop: "{{ labels, wantlist=True) | default(job_template_labels, wantlist=True) }}"
   when: labels is defined or job_template_labels is defined and labels is not "" and job_template_labels is not ""
 
 - name: Create Job Template
