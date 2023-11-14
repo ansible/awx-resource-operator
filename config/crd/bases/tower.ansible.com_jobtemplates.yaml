@@ -56,10 +56,8 @@ spec:
                 description: Prompt user for job template labels on launch.
                 type: boolean
               labels:
-                description: Job template labels.
-                items:
-                  type: string
-                type: array
+                description: Comma separated list of labels to apply to the job template.
+                type: string
               inventory:
                 type: string
               name:
