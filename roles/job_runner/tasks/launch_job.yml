@@ -5,7 +5,7 @@
     awx.awx.label:
       name: "{{ item }}"
       state: present
-    loop: "{{ lookup('env','LABELS', wantlist=True)}}"
+    with_items: "{{ lookup('env','LABELS').split(',') }}"
     when: lookup('env','LABELS') is defined and lookup('env','LABELS') is not ""
   
     - name: Launch job
