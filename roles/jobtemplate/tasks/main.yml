@@ -34,7 +34,7 @@
     fail_msg: "Tower Secret must exist"
 
 - name: Set job_template_labels equal to labels if defined
-  set_facts:
+  ansible.builtin.set_fact:
     labels: "{{ job_template_labels }}"
   when: labels is not defined and job_template_labels is defined
 
