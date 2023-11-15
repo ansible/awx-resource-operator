@@ -57,7 +57,7 @@
     forks: "{{ forks | default(job_template_forks | default(omit)) }}"
     limit: "{{ limit | default(job_template_limit | default(omit)) }}"
     verbosity: "{{ verbosity | default(job_template_verbosity | default(omit)) }}"
-    labels: "{{ labels | default(omit)) }}"
+    labels: "{{ labels | default(omit) }}"
     extra_vars: "{{ extra_vars | default(job_template_extra_vars | default(omit)) }}"
     become_enabled: "{{ become_enabled | default(job_template_become_enabled | default(omit)) }}"
     allow_simultaneous: "{{ allow_simultaneous | default(job_template_allow_simultaneous | default(omit)) }}"
