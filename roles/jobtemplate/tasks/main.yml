@@ -38,12 +38,12 @@
     labels: "{{ job_template_labels }}"
   when: labels is not defined and job_template_labels is defined
 
-- name: If a label is defined ensure that it exists before proceeding
+- name: If a label is defined, ensure that it exists before proceeding
   awx.awx.label:
     name: "{{ item }}"
     state: present
   with_items: "{{ labels.split(',') }}"
-  when: labels is defined and labels is not ""
+  when: labels is defined and labels != ""
 
 - name: Create Job Template
   awx.awx.job_template:
