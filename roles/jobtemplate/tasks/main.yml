@@ -33,12 +33,17 @@
       - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
     fail_msg: "Tower Secret must exist"
 
+- name: Set job_template_labels equal to labels if defined
+  set_facts:
+    labels: "{{ job_template_labels }}"
+  when: labels is not defined and job_template_labels is defined
+
 - name: If a label is defined ensure that it exists before proceeding
   awx.awx.label:
     name: "{{ item }}"
     state: present
-  with_items: "{{ labels.split(',') | job_template_labels.split(',') }}"
-  when: labels is defined or job_template_labels is defined and labels is not "" and job_template_labels is not ""
+  with_items: "{{ labels.split(',') }}"
+  when: labels is defined and labels is not ""
 
 - name: Create Job Template
   awx.awx.job_template:
@@ -52,7 +57,7 @@
     forks: "{{ forks | default(job_template_forks | default(omit)) }}"
     limit: "{{ limit | default(job_template_limit | default(omit)) }}"
     verbosity: "{{ verbosity | default(job_template_verbosity | default(omit)) }}"
-    labels: "{{ labels | default(job_template_labels | default(omit)) }}"
+    labels: "{{ labels | default(omit)) }}"
     extra_vars: "{{ extra_vars | default(job_template_extra_vars | default(omit)) }}"
     become_enabled: "{{ become_enabled | default(job_template_become_enabled | default(omit)) }}"
     allow_simultaneous: "{{ allow_simultaneous | default(job_template_allow_simultaneous | default(omit)) }}"

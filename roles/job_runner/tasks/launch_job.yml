@@ -1,12 +1,12 @@
 ---
 - name: Launch a job, if error update AnsibleJob status then end play
   block:
-  - name: If a label is defined ensure that it exists before proceeding
-    awx.awx.label:
-      name: "{{ item }}"
-      state: present
-    with_items: "{{ lookup('env','LABELS').split(',') }}"
-    when: lookup('env','LABELS') is defined and lookup('env','LABELS') is not ""
+    - name: If a label is defined ensure that it exists before proceeding
+      awx.awx.label:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ lookup('env','LABELS').split(',') }}"
+      when: lookup('env','LABELS') is defined and lookup('env','LABELS') is not ""
   
     - name: Launch job
       awx.awx.job_launch:
