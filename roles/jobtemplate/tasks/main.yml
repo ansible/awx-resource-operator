@@ -42,6 +42,7 @@
   awx.awx.label:
     name: "{{ item }}"
     state: present
+    organization: "{{ organization | default(job_template_organization | default('Default')) }}"
   with_items: "{{ labels.split(',') }}"
   when: labels is defined and labels != ""
 
