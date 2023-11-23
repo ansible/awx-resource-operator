@@ -58,6 +58,7 @@
       awx.awx.job_wait:
         job_id: "{{ job.id }}"
         job_type: workflow_jobs
+        request_timeout: 600
       register: job_result
   rescue:
     - name: Update status if job results in an error
