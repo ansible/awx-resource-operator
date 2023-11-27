@@ -38,7 +38,7 @@ jobs:
       - name: Push To Quay
         uses: redhat-actions/push-to-registry@v2.1.1
         with:
-          image: awx-resource-operator
+          image: awx-resource-runner
           tags: devel
           registry: quay.io/ansible/
           username: ${{ secrets.QUAY_USER }}
