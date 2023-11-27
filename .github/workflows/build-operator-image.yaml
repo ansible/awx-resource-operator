@@ -33,7 +33,7 @@ jobs:
 
       - name: Build Image
         run: |
-          docker build -t awx-runner-operator:devel -f Dockerfile.runner .
+          docker build -t awx-resource-runner:devel -f Dockerfile.runner .
 
       - name: Push To Quay
         uses: redhat-actions/push-to-registry@v2.1.1
