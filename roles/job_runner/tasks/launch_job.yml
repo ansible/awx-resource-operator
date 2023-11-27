@@ -53,7 +53,7 @@
     - name: Register Job result when complete
       awx.awx.job_wait:
         job_id: "{{ job.id }}"
-        request_timeout: 600
+        request_timeout: "{{ request_timeout }}"
       register: job_result
   rescue:
     - name: Update status if job results in an error
