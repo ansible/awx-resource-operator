@@ -1,0 +1,4 @@
+---
+
+# Time before request to AWX api/v2/jobs/{id}/stdout/ times out (in seconds)
+request_timeout: 600

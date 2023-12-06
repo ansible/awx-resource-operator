@@ -47,6 +47,7 @@ spec:
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Job TTL
+        description: Time to live for k8s job object after the playbook run has finished
         path: job_ttl
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
@@ -58,6 +59,12 @@ spec:
         - urn:alm:descriptor:com.tectonic.ui:advanced
       - displayName: Skip Tags
         path: skip_tags
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      - displayName: Request Timeout
+        description: Time in seconds to wait for a response from the AWX API
+        path: request_timeout
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
         - urn:alm:descriptor:com.tectonic.ui:advanced
@@ -198,7 +205,14 @@ spec:
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Workflow TTL
+        description: Time to live for k8s job object after the playbook run has finished
         path: workflow_ttl
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      - displayName: Request Timeout
+        description: Time in seconds to wait for a response from the AWX API
+        path: request_timeout
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
         - urn:alm:descriptor:com.tectonic.ui:advanced
