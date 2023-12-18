@@ -137,7 +137,7 @@ jobs:
         run: |
           sleep 10
           kubectl wait awx -n awx awx-demo --for condition=Successful=true --timeout=720s
-          kubectl wait deployment -n awx awx-demo-task --for condition=Available=True --timeout=500s
+          kubectl wait deployment -n awx awx-demo-task --for condition=Available=True --timeout=600s
           kubectl wait deployment -n awx awx-demo-web --for condition=Available=True --timeout=500s
           kubectl apply -f test-e2e/token.yaml
           kubectl wait job -n awx create-token --for condition=Complete --timeout=60s
@@ -155,13 +155,13 @@ jobs:
       - name: launch a job
         run: |
           kubectl apply -f test-e2e/tests/job.yaml
-          kubectl wait ansiblejob -n awx demo-job --for condition=Successful=True --timeout=60s
+          kubectl wait ansiblejob -n awx demo-job --for condition=Successful=True --timeout=80s
           kubectl apply -f config/samples/tower_v1alpha1_ansiblejob-broken.yaml -n awx
-          kubectl wait ansiblejob -n awx broke-job --for condition=Successful=True --timeout=60s
+          kubectl wait ansiblejob -n awx broke-job --for condition=Successful=True --timeout=80s
           kubectl apply -f test-e2e/tests/job-deprecated.yaml
-          kubectl wait ansiblejob -n awx demo-job-deprecated --for condition=Successful=True --timeout=60s
+          kubectl wait ansiblejob -n awx demo-job-deprecated --for condition=Successful=True --timeout=80s
           kubectl apply -f config/samples/tower_v1alpha1_ansiblejob-broken-dep.yaml -n awx
-          kubectl wait ansiblejob -n awx broke-job-deprecated --for condition=Successful=True --timeout=60s
+          kubectl wait ansiblejob -n awx broke-job-deprecated --for condition=Successful=True --timeout=80s
 
       - name: launch a template
         run: |

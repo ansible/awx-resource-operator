@@ -1,0 +1,45 @@
+---
+
+name: Build Operator Image
+
+on:
+  push:
+    branches: [devel]
+
+jobs:
+  operator-image-build:
+    runs-on: ubuntu-latest
+    name: Push Operator Image
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build Image
+        run: |
+          IMG=awx-resource-operator:devel make docker-build
+
+      - name: Push To Quay
+        uses: redhat-actions/push-to-registry@v2.1.1
+        with:
+          image: awx-resource-operator
+          tags: devel
+          registry: quay.io/ansible/
+          username: ${{ secrets.QUAY_USER }}
+          password: ${{ secrets.QUAY_TOKEN }}
+  runner-image-build:
+    runs-on: ubuntu-latest
+    name: Push Runner Image
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build Image
+        run: |
+          docker build -t awx-resource-runner:devel -f Dockerfile.runner .
+
+      - name: Push To Quay
+        uses: redhat-actions/push-to-registry@v2.1.1
+        with:
+          image: awx-resource-runner
+          tags: devel
+          registry: quay.io/ansible/
+          username: ${{ secrets.QUAY_USER }}
+          password: ${{ secrets.QUAY_TOKEN }}

@@ -38,6 +38,9 @@ spec:
                 type: string
               workflow_template_name:
                 type: string
+              request_timeout:
+                type: integer
+                description: Timeout in seconds to wait for a response when querying the API for the job status
               runner_image:
                 type: string
                 description: Runner image used when running jobs

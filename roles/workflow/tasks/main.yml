@@ -120,6 +120,6 @@
         namespacedName: "{{ ansible_operator_meta.namespace+'/'+ansible_operator_meta.name }}"
         env:
           inventory: "{{ inventory | default(omit) }}"
-          secretNamespacedName: "{{ ansible_operator_meta.namespace+'/'+connection_secret }}"
+          secretNamespacedName: "{{ ansible_operator_meta.namespace+'/'+(connection_secret | default(tower_auth_secret, true)) }}"
           templateName: "{{ _job_name }}"
           verifySSL: false
