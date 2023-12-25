@@ -448,6 +448,20 @@ spec:
         path: instance_groups
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Inventory State
+        path: state
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:select:present
+        - urn:alm:descriptor:com.tectonic.ui:select:absent
+        - urn:alm:descriptor:com.tectonic.ui:select:exists
+      - displayName: Inventory Variables
+        path: variables
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Authentication Secret
+        path: connection_secret
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
       - description: Copy inventory from another inventory
         displayName: Copy Inventory
         path: copy_from

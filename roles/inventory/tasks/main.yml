@@ -10,7 +10,7 @@
 
 - name: Set fact based on secret results
   set_fact:
-     tower_config_secret: "{{ tower_connection_secret }}"
+    tower_config_secret: "{{ tower_connection_secret }}"
 
 - name: Validate Secret Exists
   assert:
@@ -26,10 +26,11 @@
     copy_from: "{{ copy_from | default(omit) }}"
     state: "{{ state | default('present') }}"
     instance_groups: "{{ instance_groups | default(omit) }}"
+    variables: "{{ variables | default(omit) }}"
   environment:
-    - TOWER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
-    - TOWER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
-    - TOWER_VERIFY_SSL: "False"
+    TOWER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
+    TOWER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
+    TOWER_VERIFY_SSL: "False"
   register: inventory
   ignore_errors: true
 
@@ -57,4 +58,3 @@
       message: "There was an error when creating the inventory"
   when:
     - inventory.failed
-

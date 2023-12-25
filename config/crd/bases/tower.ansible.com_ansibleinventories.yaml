@@ -33,14 +33,35 @@ spec:
             properties:
               name:
                 type: string
+                description: The name to use for the inventory
               description:
                 type: string
+                description: The description for the inventory
               organization:
                 type: string
+                description: Organization name, ID, or named URL the inventory belongs to
+              instance_groups:
+                type: array
+                description: list of Instance Group names, IDs, or named URLs for this Organization to run on
+                items:
+                  type: string
               copy_from:
                 type: string
+                description: Name or id to copy the inventory from
+                  This will copy an existing inventory and change any parameters supplied
+                  The new inventory name will be the one provided in the name parameter
+                  The organization parameter is not used in this, to facilitate copy from one organization to another
+                  Provide the id or use the lookup plugin to provide the id if multiple inventories share the same name
               state:
                 type: string
+                default: present
+                enum: ["present", "absent", "exists"]
+                description: Desired state of the resource
+              variables:
+                type: object
+                description: The desired inventory variables for the inventory
+                additionalProperties:
+                  x-kubernetes-preserve-unknown-fields: true
               connection_secret:
                 type: string
                 description: |
@@ -48,6 +69,9 @@ spec:
             description: Spec defines the desired state of Inventory
             type: object
             x-kubernetes-preserve-unknown-fields: true
+            required:
+            - name
+            - organization
           status:
             description: Status defines the observed state of Inventory
             type: object
