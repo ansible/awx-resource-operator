@@ -34,10 +34,12 @@ spec:
         path: tower_auth_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:io.kubernetes:Secret
       - displayName: Authentication Secret
         path: connection_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:io.kubernetes:Secret
       - displayName: AWX Inventory
         path: inventory
         x-descriptors:
@@ -108,14 +110,17 @@ spec:
         path: ssh_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:io.kubernetes:Secret
       - displayName: Kubernetes Bearer Token Secret
         path: kubernetes_bearer_token_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:io.kubernetes:Secret
       - displayName: Connection Secret
         path: connection_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:io.kubernetes:Secret
       - displayName: Kubernetes API
         path: kubernetes_api
         x-descriptors:
@@ -172,6 +177,7 @@ spec:
         path: connection_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:io.kubernetes:Secret
       - displayName: Ansible Runner Image
         path: runner_image
         x-descriptors:
@@ -196,6 +202,7 @@ spec:
         path: connection_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:io.kubernetes:Secret
       - displayName: AWX Inventory
         path: inventory
         x-descriptors:
@@ -244,10 +251,12 @@ spec:
         path: tower_auth_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:io.kubernetes:Secret
       - displayName: Authentication Secret
         path: connection_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:io.kubernetes:Secret
       - displayName: Job Template Inventory
         path: job_template_inventory
         x-descriptors:
@@ -302,6 +311,7 @@ spec:
         path: connection_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:io.kubernetes:Secret
       - displayName: Workflow Inventory
         path: inventory
         x-descriptors:
@@ -384,6 +394,7 @@ spec:
         path: connection_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:io.kubernetes:Secret
       - displayName: Git Repository URL
         path: repo
         x-descriptors:
@@ -418,6 +429,7 @@ spec:
         path: connection_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:io.kubernetes:Secret
       - displayName: Schedule Rules
         path: rrules
         x-descriptors:
@@ -462,6 +474,7 @@ spec:
         path: connection_secret
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:io.kubernetes:Secret
       - description: Copy inventory from another inventory
         displayName: Copy Inventory
         path: copy_from
