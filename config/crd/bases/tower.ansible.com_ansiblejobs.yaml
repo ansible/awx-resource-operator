@@ -49,6 +49,9 @@ spec:
               runner_version:
                 type: string
                 description: Runner image version used when running jobs
+              labels:
+                type: string
+                description: A comma-separated list of labels to apply to the job
               runner_pull_policy:
                 type: string
                 description: Runner image pull policy used when running jobs
