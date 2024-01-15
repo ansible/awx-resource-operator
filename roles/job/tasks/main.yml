@@ -94,6 +94,9 @@
     state: present
     definition: "{{ lookup('template', 'service_account.yml.j2') }}"
 
+- name: Unset ownerReference on ServiceAccount, Role, and RoleBinding
+  include_tasks: ../common/tasks/unset-ownerref.yml
+
 - name: Start K8s Runner Job
   kubernetes.core.k8s:
     state: present

@@ -102,4 +102,3 @@
       message: "There was an error in the job template"
   when:
     - job_template.failed
-
