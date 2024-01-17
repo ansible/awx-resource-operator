@@ -12,6 +12,8 @@
   when:
     - ansibleproj_info['resources'][0]['status']['isFinished'] is defined
     - ansibleproj_info['resources'][0]['status']['isFinished']
+    - ansibleproj_info['resources'][0]['status']['generation'] is defined
+    - ansibleproj_info['resources'][0]['status']['generation']|int == ansibleproj_info['resources'][0]['metadata']['generation']|int
 
 - block:
     - name: Check number of attempts to execute the job have been made
@@ -77,13 +79,14 @@
   set_fact:
     _project_name: "{{ name}}"
 
-- name: Update AnsibleProject status with K8s job info
+- name: Update AnsibleProject status with K8s job info and generation
   operator_sdk.util.k8s_status:
     api_version: tower.ansible.com/v1alpha1
     kind: AnsibleProject
     name: "{{ ansible_operator_meta.name }}"
     namespace: "{{ ansible_operator_meta.namespace }}"
     status:
+      generation: "{{ ansibleproj_info['resources'][0]['metadata']['generation'] }}"
       k8sJob:
         created: true
         message: |-
