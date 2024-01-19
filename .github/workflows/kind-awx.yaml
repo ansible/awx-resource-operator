@@ -193,14 +193,17 @@ jobs:
           kubectl apply -n awx -f test-e2e/tests/bearer.yaml
           kubectl create secret generic github-secret -n awx --from-literal=username=FSAFDFSDF --from-literal=password=FSDFSDFSDFDFFESFD
           kubectl create secret generic aws-secret -n awx --from-literal=username=FSAFDFSDF --from-literal=password=FSDFSDFSDFDFFESFD
+          kubectl create secret generic cr-secret -n awx --from-literal=username=FSAFDFSDF --from-literal=password=FSDFSDFSDFDFFESFD
           kubectl create secret generic github-token-secret -n awx --from-literal=token=FASDFDDSFSDFSDFSDF
           kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-aws.yaml -n awx
           kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-bearer.yaml -n awx
           kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-broken.yaml -n awx
+          kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-cr.yaml -n awx
           kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-git.yaml -n awx
           kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-sc.yaml -n awx
           kubectl apply -f config/samples/credentials/tower_v1alpha1_ansiblecredential-ssh.yaml -n awx
           kubectl wait ansiblecredential -n awx aws-cred --for condition=Successful=True --timeout=240s
+          kubectl wait ansiblecredential -n awx cr-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx gh-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx scm-cred --for condition=Successful=True --timeout=240s
           kubectl wait ansiblecredential -n awx ssh-cred --for condition=Successful=True --timeout=240s
