@@ -20,7 +20,7 @@ spec:
   template:
     metadata:
       annotations:
-        kubectl.kubernetes.io/default-container: manager
+        kubectl.kubernetes.io/default-container: awx-resource-manager
       labels:
         control-plane: controller-manager
     spec:
@@ -37,11 +37,14 @@ spec:
       - args:
         - --leader-elect
         - --leader-election-id=awx-resource-operator
-        - --max-concurrent-reconciles=15
         image: controller:latest
         imagePullPolicy: IfNotPresent
         name: awx-resource-manager
         env:
+        - name: MAX_CONCURRENT_RECONCILES_ANSIBLEJOB_TOWER_ANSIBLE_COM
+          value: "5"
+        - name: MAX_CONCURRENT_RECONCILES_ANSIBLEWORKFLOW_TOWER_ANSIBLE_COM
+          value: "5"
         - name: ANSIBLE_GATHERING
           value: explicit
         - name: ANSIBLE_DEBUG_LOGS

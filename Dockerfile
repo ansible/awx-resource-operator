@@ -8,4 +8,4 @@ COPY watches.yaml ${HOME}/watches.yaml
 COPY roles/ ${HOME}/roles/
 COPY playbooks/ ${HOME}/playbooks/
 
-ENTRYPOINT ["/tini", "--", "/usr/local/bin/ansible-operator", "run", "--watches-file=./watches.yaml", "--reconcile-period=0s"]
+ENTRYPOINT ["/tini", "--", "/usr/local/bin/ansible-operator", "run", "--watches-file=./watches.yaml", "--reconcile-period=0s", "--max-concurrent-reconciles", "2"]
