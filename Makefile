@@ -46,6 +46,11 @@ RUNNER_IMAGE_TAG_BASE ?= quay.io/ansible/awx-resource-runner
 RUNNER_VERSION ?= latest
 RUNNER_IMG ?= $(RUNNER_IMAGE_TAG_BASE):$(RUNNER_VERSION)
 
+OS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
+ARCHA := $(shell uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/')
+ARCHX := $(shell uname -m | sed -e 's/amd64/x86_64/' -e 's/aarch64/arm64/')
+
+
 # BUNDLE_GEN_FLAGS are the flags passed to the operator-sdk generate bundle command
 BUNDLE_GEN_FLAGS ?= -q --overwrite --version $(VERSION) $(BUNDLE_METADATA_OPTS)
 
@@ -87,6 +92,10 @@ run: ansible-operator ## Run against the configured Kubernetes cluster in ~/.kub
 .PHONY: docker-build
 docker-build: ## Build docker image with the manager.
 	$(ENGINE) build -t ${IMG} .
+
+.PHONY: docker-save
+docker-save: ## Save docker image with the manager.
+	$(ENGINE) save ${IMG} > operator.tar
 
 .PHONY: docker-push
 docker-push: ## Push docker image with the manager.
@@ -203,3 +212,138 @@ catalog-build: opm ## Build a catalog image.
 .PHONY: catalog-push
 catalog-push: ## Push a catalog image.
 	$(MAKE) docker-push IMG=$(CATALOG_IMG)
+
+.PHONY: helm
+HELM = $(shell pwd)/bin/helm
+helm: ## Download helm locally if necessary.
+ifeq (,$(wildcard $(HELM)))
+ifeq (,$(shell which helm 2>/dev/null))
+	@{ \
+	set -e ;\
+	mkdir -p $(dir $(HELM)) ;\
+	curl -sSLo - https://get.helm.sh/helm-v3.8.0-$(OS)-$(ARCHA).tar.gz | \
+	tar xzf - -C bin/ $(OS)-$(ARCHA)/helm ;\
+	mv bin/$(OS)-$(ARCHA)/helm bin/helm ;\
+	rmdir bin/$(OS)-$(ARCHA) ;\
+	}
+else
+HELM = $(shell which helm)
+endif
+endif
+
+.PHONY: kubectl-slice
+KUBECTL_SLICE = $(shell pwd)/bin/kubectl-slice
+kubectl-slice: ## Download kubectl-slice locally if necessary.
+ifeq (,$(wildcard $(KUBECTL_SLICE)))
+ifeq (,$(shell which kubectl-slice 2>/dev/null))
+	@{ \
+	set -e ;\
+	mkdir -p $(dir $(KUBECTL_SLICE)) ;\
+	curl -sSLo - https://github.com/patrickdappollonio/kubectl-slice/releases/download/v1.2.6/kubectl-slice_$(OS)_$(ARCHX).tar.gz | \
+	tar xzf - -C bin/ kubectl-slice ;\
+	}
+else
+KUBECTL_SLICE = $(shell which kubectl-slice)
+endif
+endif
+
+charts:
+	mkdir -p $@
+
+.PHONY: yq
+YQ = $(shell pwd)/bin/yq
+yq: ## Download yq locally if necessary.
+ifeq (,$(wildcard $(YQ)))
+ifeq (,$(shell which yq 2>/dev/null))
+	@{ \
+	set -e ;\
+	mkdir -p $(dir $(HELM)) ;\
+	curl -sSLo - https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_$(OS)_$(ARCHA).tar.gz | \
+	tar xzf - -C bin/ ;\
+	mv bin/yq_$(OS)_$(ARCHA) bin/yq ;\
+	}
+else
+YQ = $(shell which yq)
+endif
+endif
+
+# Helm variables
+CHART_NAME ?= awx-resource-operator
+CHART_DESCRIPTION ?= A Helm chart for the AWX Resource Operator
+CHART_OWNER ?= $(GH_REPO_OWNER)
+CHART_REPO ?= awx-resource-operator
+CHART_BRANCH ?= gh-pages
+CHART_DIR ?= gh-pages
+CHART_INDEX ?= index.yaml
+
+
+.PHONY: helm-chart
+helm-chart: helm-chart-generate
+
+.PHONY: helm-chart-generate
+helm-chart-generate: kustomize helm kubectl-slice yq charts
+	@echo "== KUSTOMIZE: Set image and chart label =="
+	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
+	cd config/manager && $(KUSTOMIZE) edit set label helm.sh/chart:$(CHART_NAME)
+	cd config/default && $(KUSTOMIZE) edit set label helm.sh/chart:$(CHART_NAME)
+	
+
+	@echo "== Gather Helm Chart Metadata =="
+	# remove the existing chart if it exists
+	rm -rf charts/$(CHART_NAME)
+	# create new chart metadata in Chart.yaml
+	cd charts && \
+	$(HELM) create awx-resource-operator --starter $(shell pwd)/.helm/starter ;\
+	$(YQ) -i '.version = "$(VERSION)"' $(CHART_NAME)/Chart.yaml ;\
+	$(YQ) -i '.appVersion = "$(VERSION)" | .appVersion style="double"' $(CHART_NAME)/Chart.yaml ;\
+	$(YQ) -i '.description = "$(CHART_DESCRIPTION)"' $(CHART_NAME)/Chart.yaml ;\
+
+# 
+
+	@echo "Generated chart metadata:"
+	@cat charts/$(CHART_NAME)/Chart.yaml
+
+	@echo "== KUSTOMIZE: Generate resources and slice into templates =="
+	# place in raw-files directory so they can be modified while they are valid yaml - as soon as they are in templates/,
+	# wild cards pick up the actual templates, which are not real yaml and can't have yq run on them.
+	$(KUSTOMIZE) build --load-restrictor LoadRestrictionsNone config/default | \
+		$(KUBECTL_SLICE) --input-file=- \
+			--output-dir=charts/$(CHART_NAME)/raw-files \
+			--sort-by-kind
+
+	@echo "== GIT: Reset kustomize configs =="
+	# reset kustomize configs following kustomize build
+	git checkout -f config/.
+
+	@echo "== Build Templates and CRDS =="
+	# Delete metadata.namespace, release namespace will be automatically inserted by helm
+	for file in charts/$(CHART_NAME)/raw-files/*; do\
+		$(YQ) -i 'del(.metadata.namespace)' $${file};\
+	done
+	# Correct namespace for rolebinding to be release namespace, this must be explicit
+	for file in charts/$(CHART_NAME)/raw-files/*rolebinding*; do\
+		$(YQ) -i '.subjects[0].namespace = "{{ .Release.Namespace }}"' $${file};\
+	done
+	# Correct .metadata.name for cluster scoped resources
+	cluster_scoped_files="charts/$(CHART_NAME)/raw-files/clusterrolebinding-resource-operator-proxy-rolebinding.yaml charts/$(CHART_NAME)/raw-files/clusterrole-resource-operator-metrics-reader.yaml charts/$(CHART_NAME)/raw-files/clusterrole-resource-operator-proxy-role.yaml";\
+	for file in $${cluster_scoped_files}; do\
+		$(YQ) -i '.metadata.name += "-{{ .Release.Name }}"' $${file};\
+	done
+
+	# Correct the reference for the clusterrolebinding
+	$(YQ) -i '.roleRef.name += "-{{ .Release.Name }}"' 'charts/$(CHART_NAME)/raw-files/clusterrolebinding-resource-operator-proxy-rolebinding.yaml'
+	# move all custom resource definitions to crds folder
+	mkdir charts/$(CHART_NAME)/crds
+	mv charts/$(CHART_NAME)/raw-files/customresourcedefinition*.yaml charts/$(CHART_NAME)/crds/.
+	# remove any namespace definitions
+	rm -f charts/$(CHART_NAME)/raw-files/namespace*.yaml
+	# move remaining resources to helm templates
+	mv charts/$(CHART_NAME)/raw-files/* charts/$(CHART_NAME)/templates/.
+	# remove the raw-files folder
+	rm -rf charts/$(CHART_NAME)/raw-files
+
+	# create and populate NOTES.txt
+	@echo "AWX Resource Operator installed with Helm Chart version $(VERSION)" > charts/$(CHART_NAME)/templates/NOTES.txt
+
+	@echo "Helm chart successfully configured for $(CHART_NAME) version $(VERSION)"
+

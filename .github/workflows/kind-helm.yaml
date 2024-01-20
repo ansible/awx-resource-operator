@@ -1,0 +1,102 @@
+---
+
+    name: Build Helm Chart 
+    
+    on:
+      pull_request:
+        branches: [devel]
+    
+      push:
+        branches: [devel]
+    
+    env:
+      GO_VERSION: "1.17"
+      OPERATOR_IMAGE: "quay.io/ansible/awx-resource-operator:ci"
+    
+    jobs:
+      operator-image-build:
+        runs-on: ubuntu-20.04
+        name: operator-image-build
+        steps:
+          - uses: actions/checkout@v3
+
+          - name: Build operator container
+            run: make docker-build
+
+          - name: archive operator image
+            run: make docker-save
+
+          - name: upload operator image
+            uses: actions/upload-artifact@v3
+            with:
+                name: operator.tar
+                path: operator.tar
+
+      helm-template:
+        runs-on: ubuntu-20.04
+        name: helm-template
+        steps:
+          - uses: actions/checkout@v3
+    
+          - name: make helm chart
+            run: make helm-chart
+        
+          - name: helm template
+            run: |
+                cd charts/awx-resource-operator
+                helm template .
+          - name: helm package
+            run: |
+                cd charts/awx-resource-operator
+                helm package .
+          - name: upload awx-resource-operator image
+            uses: actions/upload-artifact@v3
+            with:
+                name: helm-chart.tar
+                path: charts/awx-resource-operator/*.tgz
+      minikube-test:
+        runs-on: ubuntu-20.04
+        name: minikube-test
+        needs: [helm-template, operator-image-build]
+        steps:
+          - uses: actions/checkout@v3
+    
+          - name: Start minikube
+            uses: medyagh/setup-minikube@master
+            with:
+                memory: max
+                cpus: max
+          - name: Pull the Helm Chart Image from Artifacts
+            uses: actions/download-artifact@v3
+            with:
+                name: helm-chart.tar
+                path: /tmp
+          - name: Pull the Container Image from Artifacts
+            uses: actions/download-artifact@v3
+            with:
+                name: operator.tar
+                path: /tmp
+     
+          - name: Load the Container Image into the minikube
+            run: |
+                export SHELL=/bin/bash
+                eval $(minikube -p minikube docker-env)
+                docker load < /tmp/operator.tar
+                
+          - name: Install the Kubectl binary
+            run: |
+                curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                sudo install ./kubectl /usr/local/bin/
+                kubectl version --client
+          - name: Install awx-resource-operator chart
+            run: |
+                helm install awx-resource-operator /tmp/awx-resource-operator-0.2.0.tgz -n awx --create-namespace
+          - name: Check deployment status
+            run: |
+                sleep 10
+                kubectl wait deployment -n awx resource-operator-controller-manager --for condition=Available=True --timeout=100s
+          
+          - name: dump logs
+            if: always()
+            run: kubectl get events -n awx && kubectl get jobs -n awx && kubectl get pods -n awx && kubectl logs -n awx -l control-plane=controller-manager --tail 80 --all-containers
+        
