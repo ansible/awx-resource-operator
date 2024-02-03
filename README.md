@@ -60,7 +60,7 @@ kubectl login <cluster-url>
 NAMESPACE=awx IMG=quay.io/ansible/awx-resource-operator:latest make deploy
 ```
 
-This will create a deployment named `resource-operator-controller-manager` in the namespace specified, in this case the `awx` namespace. The resulting operator pod will reconcile any AnsibleJob or JotTemplate resources created.
+This will create a deployment named `resource-operator-controller-manager` in the namespace specified, in this case the `awx` namespace. The resulting operator pod will reconcile any AnsibleJob or JobTemplate resources created.
 
 
 ## Usage
@@ -170,10 +170,10 @@ metadata:
   name: jobtemplate-4
 spec:
   connection_secret: awx-access
-  job_template_name: ExampleJobTemplate4
-  job_template_project: Demo Project
-  job_template_playbook: hello_world.yml
-  job_template_inventory: Demo Inventory
+  name: ExampleJobTemplate4
+  project: Demo Project
+  playbook: hello_world.yml
+  inventory: Demo Inventory
 ```
 
 
