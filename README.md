@@ -155,7 +155,7 @@ metadata:
   generateName: demo-job-1 # generate a unique suffix per 'kubectl create'
 spec:
   connection_secret: awx-access
-  workflow_template_name: Demo Workflow Template
+  name: Demo Workflow Template
 ```
 
 ### JobTemplate
@@ -170,10 +170,10 @@ metadata:
   name: jobtemplate-4
 spec:
   connection_secret: awx-access
-  job_template_name: ExampleJobTemplate4
-  job_template_project: Demo Project
-  job_template_playbook: hello_world.yml
-  job_template_inventory: Demo Inventory
+  name: ExampleJobTemplate4
+  project: Demo Project
+  playbook: hello_world.yml
+  inventory: Demo Inventory
 ```
 
 
