@@ -46,7 +46,7 @@
         changed: "{{ job.changed }}"
         failed: "{{ job.failed }}"
         status: "{{ job.status }}"
-        url: "{{ lookup('env', 'TOWER_HOST') + '/#/jobs/playbook/' + (job.id|string) }}"
+        url: "{{ lookup('env', 'TOWER_HOST') | regex_replace('\\/$', '') + '/#/jobs/playbook/' + (job.id|string) }}"
 
 - name: Wait for the tower job, if error update AnsibleJob status then end play
   block:
@@ -55,6 +55,27 @@
         job_id: "{{ job.id }}"
         request_timeout: "{{ request_timeout }}"
       register: job_result
+
+    - name: Get job result data
+      awx.awx.job_list:
+        query: {"id": "{{ job.id }}"}
+      register: job_data
+      when:
+        - ansible_job['resources'][0]['spec']['artifacts'] | default(false)
+
+    - name: Register artifacts
+      operator_sdk.util.k8s_status:
+        api_version: tower.ansible.com/v1alpha1
+        kind: AnsibleJob
+        name: "{{ ansible_job_name }}"
+        namespace: "{{ ansible_job_namespace }}"
+        status:
+          ansibleJobResult:
+            artifacts: "{{ job_data.results[0].artifacts | default({}) }}"
+      when:
+        - ansible_job['resources'][0]['spec']['artifacts'] | default(false)
+        - job_data.results[0] is defined
+
   rescue:
     - name: Update status if job results in an error
       operator_sdk.util.k8s_status:
@@ -65,6 +86,6 @@
         status:
           ansibleJobResult:
             status: "error"
-          error_message: "{{ job_result.msg | default('Job failed, check the job for more information: lookup('env', 'TOWER_HOST') + '/#/jobs/playbook/' + (job.id|string)') }}"
+          error_message: "{{ job_result.msg | default(\"Job failed, check the job for more information: lookup('env', 'TOWER_HOST') + '/#/jobs/playbook/' + (job.id|string)\") }}"
     - name: End playbook run
       meta: end_play
