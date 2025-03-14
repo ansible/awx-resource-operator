@@ -29,7 +29,7 @@ jobs:
         run: podman save ${OPERATOR_IMAGE} > operator.tar
 
       - name: upload operator image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: operator.tar
           path: operator.tar
@@ -47,7 +47,7 @@ jobs:
         run: podman save ${RUNNER_IMAGE} > runner.tar
 
       - name: upload runner image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: runner.tar
           path: runner.tar
@@ -65,7 +65,7 @@ jobs:
         run: podman save ${TOKEN_IMAGE} > token.tar
 
       - name: upload token image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: token.tar
           path: token.tar
@@ -84,19 +84,19 @@ jobs:
           cpus: max
 
       - name: Pull the Container Image from Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: operator.tar
           path: /tmp
 
       - name: Pull the Container Image from Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: runner.tar
           path: /tmp
 
       - name: Pull the Container Image from Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: token.tar
           path: /tmp
