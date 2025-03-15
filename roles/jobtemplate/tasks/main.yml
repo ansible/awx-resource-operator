@@ -71,6 +71,8 @@
     use_fast_cache: "{{ use_fast_cache | default(job_template_use_fast_cache | default(omit)) }}"
     webhook_credential: "{{ webhook_credential | default(job_template_webhook_credential | default(omit)) }}"
     webhook_service: "{{ webhook_service | default(job_template_webhook_service | default(omit)) }}"
+    survey_enabled: "{{ survey_enabled | default(omit) }}"
+    survey_spec: "{{ survey_spec | default(omit) }}"
   environment:
     - TOWER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
     - TOWER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
