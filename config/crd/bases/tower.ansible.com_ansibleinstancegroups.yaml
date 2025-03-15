@@ -30,6 +30,9 @@ spec:
           metadata:
             type: object
           spec:
+            x-kubernetes-validations:
+            - rule: "!(has(self.pod_spec_override) && (has(self.is_container_group) ? self.is_container_group : false ) == false)"
+              message: "pod_spec_override is only valid for container groups"
             properties:
               name:
                 type: string
@@ -40,7 +43,6 @@ spec:
                   Must be of type “OpenShift or Kubernetes API Bearer Token”. Only for ContainerGroup.'
               is_container_group:
                 type: boolean
-                default: false
                 description: Whether this is a ContainerGroup (if true) or an InstanceGroup (if false). Defaults to false.
               max_concurrent_jobs:
                 type: integer
