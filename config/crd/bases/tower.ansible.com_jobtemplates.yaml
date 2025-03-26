@@ -91,6 +91,10 @@ spec:
                           message: "Question types multiselect or multiplechoice must have choices"
                         - rule: "!(self.type in ['multiselect', 'multiplechoice']) ? (! has(self.choices)) : true"
                           message: "You have provided choices for a survey type that isn't multiplechoice or multiselect. Is this an error?"
+                        - rule: "has(self.min) ? self.type in ['text', 'integer', 'float', 'password'] : true"
+                          message: "You have provided a maximum for multiplechoice or multiselect question. Is this an error?"
+                        - rule: "has(self.max) ? self.type in ['text', 'integer', 'float', 'password'] : true"
+                          message: "You have provided a maximum for multiplechoice or multiselect question. Is this an error?"
                       properties:
                         type:
                           type: string
@@ -112,6 +116,12 @@ spec:
                         required:
                           type: boolean
                           description: "Indicates if the question is mandatory"
+                        min:
+                          type: integer
+                          description: "minimum value for int or float, minimum length for text"
+                        max:
+                          type: integer
+                          description: "maximum value for int or float, maximum length for text"
 
                 x-kubernetes-preserve-unknown-fields: true
             description: Spec defines the desired state of JobTemplate
