@@ -95,6 +95,7 @@ spec:
                           message: "You have provided a maximum for multiplechoice or multiselect question. Is this an error?"
                         - rule: "has(self.max) ? self.type in ['text', 'integer', 'float', 'password'] : true"
                           message: "You have provided a maximum for multiplechoice or multiselect question. Is this an error?"
+                        - rule: "(has(self.min) && has(self.max) ? self.min <= self.max : true)"
                       properties:
                         type:
                           type: string
