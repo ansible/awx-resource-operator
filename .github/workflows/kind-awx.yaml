@@ -17,7 +17,7 @@ env:
 
 jobs:
   operator-image-build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: operator-image-build
     steps:
       - uses: actions/checkout@v3
@@ -35,7 +35,7 @@ jobs:
           path: operator.tar
 
   runner-image-build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: runner-image-build
     steps:
       - uses: actions/checkout@v3
@@ -53,7 +53,7 @@ jobs:
           path: runner.tar
 
   token-image-build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: token-image-build
     steps:
       - uses: actions/checkout@v3
@@ -71,7 +71,7 @@ jobs:
           path: token.tar
 
   minikube-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: minikube-test
     needs: [operator-image-build, runner-image-build, token-image-build]
     steps:
