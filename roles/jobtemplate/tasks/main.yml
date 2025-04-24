@@ -37,7 +37,7 @@
   awx.awx.job_template:
     name: "{{ name | default(job_template_name) }}"
     job_type: "{{ job_type | default(job_template_type | default('run')) }}"
-    inventory: "{{ inventory | default(job_template_inventory) }}"
+    inventory: "{{ inventory | default(omit) }}"
     project: "{{ project | default(job_template_project) }}"
     playbook: "{{ playbook | default(job_template_playbook) }}"
     credentials: "{{ credentials | default(job_template_credentials | default(omit)) }}"

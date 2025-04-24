@@ -116,7 +116,6 @@ spec:
             - connection_secret
             - name
             - organization
-            - inventory
             - workflow_nodes
             description: Spec defines the desired state of WorkfkowTemplate
             type: object
