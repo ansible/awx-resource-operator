@@ -37,13 +37,15 @@ spec:
             - name: CREDENTIAL_NAME
               value: "{{ credential_name }}"
 {% endif %}
+{% if is_container_group is defined %}
             - name: IS_CONTAINER_GROUP
               value: "{{ is_container_group }}"
-{% if max_concurrent_jobs is defined and max_concurrent_jobs != "" %}
+{% endif %}
+{% if max_concurrent_jobs is defined %}
             - name: MAX_CONCURRENT_JOBS
               value: "{{ max_concurrent_jobs }}"
 {% endif %}
-{% if max_forks is defined and max_forks != "" %}
+{% if max_forks is defined %}
             - name: MAX_FORKS
               value: "{{ max_forks }}"
 {% endif %}
@@ -51,11 +53,11 @@ spec:
             - name: POD_SPEC_OVERRIDE
               value: "{{ pod_spec_override }}"
 {% endif %}
-{% if policy_instance_percentage is defined and policy_instance_percentage != "" %}
+{% if policy_instance_percentage is defined %}
             - name: POLICY_INSTANCE_PERCENTAGE
               value: "{{ policy_instance_percentage }}"
 {% endif %}
-{% if policy_instance_minimum is defined and policy_instance_minimum != "" %}
+{% if policy_instance_minimum is defined %}
             - name: POLICY_INSTANCE_MINIMUM
               value: "{{ policy_instance_minimum }}"
 {% endif %}
