@@ -1,7 +1,7 @@
 ---
 collections:
   - name: kubernetes.core
-    version: "2.3.2"
+    version: "2.4.2"
   - name: operator_sdk.util
     version: "0.4.0"
   - name: awx.awx

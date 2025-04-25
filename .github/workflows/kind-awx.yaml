@@ -17,7 +17,7 @@ env:
 
 jobs:
   operator-image-build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: operator-image-build
     steps:
       - uses: actions/checkout@v3
@@ -29,13 +29,13 @@ jobs:
         run: podman save ${OPERATOR_IMAGE} > operator.tar
 
       - name: upload operator image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: operator.tar
           path: operator.tar
 
   runner-image-build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: runner-image-build
     steps:
       - uses: actions/checkout@v3
@@ -47,13 +47,13 @@ jobs:
         run: podman save ${RUNNER_IMAGE} > runner.tar
 
       - name: upload runner image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: runner.tar
           path: runner.tar
 
   token-image-build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: token-image-build
     steps:
       - uses: actions/checkout@v3
@@ -65,13 +65,13 @@ jobs:
         run: podman save ${TOKEN_IMAGE} > token.tar
 
       - name: upload token image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: token.tar
           path: token.tar
 
   minikube-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: minikube-test
     needs: [operator-image-build, runner-image-build, token-image-build]
     steps:
@@ -84,19 +84,19 @@ jobs:
           cpus: max
 
       - name: Pull the Container Image from Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: operator.tar
           path: /tmp
 
       - name: Pull the Container Image from Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: runner.tar
           path: /tmp
 
       - name: Pull the Container Image from Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: token.tar
           path: /tmp
