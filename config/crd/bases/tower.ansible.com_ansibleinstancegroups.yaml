@@ -44,6 +44,7 @@ spec:
               is_container_group:
                 type: boolean
                 description: Whether this is a ContainerGroup (if true) or an InstanceGroup (if false). Defaults to false.
+                default: false
               max_concurrent_jobs:
                 type: integer
                 description: Maximum number of concurrent jobs to run on this group. Zero means no limit.

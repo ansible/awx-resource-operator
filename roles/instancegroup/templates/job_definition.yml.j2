@@ -37,10 +37,8 @@ spec:
             - name: CREDENTIAL_NAME
               value: "{{ credential_name }}"
 {% endif %}
-{% if is_container_group is defined and is_container_group != "" %}
             - name: IS_CONTAINER_GROUP
               value: "{{ is_container_group }}"
-{% endif %}
 {% if max_concurrent_jobs is defined and max_concurrent_jobs != "" %}
             - name: MAX_CONCURRENT_JOBS
               value: "{{ max_concurrent_jobs }}"
