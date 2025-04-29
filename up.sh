@@ -145,8 +145,23 @@ make deploy IMG=$IMG:$TAG NAMESPACE=$NAMESPACE
 # Deploy Operator
 NAMESPACE=$NAMESPACE IMG=quay.io/chadams/awx-resource-operator:$TAG make deploy # RUNNER_IMG=quay.io/chadams/awx-resource-runner:dev
 
-# Prepare files
-oc create -f hacking/awxaccess-secret.yml 
+# -- Create connection secret using environment variables
+if [ -z "$RESOURCE_SERVER_URL" ] || [ -z "$RESOURCE_SERVER_TOKEN" ]; then
+    echo "Warning: RESOURCE_SERVER_URL and/or RESOURCE_SERVER_TOKEN not set. Skipping connection secret creation."
+else
+    cat <<EOF | kubectl apply -n $NAMESPACE -f -
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: awxaccess
+stringData:
+  host: "${RESOURCE_SERVER_URL}"
+  token: "${RESOURCE_SERVER_TOKEN}"
+type: Opaque
+EOF
+    echo "Created connection secret 'awxaccess' in namespace $NAMESPACE"
+fi
 
 
 # Create custom resources
