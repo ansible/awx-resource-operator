@@ -14,29 +14,44 @@ After cloning the repository and logging in to your OpenShift or Kubernetes clus
 export QUAY_USER=username
 export NAMESPACE=resource
 export TAG=test
-export RESOURCE_SERVER_URL="https://your-awx-instance.com"
-export RESOURCE_SERVER_TOKEN="your-awx-token"
 ./up.sh
 ```
-
-To make this persistent across sessions, consider adding these exports to your `.bashrc` or `.bash_profile`.
-
-> **Note**: The first run will attempt to push operator images to your Quay.io namespace. Ensure the resulting repositories are made **public** or configure a **global pull secret** in your OpenShift or Kubernetes cluster to avoid image pull issues.
 
 ---
 
 ## Connection Secret Configuration
 
-The operator requires a connection secret to communicate with your AWX instance. You can automatically create this secret during deployment by setting the following environment variables:
+The operator requires a connection secret to communicate with your AWX instance. There are two ways to configure this:
+
+### Option 1: Automatic OAuth2 Token Generation (Recommended)
+
+The operator can automatically generate an OAuth2 token using admin credentials. Simply set these environment variables:
+
+```bash
+export RESOURCE_SERVER_URL="https://your-awx-instance.com"
+export RESOURCE_SERVER_ADMIN_USER="admin"
+export RESOURCE_SERVER_ADMIN_PASSWORD="password"
+```
+
+When these variables are set, `up.sh` will:
+1. Automatically generate an OAuth2 token using the provided credentials
+2. Create a connection secret named `awxaccess` in your specified namespace
+3. Configure the operator to use this connection
+
+> **Note**: This method requires `ansible-playbook` to be installed on your system.
+
+### Option 2: Using an Existing OAuth2 Token
+
+If you prefer to use an existing token or cannot use automatic generation, set these environment variables:
 
 ```bash
 export RESOURCE_SERVER_URL="https://your-awx-instance.com"
 export RESOURCE_SERVER_TOKEN="your-awx-token"
 ```
 
-When these variables are set, `up.sh` will automatically create a connection secret named `awxaccess` in your specified namespace. If these variables are not set, the script will display a warning and skip secret creation.
+For information about manually creating tokens in AWX, see the [AWX documentation on token creation](https://docs.ansible.com/automation-controller/latest/html/userguide/applications_auth.html#add-tokens).
 
-To create an access token for AWX, see the [AWX documentation on token creation](https://docs.ansible.com/automation-controller/latest/html/userguide/applications_auth.html#add-tokens).
+If neither option's variables are set, the script will display a warning and skip secret creation.
 
 ---
 

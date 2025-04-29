@@ -1,0 +1,42 @@
+---
+- hosts: localhost
+  gather_facts: false
+  collections:
+    - awx.awx
+    - ansible.controller
+  tasks:
+    - name: Create OAuth2 token for admin user
+      block:
+        - name: Try with awx.awx.token
+          awx.awx.token:
+            description: "Auto-generated token by up.sh"
+            scope: "write"
+            state: present
+            controller_username: "{{ lookup('env', 'RESOURCE_SERVER_ADMIN_USER') }}"
+            controller_password: "{{ lookup('env', 'RESOURCE_SERVER_ADMIN_PASSWORD') }}"
+            controller_host: "{{ lookup('env', 'RESOURCE_SERVER_URL') }}"
+            validate_certs: false
+          register: token_result
+      rescue:
+        - name: Fallback to ansible.controller.token
+          ansible.controller.token:
+            description: "Auto-generated token by up.sh"
+            scope: "write"
+            state: present
+            controller_username: "{{ lookup('env', 'RESOURCE_SERVER_ADMIN_USER') }}"
+            controller_password: "{{ lookup('env', 'RESOURCE_SERVER_ADMIN_PASSWORD') }}"
+            controller_host: "{{ lookup('env', 'RESOURCE_SERVER_URL') }}"
+            validate_certs: false
+          register: token_result
+
+    - name: Set token as environment variable
+      set_fact:
+        oauth2_token: "{{ token_result.ansible_facts.tower_token.token }}"
+
+    - name: Display token information
+      debug:
+        msg: "Token created successfully: {{ oauth2_token }}"
+
+    - name: Export token to environment variable
+      shell: echo "export RESOURCE_SERVER_TOKEN={{ oauth2_token }}"
+      register: export_result
