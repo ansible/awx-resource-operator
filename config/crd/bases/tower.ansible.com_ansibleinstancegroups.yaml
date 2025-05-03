@@ -54,6 +54,9 @@ spec:
               pod_spec_override:
                 type: string
                 description: A custom Kubernetes or OpenShift Pod specification. Only for ContainerGroup.
+              policy_spec_override:
+                type: string
+                description: DEPRECATED - Override the policy spec for this instance group
               policy_instance_percentage:
                 type: integer
                 description: The percentage of instances to use for this instance group. Only for InstanceGroup.

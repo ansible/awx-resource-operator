@@ -52,6 +52,9 @@ spec:
 {% if pod_spec_override is defined and pod_spec_override != "" %}
             - name: POD_SPEC_OVERRIDE
               value: "{{ pod_spec_override }}"
+{% elif policy_spec_override is defined and policy_spec_override != "" %}
+            - name: POD_SPEC_OVERRIDE
+              value: "{{ policy_spec_override }}"
 {% endif %}
 {% if policy_instance_percentage is defined %}
             - name: POLICY_INSTANCE_PERCENTAGE
