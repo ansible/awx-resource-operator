@@ -2,11 +2,11 @@
 resources:
 - tower_v1alpha1_ansiblejob.yaml
 - tower_v1alpha1_ansibleschedule.yaml
-- tower_v1alpha1_ansibleinstancegroup.yaml
 - ./credentials/
 - ./inventory/
-- ./projects/
+- ./instancegroup/
 - ./jobtemplate/
+- ./projects/
 - ./workflow/
 - ./workflowtemplate/
 #+kubebuilder:scaffold:manifestskustomizesamples

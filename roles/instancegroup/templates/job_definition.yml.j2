@@ -33,18 +33,41 @@ spec:
             - name: STATE
               value: "present"
 {% endif %}
+{% if credential_name is defined and credential_name != "" %}
             - name: CREDENTIAL_NAME
               value: "{{ credential_name }}"
+{% endif %}
+{% if is_container_group is defined %}
             - name: IS_CONTAINER_GROUP
               value: "{{ is_container_group }}"
-            - name: POLICY_SPEC_OVERRIDE
+{% endif %}
+{% if max_concurrent_jobs is defined %}
+            - name: MAX_CONCURRENT_JOBS
+              value: "{{ max_concurrent_jobs }}"
+{% endif %}
+{% if max_forks is defined %}
+            - name: MAX_FORKS
+              value: "{{ max_forks }}"
+{% endif %}
+{% if pod_spec_override is defined and pod_spec_override != "" %}
+            - name: POD_SPEC_OVERRIDE
+              value: "{{ pod_spec_override }}"
+{% elif policy_spec_override is defined and policy_spec_override != "" %}
+            - name: POD_SPEC_OVERRIDE
               value: "{{ policy_spec_override }}"
+{% endif %}
+{% if policy_instance_percentage is defined %}
             - name: POLICY_INSTANCE_PERCENTAGE
               value: "{{ policy_instance_percentage }}"
+{% endif %}
+{% if policy_instance_minimum is defined %}
             - name: POLICY_INSTANCE_MINIMUM
               value: "{{ policy_instance_minimum }}"
+{% endif %}
+{% if instance_list is defined and instance_list != "" %}
             - name: INSTANCE_LIST
               value: "{{ instance_list }}"
+{% endif %}
             - name: TOWER_VERIFY_SSL
               value: "False"
             - name: ANSIBLEINSTANCEGROUP_NAME

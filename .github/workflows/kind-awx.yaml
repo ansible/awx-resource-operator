@@ -219,10 +219,11 @@ jobs:
           kubectl apply -f config/samples/tower_v1alpha1_ansibleschedule.yaml -n awx
           kubectl wait ansibleschedule -n awx schedule --for condition=Successful=True --timeout=240s
 
-      - name: define an instance group
+      - name: define an instance groups
         run: |
-          kubectl apply -f config/samples/tower_v1alpha1_ansibleinstancegroup.yaml -n awx
+          kubectl apply -k config/samples/instancegroup -n awx
           kubectl wait ansibleinstancegroup -n awx kuber-instance-group --for condition=Successful=True --timeout=240s
+          kubectl wait ansibleinstancegroup -n awx container-group --for condition=Successful=True --timeout=240s
 
       - name: create two inventories
         run: |

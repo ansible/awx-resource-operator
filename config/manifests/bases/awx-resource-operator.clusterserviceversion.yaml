@@ -148,30 +148,43 @@ spec:
         path: name
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
-      - displayName: OpenShift or Kubernetes credential
-        path: credential_name
-        x-descriptors:
-        - urn:alm:descriptor:com.tectonic.ui:text
       - displayName: Container Group
         path: is_container_group
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
-      - displayName: Policy Spec Override
-        path: policy_spec_override
+      - displayName: OpenShift or Kubernetes credential
+        path: credential_name
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:fieldDependency:is_container_group:true
+      - displayName: Max Concurrent Jobs
+        path: max_concurrent_jobs
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:int
+      - displayName: Max Forks
+        path: max_forks
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:int
+      - displayName: Pod Spec Override
+        path: pod_spec_override
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+        - urn:alm:descriptor:com.tectonic.ui:fieldDependency:is_container_group:true
       - displayName: Policy Instance Percentage
         path: policy_instance_percentage
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:int
+        - urn:alm:descriptor:com.tectonic.ui:fieldDependency:is_container_group:false
       - displayName: Policy Instance Minimum
         path: policy_instance_minimum
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:int
+        - urn:alm:descriptor:com.tectonic.ui:fieldDependency:is_container_group:false
       - displayName: Instances for Group
         path: instance_list
         x-descriptors:
         - urn:alm:descriptor:com.tectonic.ui:array
+        - urn:alm:descriptor:com.tectonic.ui:fieldDependency:is_container_group:false
       - displayName: Connection Secret
         path: connection_secret
         x-descriptors:

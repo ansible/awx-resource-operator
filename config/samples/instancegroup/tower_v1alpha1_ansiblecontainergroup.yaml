@@ -1,0 +1,31 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleInstanceGroup
+metadata:
+  name: container-group
+spec:
+  name: container-group
+  credential_name: bearer-cred
+  is_container_group: true
+  max_concurrent_jobs: 0
+  max_forks: 0
+  pod_spec_override: |-
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      namespace: awx
+    spec:
+      serviceAccountName: default
+      automountServiceAccountToken: false
+      containers:
+        - image: quay.io/ansible/awx-ee:latest
+          name: worker
+          args:
+            - ansible-runner
+            - worker
+            - '--private-data-dir=/runner'
+          resources:
+            requests:
+              cpu: 250m
+              memory: 100Mi
+  runner_pull_policy: IfNotPresent
+  connection_secret: awxaccess

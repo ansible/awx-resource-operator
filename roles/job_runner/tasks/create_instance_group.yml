@@ -4,8 +4,10 @@
       awx.awx.instance_group:
         name: "{{ lookup('env','NAME') }}"
         state: "{{ lookup('env','STATE') | default('present') }}"
-        credential: "{{ lookup('env','NAME') }}"
-        is_container_group: "{{ lookup('env','IS_CONTAINER_GROUP')| default(omit, true) }}"
+        credential: "{{ lookup('env','CREDENTIAL_NAME') | default(omit, true) }}"
+        is_container_group: "{{ lookup('env','IS_CONTAINER_GROUP') | default(omit, true) }}"
+        max_concurrent_jobs: "{{ lookup('env','MAX_CONCURRENT_JOBS')| default(omit, true) }}"
+        max_forks: "{{ lookup('env','MAX_FORKS')| default(omit, true) }}"
         pod_spec_override: "{{ lookup('env','POD_SPEC_OVERRIDE')| default(omit, true) }}"
         policy_instance_percentage: "{{ lookup('env','POLICY_INSTANCE_PERCENTAGE')| default(omit, true) }}"
         policy_instance_minimum: "{{ lookup('env','POLICY_INSTANCE_MINIMUM')| default(omit, true) }}"

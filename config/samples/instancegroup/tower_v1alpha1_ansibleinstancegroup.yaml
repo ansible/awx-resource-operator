@@ -4,9 +4,9 @@ metadata:
   name: kuber-instance-group
 spec:
   name: kuber-instance-group
-  credential_name: bearer-cred
-  is_container_group: true
-  policy_spec_override: ""
+  is_container_group: false
+  max_concurrent_jobs: 0
+  max_forks: 0
   policy_instance_percentage: 100
   policy_instance_minimum: 1
   instance_list: []

@@ -1,0 +1,5 @@
+## Append samples you want in your CSV to this file as resources ##
+resources:
+- tower_v1alpha1_ansibleinstancegroup.yaml
+- tower_v1alpha1_ansiblecontainergroup.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples

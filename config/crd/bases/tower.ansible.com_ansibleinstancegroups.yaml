@@ -30,30 +30,44 @@ spec:
           metadata:
             type: object
           spec:
+            x-kubernetes-validations:
+            - rule: "!(has(self.pod_spec_override) && (has(self.is_container_group) ? self.is_container_group : false ) == false)"
+              message: "pod_spec_override is only valid for container groups"
             properties:
               name:
                 type: string
                 description: The name of the Instance Group
               credential_name:
                 type: string
-                description: Credential to authenticate with Kubernetes or OpenShift. Must be of type "Kubernetes/OpenShift API Bearer Token".
+                description: 'Credential name, ID, or named URL to authenticate with Kubernetes or OpenShift.
+                  Must be of type “OpenShift or Kubernetes API Bearer Token”. Only for ContainerGroup.'
               is_container_group:
                 type: boolean
-                description: Whether or not this is a container group
-              policy_spec_override:
-                description: Override the policy spec for this instance group
+                description: Whether this is a ContainerGroup (if true) or an InstanceGroup (if false). Defaults to false.
+                default: false
+              max_concurrent_jobs:
+                type: integer
+                description: Maximum number of concurrent jobs to run on this group. Zero means no limit.
+              max_forks:
+                type: integer
+                description: Max forks to execute on this group. Zero means no limit.
+              pod_spec_override:
                 type: string
+                description: A custom Kubernetes or OpenShift Pod specification. Only for ContainerGroup.
+              policy_spec_override:
+                type: string
+                description: DEPRECATED - Override the policy spec for this instance group
               policy_instance_percentage:
-                description: The percentage of instances to use for this instance group
                 type: integer
+                description: The percentage of instances to use for this instance group. Only for InstanceGroup.
               policy_instance_minimum:
-                description: The minimum number of instances to use for this instance group
                 type: integer
+                description: The minimum number of instances to use for this instance group. Only for InstanceGroup.
               instance_list:
-                description: A list of instances to use for this instance group
                 type: array
                 items:
                   type: string
+                description: A list of instance names, IDs, or named URLs associated with this instance_group. Only for InstanceGroup.
               runner_image:
                 type: string
                 description: Runner image used when running jobs
@@ -64,13 +78,12 @@ spec:
                 type: string
                 description: Runner image pull policy used when running jobs
               connection_secret:
+                type: string
                 description: |
                   A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
-                type: string
             required:
             - connection_secret
             - name
-            - credential_name
             description: Spec defines the definition of the Ansible Instance Group
             type: object
             x-kubernetes-preserve-unknown-fields: true

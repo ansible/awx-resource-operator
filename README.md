@@ -187,6 +187,12 @@ Build the operator image
 make docker-build docker-push IMG=<your-registry>:dev
 ```
 
+Build the runner image
+
+```
+make runner-build runner-push RUNNER_IMG=<your-registry>:dev
+```
+
 Deploy the operator
 
 ```
