@@ -10,17 +10,21 @@ An operator that can be used along side [Ansible AWX](https://github.com/ansible
 
 ## Table of Contents
 
-* [AWX Resource Operator](#awx-resource-operator)
-   * [Overview](#overview)
-      * [Prerequisites](#prerequisites)
-   * [Installing the Operator](#installing-the-operator)
-   * [Usage](#usage)
-      * [AnsibleJob](#ansiblejob)
-      * [JobTemplate](#jobtemplate)
-   * [Building and Testing](#building-and-testing)
-   * [Author](#author)
-   * [Code of Conduct](#code-of-conduct)
-   * [Get Involved](#get-involved)
+- [AWX Resource Operator](#awx-resource-operator)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+    - [Prerequisites](#prerequisites)
+  - [Installing the Operator](#installing-the-operator)
+  - [Usage](#usage)
+    - [Create an AWX Access Token](#create-an-awx-access-token)
+    - [Create a Connection Secret](#create-a-connection-secret)
+    - [AnsibleJob](#ansiblejob)
+      - [Launching Workflows](#launching-workflows)
+    - [JobTemplate](#jobtemplate)
+  - [Building and Testing](#building-and-testing)
+  - [Author](#author)
+  - [Code of Conduct](#code-of-conduct)
+  - [Get Involved](#get-involved)
 
 ## Overview
 
@@ -78,7 +82,7 @@ Create an OAuth2 token for your user in the AWX UI.
 3. Click on tokens, then the green plus icon
 4. Application can be left empty, input a description and select the read/write scope.
 
-> Alternatively, you can create one at the command-line using the `create_oauth2_token` manage command ([docs](https://docs.ansible.com/automation-controller/latest/html/administration/tower-manage.html#create-oauth2-token))
+> Alternatively, you can create one at the command-line using the `create_oauth2_token` manage command ([docs](https://docs.ansible.com/automation-controller/4.4/html/administration/tower-manage.html#create-oauth2-token))
 
 ### Create a Connection Secret
 
