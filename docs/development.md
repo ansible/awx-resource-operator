@@ -49,7 +49,7 @@ export RESOURCE_SERVER_URL="https://your-awx-instance.com"
 export RESOURCE_SERVER_TOKEN="your-awx-token"
 ```
 
-For information about manually creating tokens in AWX, see the [AWX documentation on token creation](https://docs.ansible.com/automation-controller/latest/html/userguide/applications_auth.html#add-tokens).
+For information about manually creating tokens in AWX, see the [AWX documentation on token creation](https://docs.ansible.com/automation-controller/4.4/html/userguide/applications_auth.html#add-tokens).
 
 If neither option's variables are set, the script will display a warning and skip secret creation.
 
