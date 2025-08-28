@@ -34,6 +34,14 @@
         labels:
           tower_job_id: "{{ job.id }}"
 
+- name: Gather Job Info
+  set_fact:
+    job_info: "{{ lookup('awx.awx.controller_api', 'workflow_jobs', query_params={'id': job.id}) }}"
+
+- name: Set api_endpoint fact with conditional value
+  set_fact:
+    api_endpoint: "{{ '/#/jobs/workflow/' + (job.id|string) if gw_deployment else '/execution/jobs/workflow/' + (job.id|string) + '/output' }}"
+
 - name: Update AnsibleWorkflow status with Tower workflow status and url
   operator_sdk.util.k8s_status:
     api_version: tower.ansible.com/v1alpha1
@@ -45,7 +53,7 @@
         changed: "{{ job.changed }}"
         failed: "{{ job.failed }}"
         status: "{{ job.status }}"
-        url: "{{ lookup('env', 'TOWER_HOST') + '/#/jobs/workflow/' + (job.id|string) }}"
+        url: "{{ lookup('env', 'TOWER_HOST') + api_endpoint }}"
 
 - name: Wait for the tower workflow, if error update AnsibleWorkflow status then end play
   block:
@@ -65,7 +73,7 @@
         status:
           ansibleWorkflowesult:
             status: "error"
-          error_message: "{{ job_result.msg | default('Job failed, check the job for more information: lookup('env', 'TOWER_HOST') + '/#/jobs/workflow/' + (job.id|string)') }}"
+          error_message: "{{ job_result.msg | default('Job failed, check the job for more information: ' + lookup('env', 'TOWER_HOST') + api_endpoint) }}"
 
     - name: End playbook run
       meta: end_play
