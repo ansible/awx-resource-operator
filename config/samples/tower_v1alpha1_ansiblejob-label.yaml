@@ -1,0 +1,9 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleJob
+metadata:
+  name: demo-job-label
+spec:
+  connection_secret: awxaccess
+  job_template_name: Demo Job Template
+  inventory: Demo Inventory # Inventory prompt on launch needs to be enabled
+  labels: demo-label

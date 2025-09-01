@@ -48,6 +48,10 @@ spec:
 {% endif %}
             - name: TOWER_VERIFY_SSL
               value: "False"
+{% if labels is defined and labels != "" %}
+            - name: LABELS
+              value: "{{ labels }}"
+{% endif %}
             - name: ANSIBLEJOB_NAME
               value: "{{ ansible_operator_meta.name }}"
             - name: ANSIBLEJOB_NAMESPACE
