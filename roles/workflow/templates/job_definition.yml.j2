@@ -19,7 +19,17 @@ spec:
                 secretKeyRef:
                   name: "{{ connection_secret }}"
                   key: token
+            - name: CONTROLLER_OAUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ connection_secret }}"
+                  key: token
             - name: TOWER_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ connection_secret }}"
+                  key: host
+            - name: CONTROLLER_HOST
               valueFrom:
                 secretKeyRef:
                   name: "{{ connection_secret }}"
@@ -27,8 +37,12 @@ spec:
 {% if workflow_template_name is defined and workflow_template_name != "" %}
             - name: TOWER_WORKFLOW_TEMPLATE_NAME
               value: "{{ workflow_template_name }}"
+            - name: CONTROLLER_WORKFLOW_TEMPLATE_NAME
+              value: "{{ workflow_template_name }}"
 {% endif %}
             - name: TOWER_VERIFY_SSL
+              value: "False"
+            - name: CONTROLLER_VERIFY_SSL
               value: "False"
             - name: ANSIBLEWORKFLOW_NAME
               value: "{{ ansible_operator_meta.name }}"

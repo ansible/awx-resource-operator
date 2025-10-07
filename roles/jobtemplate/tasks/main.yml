@@ -75,6 +75,9 @@
     - TOWER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
     - TOWER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
     - TOWER_VERIFY_SSL: "False"
+    - CONTROLLER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
+    - CONTROLLER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
+    - CONTROLLER_VERIFY_SSL: "False"
   register: job_template
   ignore_errors: true
 
