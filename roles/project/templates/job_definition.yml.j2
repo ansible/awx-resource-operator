@@ -19,7 +19,17 @@ spec:
                 secretKeyRef:
                   name: "{{ connection_secret }}"
                   key: token
+            - name: CONTROLLER_OAUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ connection_secret }}"
+                  key: token
             - name: TOWER_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ connection_secret }}"
+                  key: host
+            - name: CONTROLLER_HOST
               valueFrom:
                 secretKeyRef:
                   name: "{{ connection_secret }}"
@@ -54,6 +64,8 @@ spec:
               value: "present"
 {% endif %}
             - name: TOWER_VERIFY_SSL
+              value: "False"
+            - name: CONTROLLER_VERIFY_SSL
               value: "False"
             - name: ANSIBLEPROJECT_NAME
               value: "{{ ansible_operator_meta.name }}"
