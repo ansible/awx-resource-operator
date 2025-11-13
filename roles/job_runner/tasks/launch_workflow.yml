@@ -40,7 +40,7 @@
 
 - name: Set api_endpoint fact with conditional value
   set_fact:
-    api_endpoint: "{{ '/#/jobs/workflow/' + (job.id|string) if gw_deployment else '/execution/jobs/workflow/' + (job.id|string) + '/output' }}"
+    api_endpoint: "{{ '/execution/jobs/workflow/' + (job.id|string) + '/output' if '/controller' in job_info.url else '/#/jobs/workflow/' + (job.id|string) }}"
 
 - name: Update AnsibleWorkflow status with Tower workflow status and url
   operator_sdk.util.k8s_status:
