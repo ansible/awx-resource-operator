@@ -9,6 +9,14 @@ VERSION ?= 0.2.0
 # that some targets might be available only for one of them.
 ENGINE ?= docker
 
+# PLATFORMS defines the target platforms for the manager image be build to provide support to multiple
+# architectures. (i.e. make docker-buildx IMG=myregistry/mypoperator:0.0.1). To use this option you need to:
+# - able to use docker buildx . More info: https://docs.docker.com/build/buildx/
+# - have enable BuildKit, More info: https://docs.docker.com/develop/develop-images/build_enhancements/
+# - be able to push the image for your registry (i.e. if you do not inform a valid value via IMG=<myregistry/image:<tag>> then the export will fail)
+# To properly provided solutions that supports more than one platform you should use this option.
+PLATFORMS ?= linux/arm64,linux/amd64
+
 # CHANNELS define the bundle channels used in the bundle.
 # Add a new line here if you would like to change its default config. (E.g CHANNELS = "candidate,fast,stable")
 # To re-generate a bundle for other specific channels without changing the standard setup, you can:
@@ -43,7 +51,7 @@ BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
 IMG ?= $(IMAGE_TAG_BASE):$(VERSION)
 
 RUNNER_IMAGE_TAG_BASE ?= quay.io/ansible/awx-resource-runner
-RUNNER_VERSION ?= latest
+RUNNER_VERSION ?= $(VERSION)
 RUNNER_IMG ?= $(RUNNER_IMAGE_TAG_BASE):$(RUNNER_VERSION)
 
 # BUNDLE_GEN_FLAGS are the flags passed to the operator-sdk generate bundle command
@@ -99,6 +107,16 @@ runner-build: ## Build job runner image with the manager.
 .PHONY: runner-push
 runner-push: ## Push job runner image with the manager.
 	$(ENGINE) push ${RUNNER_IMG}
+
+.PHONY: runner-podman-buildx
+runner-podman-buildx: ## Build and push runner image for cross-platform support
+	podman build --platform=$(PLATFORMS) --manifest ${RUNNER_IMG} -f Dockerfile.runner .
+	podman manifest push --all ${RUNNER_IMG}
+
+.PHONY: podman-buildx
+podman-buildx: ## Build and push podman image for the manager for cross-platform support
+	podman build --platform=$(PLATFORMS) --manifest ${IMG} -f Dockerfile .
+	podman manifest push --all ${IMG}
 
 ##@ Deployment
 
