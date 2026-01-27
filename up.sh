@@ -129,24 +129,35 @@ if [ $ENGINE = 'docker' ]; then
   fi
 fi
 
-# Build Resource Runner images
-make docker-build docker-push IMG=$RUNNER_IMG:$TAG
-
-make docker-push IMG=$RUNNER_IMG:$DEV_TAG
-
-docker build -t $RUNNER_IMG:$TAG -f Dockerfile.runner .
-docker push $RUNNER_IMG:$TAG # must specify this in manager.yml to use it, or on the job CR as runner_image and runner_version
-
-
-# -- Build & Push Operator Image
-echo "Preparing to build $IMG:$TAG ($IMG:$DEV_TAG) with $ENGINE..."
+# -- Build & Push Operator and Runner Images
+echo "Preparing to build $IMG:$TAG ($IMG:$DEV_TAG) and $RUNNER_IMG:$TAG ($RUNNER_IMG:$DEV_TAG) with $ENGINE..."
 sleep 3
-make docker-build docker-push IMG=$IMG:$TAG
 
-# Tag and Push DEV_TAG Image when DEV_TAG_PUSH is 'True'
-if $DEV_TAG_PUSH ; then
-  $ENGINE tag $IMG:$TAG $IMG:$DEV_TAG
-  make docker-push IMG=$IMG:$DEV_TAG
+# Detect architecture and use multi-arch build for ARM hosts
+HOST_ARCH=$(uname -m)
+if [[ "$HOST_ARCH" == "aarch64" || "$HOST_ARCH" == "arm64" ]] && [ "$ENGINE" = "podman" ]; then
+  echo "ARM architecture detected ($HOST_ARCH). Using multi-arch build..."
+  make podman-buildx IMG=$IMG:$DEV_TAG ENGINE=$ENGINE
+  make runner-podman-buildx RUNNER_IMG=$RUNNER_IMG:$DEV_TAG ENGINE=$ENGINE
+
+  # Tag and Push DEV_TAG Image when DEV_TAG_PUSH is 'True'
+  if $DEV_TAG_PUSH ; then
+    $ENGINE tag $IMG:$DEV_TAG $IMG:$TAG
+    make docker-push IMG=$IMG:$TAG ENGINE=$ENGINE
+    $ENGINE tag $RUNNER_IMG:$DEV_TAG $RUNNER_IMG:$TAG
+    make runner-push RUNNER_IMG=$RUNNER_IMG:$TAG ENGINE=$ENGINE
+  fi
+else
+  make docker-build docker-push IMG=$IMG:$TAG
+  make runner-build runner-push RUNNER_IMG=$RUNNER_IMG:$TAG ENGINE=$ENGINE
+
+  # Tag and Push DEV_TAG Image when DEV_TAG_PUSH is 'True'
+  if $DEV_TAG_PUSH ; then
+    $ENGINE tag $IMG:$TAG $IMG:$DEV_TAG
+    make docker-push IMG=$IMG:$DEV_TAG
+    $ENGINE tag $RUNNER_IMG:$TAG $RUNNER_IMG:$DEV_TAG
+    make runner-push RUNNER_IMG=$RUNNER_IMG:$DEV_TAG ENGINE=$ENGINE
+  fi
 fi
 
 # -- Deploy Operator
