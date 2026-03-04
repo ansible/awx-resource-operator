@@ -38,6 +38,7 @@ spec:
         - --leader-elect
         - --leader-election-id=awx-resource-operator
         - --max-concurrent-reconciles=15
+        - --health-probe-bind-address=:6789
         image: controller:latest
         imagePullPolicy: IfNotPresent
         name: awx-resource-manager
