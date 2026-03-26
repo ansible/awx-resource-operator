@@ -116,22 +116,22 @@ jobs:
           sudo install ./kubectl /usr/local/bin/
           kubectl version --client
 
-      - name: record the ci release of awx-operator
-        run: |
-          echo "LATEST_RELEASE=$(curl -s https://api.github.com/repos/ansible/awx-operator/releases/ci | grep tag_name | cut -d '"' -f 4)" >> $GITHUB_ENV
-
-      - name: Clone and install awx operator
+      - name: Clone and deploy awx operator
         run: |
           git clone https://github.com/ansible/awx-operator.git
-          cp test-e2e/base-operator-install.yaml awx-operator/kustomization.yaml
           cd awx-operator
-          sed -i 's/TAG/${{ env.LATEST_RELEASE }}/g' kustomization.yaml
-          kustomize build . | kubectl apply -f -
-          cp ../test-e2e/awx-demo.yml ./awx-demo.yml
-          cp ../test-e2e/awx-deploy.yaml ./kustomization.yaml
-          sed -i 's/TAG/${{ env.LATEST_RELEASE }}/g' kustomization.yaml
-          kustomize build . | kubectl apply -f -
-          kubectl wait deployment -n awx awx-operator-controller-manager --for condition=Available=True --timeout=500s
+          eval $(minikube -p minikube docker-env)
+          make docker-build IMG=quay.io/ansible/awx-operator:ci-test
+          make up
+        env:
+          BUILD_IMAGE: "false"
+          CREATE_PULL_SECRET: "false"
+          QUAY_USER: ansible
+          REGISTRIES: ""
+          IMAGE_PULL_POLICY: IfNotPresent
+          DEV_TAG: ci-test
+          DEV_CR: ../test-e2e/awx-demo.yml
+          CONTAINER_TOOL: docker
 
       - name: generate token
         run: |
