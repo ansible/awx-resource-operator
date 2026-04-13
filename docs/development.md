@@ -83,7 +83,7 @@ CONTAINER_TOOL=docker QUAY_USER=username make up
 PLATFORM=linux/amd64 QUAY_USER=username make up
 
 # Deploy without building (use an existing image)
-BUILD_IMAGE=false DEV_IMG=quay.io/myuser/awx-resource-operator:latest make up
+BUILD_IMAGE=false DEV_IMG=quay.io/myuser/awx-resource-operator DEV_TAG=latest make up
 ```
 
 
