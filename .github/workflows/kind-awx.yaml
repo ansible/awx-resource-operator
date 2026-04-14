@@ -108,7 +108,6 @@ jobs:
           docker load < /tmp/operator.tar
           docker load < /tmp/runner.tar
           docker load < /tmp/token.tar
-          NAMESPACE=awx IMG=${OPERATOR_IMAGE} make deploy
 
       - name: Install the Kubectl binary
         run: |
@@ -132,6 +131,11 @@ jobs:
           DEV_TAG: ci-test
           DEV_CR: ../test-e2e/awx-demo.yml
           CONTAINER_TOOL: docker
+
+      - name: Deploy resource operator
+        run: |
+          cd config/default && kustomize edit set namespace awx && cd ../..
+          IMG=${OPERATOR_IMAGE} make deploy
 
       - name: generate token
         run: |
