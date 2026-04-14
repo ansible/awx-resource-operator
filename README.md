@@ -181,27 +181,9 @@ spec:
 ```
 
 
-## Building and Testing
+## Contributing
 
-If you have made changes to the operator and want to test them, you can do the following:
-
-Build the operator image
-
-```
-make docker-build docker-push IMG=<your-registry>:dev
-```
-
-Build the runner image
-
-```
-make runner-build runner-push RUNNER_IMG=<your-registry>:dev
-```
-
-Deploy the operator
-
-```
-make deploy NAMESPACE=awx IMG=<your-registry>:dev
-```
+Please visit our [contributing guidelines](./CONTRIBUTING.md) and [development guide](./docs/development.md) for information on how to set up your environment, build and deploy the operator, and submit changes.
 
 ## Author
 
