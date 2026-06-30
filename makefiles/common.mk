@@ -357,9 +357,9 @@ dev-build: ## Build dev image (auto-detects arch of connected cluster, cross-com
 patch-pull-policy: ## Patch imagePullPolicy in manager config (default: Always, override with IMAGE_PULL_POLICY)
 	@_POLICY="$(if $(IMAGE_PULL_POLICY),$(IMAGE_PULL_POLICY),Always)"; \
 	for file in config/manager/manager.yaml; do \
-		if [ -f "$$file" ] && grep -q 'imagePullPolicy: IfNotPresent' "$$file"; then \
+		if [ -f "$$file" ] && grep -q 'imagePullPolicy:' "$$file"; then \
 			echo "Patching imagePullPolicy to $$_POLICY in $$file"; \
-			$(_SED_I) "s|imagePullPolicy: IfNotPresent|imagePullPolicy: $$_POLICY|g" "$$file"; \
+			$(_SED_I) "s|imagePullPolicy: .*|imagePullPolicy: $$_POLICY|g" "$$file"; \
 		fi; \
 	done
 
