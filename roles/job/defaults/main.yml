@@ -3,3 +3,4 @@
 
 job_ttl: 3600
 backoff_limit: 1
+launch_once: true

@@ -13,17 +13,12 @@
     namespace: "{{ ansible_operator_meta.namespace }}"
   register: k8s_job
 
-- name: Update AnsibleJob isFinished status if job succeeded
-  operator_sdk.util.k8s_status:
-    api_version: tower.ansible.com/v1alpha1
-    kind: AnsibleJob
-    name: "{{ ansible_operator_meta.name }}"
-    namespace: "{{ ansible_operator_meta.namespace }}"
-    status:
-      isFinished: true
+- name: End play early is Job succeeded and is set to run once
+  meta: end_play
   when:
     - k8s_job['resources'][0]['status']['succeeded'] is defined
     - k8s_job['resources'][0]['status']['succeeded'] == 1
+    - launch_once
 
 - name: Read AnsibleJob info
   kubernetes.core.k8s_info:
@@ -33,11 +28,13 @@
     namespace: "{{ ansible_operator_meta.namespace }}"
   register: ansiblejob_info
 
-- name: End play early is AnsibleJob has already finished
+- name: End play early is Job TTL expired and is set to run once
   meta: end_play
   when:
-    - ansiblejob_info['resources'][0]['status']['isFinished'] is defined
-    - ansiblejob_info['resources'][0]['status']['isFinished']
+    - k8s_job['resources'][0] is not defined  # Job TTL expired
+    - ansiblejob_info['resources'][0]['status']['k8sJob']['created'] is defined
+    - ansiblejob_info['resources'][0]['status']['k8sJob']['created']
+    - launch_once
 
 - block:
     - name: Check number of attempts to execute the job have been made
