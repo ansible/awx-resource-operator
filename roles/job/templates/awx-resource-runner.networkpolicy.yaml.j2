@@ -1,0 +1,37 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: '{{ ansible_operator_meta.name }}-runner'
+  namespace: '{{ ansible_operator_meta.namespace }}'
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/managed-by
+        operator: In
+        values:
+          - 'awx-resource-operator'
+          - 'platform-resource-operator'
+      - key: app.kubernetes.io/component
+        operator: In
+        values:
+          - 'awx-resource-runner'
+  policyTypes:
+    - Ingress
+    - Egress
+  egress:
+    # Allow DNS resolution via OpenShift DNS.
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openshift-dns
+      ports:
+        - protocol: TCP
+          port: 5353
+        - protocol: UDP
+          port: 5353
+    # Unrestricted egress required: runner pods call a user-configured
+    # Controller API host (HTTPS/443) whose address cannot be enumerated
+    # at policy creation time. They also update CRD status via the
+    # Kubernetes API.
+    - {}

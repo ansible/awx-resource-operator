@@ -7,6 +7,10 @@ metadata:
 spec:
   ttlSecondsAfterFinished: {{ job_ttl }}
   template:
+    metadata:
+      labels:
+        app.kubernetes.io/managed-by: '{{ (ansible_operator_meta.labels | default({})).get("app.kubernetes.io/managed-by", "awx-resource-operator") }}'
+        app.kubernetes.io/component: 'awx-resource-runner'
     spec:
       serviceAccountName: resource-operator-controller-manager-job
       containers:

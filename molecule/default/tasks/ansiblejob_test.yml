@@ -14,8 +14,73 @@
 #   vars:
 #     cr_file: 'tower_v1alpha1_ansiblejob.yaml'
 
-# TODO: Remove once CI is fully added
+# TODO: Remove once CI is fully added — NP assertions below require a reconciled
+# AnsibleJob CR which needs a live AWX/Controller connection and connection_secret.
 - name: Add assertions here
   assert:
     that: true
     fail_msg: FIXME Add real assertions for your operator
+
+- name: Verify default-deny NetworkPolicy exists
+  kubernetes.core.k8s_info:
+    api_version: networking.k8s.io/v1
+    kind: NetworkPolicy
+    namespace: '{{ namespace }}'
+    name: '{{ custom_resource.metadata.name }}-default-deny'
+  register: np_default_deny
+  until: np_default_deny.resources | length > 0
+  retries: 10
+  delay: 5
+
+- name: Assert default-deny selects managed-by awx-resource-operator pods and denies all traffic
+  ansible.builtin.assert:
+    that:
+      - np_default_deny.resources | length > 0
+      - np_default_deny.resources[0].spec.podSelector.matchExpressions | length == 1
+      - np_default_deny.resources[0].spec.podSelector.matchExpressions[0].key == 'app.kubernetes.io/managed-by'
+      - np_default_deny.resources[0].spec.podSelector.matchExpressions[0].operator == 'In'
+      - "'awx-resource-operator' in np_default_deny.resources[0].spec.podSelector.matchExpressions[0].values or
+         'platform-resource-operator' in np_default_deny.resources[0].spec.podSelector.matchExpressions[0].values"
+      - "'Ingress' in np_default_deny.resources[0].spec.policyTypes"
+      - "'Egress' in np_default_deny.resources[0].spec.policyTypes"
+      - np_default_deny.resources[0].spec.ingress is not defined or np_default_deny.resources[0].spec.ingress | length == 0
+      - np_default_deny.resources[0].spec.egress is not defined or np_default_deny.resources[0].spec.egress | length == 0
+    fail_msg: "default-deny NetworkPolicy does not match expected spec: {{ np_default_deny.resources }}"
+
+- name: Verify runner NetworkPolicy exists
+  kubernetes.core.k8s_info:
+    api_version: networking.k8s.io/v1
+    kind: NetworkPolicy
+    namespace: '{{ namespace }}'
+    name: '{{ custom_resource.metadata.name }}-runner'
+  register: np_runner
+  until: np_runner.resources | length > 0
+  retries: 10
+  delay: 5
+
+- name: Assert runner NetworkPolicy selects awx-resource-runner pods with unrestricted egress
+  ansible.builtin.assert:
+    that:
+      - np_runner.resources | length > 0
+      - np_runner.resources[0].spec.podSelector.matchExpressions | length == 2
+      - np_runner.resources[0].spec.podSelector.matchExpressions | selectattr('key', 'equalto', 'app.kubernetes.io/managed-by') | list | length == 1
+      - np_runner.resources[0].spec.podSelector.matchExpressions | selectattr('key', 'equalto', 'app.kubernetes.io/component') | list | length == 1
+      - "'Egress' in np_runner.resources[0].spec.policyTypes"
+      - np_runner.resources[0].spec.egress | length > 0
+    fail_msg: "Runner NetworkPolicy does not match expected spec: {{ np_runner.resources }}"
+
+- name: Assert runner pods carry managed-by and component labels
+  kubernetes.core.k8s_info:
+    api_version: batch/v1
+    kind: Job
+    namespace: '{{ namespace }}'
+    label_selector: 'app.kubernetes.io/component=awx-resource-runner'
+  register: runner_jobs
+
+- name: Assert at least one runner Job pod was labeled correctly
+  ansible.builtin.assert:
+    that:
+      - runner_jobs.resources | length > 0
+      - runner_jobs.resources[0].spec.template.metadata.labels['app.kubernetes.io/managed-by'] is defined
+      - runner_jobs.resources[0].spec.template.metadata.labels['app.kubernetes.io/component'] == 'awx-resource-runner'
+    fail_msg: "Runner Job pod template missing expected labels: {{ runner_jobs.resources }}"

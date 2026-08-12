@@ -1,0 +1,24 @@
+# Default deny policy for AWX Resource Operator operand pods (layered product pattern).
+# Selects only pods managed by this operator instance, not all pods in the namespace,
+# since this operator may share a namespace with other workloads.
+#
+# Uses matchExpressions to cover both upstream and downstream managed-by label values:
+#   - 'awx-resource-operator'      — upstream label stamped by OLM
+#   - 'platform-resource-operator' — downstream (automationcontroller-resource-operator)
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: '{{ ansible_operator_meta.name }}-default-deny'
+  namespace: '{{ ansible_operator_meta.namespace }}'
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/managed-by
+        operator: In
+        values:
+          - 'awx-resource-operator'
+          - 'platform-resource-operator'
+  policyTypes:
+    - Ingress
+    - Egress
