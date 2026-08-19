@@ -1,4 +1,6 @@
 ---
+- name: Apply NetworkPolicies
+  include_tasks: "{{ role_path }}/../job/tasks/networkpolicy.yml"
 
 - name: WFJT defined
   assert:
