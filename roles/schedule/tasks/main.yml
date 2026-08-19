@@ -1,6 +1,7 @@
 ---
 - name: Apply NetworkPolicies
-  include_tasks: "{{ role_path }}/../job/tasks/networkpolicy.yml"
+  include_role:
+    name: networkpolicy
 
 - name: Read AnsibleSchedule info
   kubernetes.core.k8s_info:

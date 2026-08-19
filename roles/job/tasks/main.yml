@@ -1,6 +1,7 @@
 ---
 - name: Apply NetworkPolicies
-  include_tasks: networkpolicy.yml
+  include_role:
+    name: networkpolicy
 
 - name: Assert JT or WFJT defined
   assert:
