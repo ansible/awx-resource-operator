@@ -1,0 +1,12 @@
+---
+- name: Apply default deny NetworkPolicy for AWX Resource Operator pods
+  kubernetes.core.k8s:
+    state: present
+    apply: true
+    definition: "{{ lookup('template', 'default-deny.networkpolicy.yaml.j2') }}"
+
+- name: Apply runner NetworkPolicy
+  kubernetes.core.k8s:
+    state: present
+    apply: true
+    definition: "{{ lookup('template', 'awx-resource-runner.networkpolicy.yaml.j2') }}"

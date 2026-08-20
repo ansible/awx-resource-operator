@@ -1,4 +1,7 @@
 ---
+- name: Apply NetworkPolicies
+  include_role:
+    name: networkpolicy
 
 - name: WFJT defined
   assert:
