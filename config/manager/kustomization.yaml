@@ -13,4 +13,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: quay.io/ansible/awx-resource-operator
-  newTag: 0.2.0
+  newTag: latest
