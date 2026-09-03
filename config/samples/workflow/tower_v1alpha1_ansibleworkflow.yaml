@@ -1,9 +1,10 @@
+# Prerequisite: a Workflow Job Template named "ExampleTowerWorkflow" must
+# already exist, e.g. via config/samples/workflowtemplate/tower_v1alpha1_workflowtemplate.yaml
 apiVersion: tower.ansible.com/v1alpha1
 kind: AnsibleWorkflow
 metadata:
   name: workflow
 spec:
-  inventory: Demo Inventory
-  workflow_template_name: Demo Job Template
+  workflow_template_name: ExampleTowerWorkflow
   connection_secret: awxaccess
   runner_pull_policy: IfNotPresent
