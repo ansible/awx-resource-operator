@@ -16,6 +16,8 @@
   when:
     - ansibleig_info['resources'][0]['status']['isFinished'] is defined
     - ansibleig_info['resources'][0]['status']['isFinished']
+    - ansibleig_info['resources'][0]['status']['generation'] is defined
+    - ansibleig_info['resources'][0]['status']['generation']|int == ansibleig_info['resources'][0]['metadata']['generation']|int
 
 - block:
     - name: Check number of attempts to execute the job have been made
@@ -102,6 +104,7 @@
     name: "{{ ansible_operator_meta.name }}"
     namespace: "{{ ansible_operator_meta.namespace }}"
     status:
+      generation: "{{ ansibleig_info['resources'][0]['metadata']['generation'] }}"
       k8sJob:
         created: true
         message: |-
