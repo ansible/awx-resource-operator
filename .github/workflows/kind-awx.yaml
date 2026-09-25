@@ -131,6 +131,9 @@ jobs:
           DEV_TAG: ci-test
           DEV_CR: ../test-e2e/awx-demo.yml
           CONTAINER_TOOL: docker
+          # minikube's containerd-backed docker-env can't run the buildx/buildkit
+          # container (docker inspect 404s on it), so force the classic builder.
+          DOCKER_BUILDKIT: "0"
 
       - name: Deploy resource operator
         run: |
