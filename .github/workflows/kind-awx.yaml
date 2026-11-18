@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     name: operator-image-build
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Build operator container
         run: podman build -t ${{ env.OPERATOR_IMAGE }} .
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     name: runner-image-build
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Build runner container
         run: podman build -f Dockerfile.runner -t ${{ env.RUNNER_IMAGE }}
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     name: token-image-build
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Build token generator
         run: cd test-e2e/token-container && podman build . --tag ${{ env.TOKEN_IMAGE }}
@@ -75,7 +75,7 @@ jobs:
     name: minikube-test
     needs: [operator-image-build, runner-image-build, token-image-build]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Start minikube
         uses: medyagh/setup-minikube@master
