@@ -108,7 +108,58 @@ spec:
                 description: Survey Spec is the survey spec to be used for the workflow
                   template
                 type: object
+                properties:
+                  description:
+                    type: string
+                    description: The description of the survery
+                  name:
+                    type: string
+                  spec:
+                    type: array
+                    items:
+                      type: object
+                      required: [type, question_name, question_description, variable]
+                      x-kubernetes-validations:
+                        - rule: "(self.type in ['multiselect', 'multiplechoice']) ? has(self.choices) && size(self.choices) > 0 : true"
+                          message: "Question types multiselect or multiplechoice must have choices"
+                        - rule: "!(self.type in ['multiselect', 'multiplechoice']) ? (! has(self.choices)) : true"
+                          message: "You have provided choices for a survey type that isn't multiplechoice or multiselect. Is this an error?"
+                        - rule: "has(self.min) ? self.type in ['text', 'integer', 'float', 'password'] : true"
+                          message: "You have provided a maximum for multiplechoice or multiselect question. Is this an error?"
+                        - rule: "has(self.max) ? self.type in ['text', 'integer', 'float', 'password'] : true"
+                          message: "You have provided a maximum for multiplechoice or multiselect question. Is this an error?"
+                        - rule: "(has(self.min) && has(self.max) ? self.min <= self.max : true)"
+                      properties:
+                        type:
+                          type: string
+                          enum: [text, password, integer, float, multiplechoice, multiselect]
+                        question_name:
+                          type: string
+                        question_description:
+                          type: string
+                        variable:
+                          type: string
+                        choices:
+                          type: array
+                          items:
+                            type: string
+                          description: "Required for multiplechoice and multiselect types"
+                        default:
+                          type: string
+                          description: "Optional default value"
+                        required:
+                          type: boolean
+                          description: "Indicates if the question is mandatory"
+                        min:
+                          type: integer
+                          description: "minimum value for int or float, minimum length for text"
+                        max:
+                          type: integer
+                          description: "maximum value for int or float, maximum length for text"
+
+
                 x-kubernetes-preserve-unknown-fields: true
+
               state:
                 description: State is the state of the workflow template
                 type: string

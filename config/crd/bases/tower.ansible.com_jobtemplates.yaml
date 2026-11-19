@@ -69,6 +69,62 @@ spec:
                 type: string
                 description: |
                   A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
+              survey_enabled:
+                description: Survey Enabled is a boolean value that determines if the job template will have a survey enabled
+                type: boolean
+              survey_spec:
+                type: object
+                description: describes how the survery should be
+                properties:
+                  description:
+                    type: string
+                    description: The description of the survery
+                  name:
+                    type: string
+                  spec:
+                    type: array
+                    items:
+                      type: object
+                      required: [type, question_name, question_description, variable]
+                      x-kubernetes-validations:
+                        - rule: "(self.type in ['multiselect', 'multiplechoice']) ? has(self.choices) && size(self.choices) > 0 : true"
+                          message: "Question types multiselect or multiplechoice must have choices"
+                        - rule: "!(self.type in ['multiselect', 'multiplechoice']) ? (! has(self.choices)) : true"
+                          message: "You have provided choices for a survey type that isn't multiplechoice or multiselect. Is this an error?"
+                        - rule: "has(self.min) ? self.type in ['text', 'integer', 'float', 'password'] : true"
+                          message: "You have provided a maximum for multiplechoice or multiselect question. Is this an error?"
+                        - rule: "has(self.max) ? self.type in ['text', 'integer', 'float', 'password'] : true"
+                          message: "You have provided a maximum for multiplechoice or multiselect question. Is this an error?"
+                        - rule: "(has(self.min) && has(self.max) ? self.min <= self.max : true)"
+                      properties:
+                        type:
+                          type: string
+                          enum: [text, password, integer, float, multiplechoice, multiselect]
+                        question_name:
+                          type: string
+                        question_description:
+                          type: string
+                        variable:
+                          type: string
+                        choices:
+                          type: array
+                          items:
+                            type: string
+                          description: "Required for multiplechoice and multiselect types"
+                        default:
+                          type: string
+                          description: "Optional default value"
+                        required:
+                          type: boolean
+                          description: "Indicates if the question is mandatory"
+                        min:
+                          type: integer
+                          description: "minimum value for int or float, minimum length for text"
+                        max:
+                          type: integer
+                          description: "maximum value for int or float, maximum length for text"
+
+                x-kubernetes-preserve-unknown-fields: true
             description: Spec defines the desired state of JobTemplate
             type: object
             x-kubernetes-preserve-unknown-fields: true
