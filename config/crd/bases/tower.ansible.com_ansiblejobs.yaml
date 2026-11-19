@@ -38,6 +38,9 @@ spec:
                 type: string
               job_template_name:
                 type: string
+              launch_once:
+                type: boolean
+                description: if not explicitly set to false, the job template is only launched once
               workflow_template_name:
                 type: string
               request_timeout:
@@ -69,7 +72,7 @@ spec:
                 description: |
                   A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
                 type: string
-            required:
+            required: []
             description: Spec defines the desired state of AnsibleJob
             type: object
             x-kubernetes-preserve-unknown-fields: true
