@@ -1,0 +1,62 @@
+---
+- name: Read Secret Configuration from connection_secret
+  kubernetes.core.k8s_info:
+    kind: Secret
+    api_version: v1
+    name: "{{ connection_secret }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+  register: tower_connection_secret
+
+- name: Set fact based on secret results
+  set_fact:
+    tower_config_secret: "{{ tower_connection_secret }}"
+
+- name: Validate Secret Exists
+  assert:
+    that:
+      - tower_config_secret["resources"] is defined and (tower_config_secret["resources"]|length>0)
+    fail_msg: "Tower Secret must exist"
+
+- name: Create Execution Environment
+  awx.awx.execution_environment:
+    name: "{{ name }}"
+    new_name: "{{ new_name | default(omit) }}"
+    credential: "{{ credential | default(omit) }}"
+    description: "{{ description }}"
+    image: "{{ image | default(omit) }}"
+    organization: "{{ organization | default(omit) }}"
+    pull: "{{ pull | default(omit) }}"
+    request_timeout: "{{ request_timeout | default(omit) }}"
+    state: "{{ state | default('present') }}"
+    validate_certs: "{{ validate_certs | default(omit) }}"
+  environment:
+    - TOWER_OAUTH_TOKEN: "{{ tower_config_secret['resources'][0]['data']['token'] | b64decode }}"
+    - TOWER_HOST: "{{ tower_config_secret['resources'][0]['data']['host'] | b64decode }}"
+    - TOWER_VERIFY_SSL: "False"
+  register: execution_environment
+  ignore_errors: true
+
+- name: Update the k8s status
+  operator_sdk.util.k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: executionenvironment
+    name: '{{ ansible_operator_meta.name }}'
+    namespace: '{{ ansible_operator_meta.namespace }}'
+    status:
+      isFinished: true
+      message: "Execution Environment Created"
+  when:
+    - execution_environment.changed
+
+- name: Update the k8s status
+  operator_sdk.util.k8s_status:
+    api_version: tower.ansible.com/v1alpha1
+    kind: executionenvironment
+    name: '{{ ansible_operator_meta.name }}'
+    namespace: '{{ ansible_operator_meta.namespace }}'
+    status:
+      isFinished: true
+      error: true
+      message: "There was an error in the execution environment"
+  when:
+    - execution_environment.failed

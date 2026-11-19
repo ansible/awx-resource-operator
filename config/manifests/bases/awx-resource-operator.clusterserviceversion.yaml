@@ -140,6 +140,52 @@ spec:
         - urn:alm:descriptor:com.tectonic.ui:advanced
       version: v1alpha1
     - description: Define an Instance Group
+      displayName: Define an Execution Environment
+      kind: AnsibleExecutionEnvironment
+      name: ansibleexecutionenvironments.tower.ansible.com
+      specDescriptors:
+      - displayName: Execution Environment Name
+        path: name
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Execution Environment New Name
+        path: new_name
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Container Registry Credential
+        path: credential
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Execution Environment Description
+        path: description
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Execution Environment Image
+        path: image
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Execution Environment Organization
+        path: organization
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Execution Environment Pull Behavior
+        path: pull
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Execution Environment Controller Request Timeout
+        path: request_timeout
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Execution Environment State
+        path: state
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - displayName: Certificate Validation
+        path: validate_certs
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+      version: v1alpha1
+    - description: Define an Instance Group
       displayName: AWX Instance Group
       kind: AnsibleInstanceGroup
       name: ansibleinstancegroups.tower.ansible.com

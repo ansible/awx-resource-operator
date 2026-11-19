@@ -1,0 +1,13 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleExecutionEnvironment
+metadata:
+  name: executionenvironment
+spec:
+  name: test_ee
+  connection_secret: awxaccess
+  description: Test Execution Environment
+  image: quay.io/ansible/awx-ee
+  pull: always
+  request_timeout: 20
+  state: present
+  validate_certs: false
