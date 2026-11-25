@@ -5,6 +5,7 @@
   kind: AnsibleJob
   role: job
   watchDependentResources: True
+  markUnsafe: true
   # finalizer:
   #   name: finalizer.tower.ansible.com
   #   vars:
@@ -14,32 +15,40 @@
   group: tower.ansible.com
   kind: JobTemplate
   role: jobtemplate
+  markUnsafe: true
 - version: v1alpha1
   group: tower.ansible.com
   kind: AnsibleProject
   role: project
+  markUnsafe: true
 - version: v1alpha1
   group: tower.ansible.com
   kind: AnsibleWorkflow
   role: workflow
+  markUnsafe: true
 - version: v1alpha1
   group: tower.ansible.com
   kind: AnsibleCredential
   role: credential
+  markUnsafe: true
 - version: v1alpha1
   group: tower.ansible.com
   kind: AnsibleSchedule
   role: schedule
+  markUnsafe: true
 - version: v1alpha1
   group: tower.ansible.com
   kind: AnsibleInstanceGroup
   role: instancegroup
+  markUnsafe: true
 - version: v1alpha1
   group: tower.ansible.com
   kind: WorkflowTemplate
   role: workflowtemplate
+  markUnsafe: true
 - version: v1alpha1
   group: tower.ansible.com
   kind: AnsibleInventory
   role: inventory
+  markUnsafe: true
 #+kubebuilder:scaffold:watch
